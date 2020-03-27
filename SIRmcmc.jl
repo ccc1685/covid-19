@@ -27,7 +27,7 @@ function mcmc(data,r,total::Int)
 		sampleparams!(rt,r)
 		chit = loss(data,rt)
 
-		# prior for psi = r[4]: 1/r[4], r[4] > 50
+		# mesa prior for psi: P(psi) = 1/50, psi < 50, 1/psi, psi >= 50
 		if rand() < exp(chi - chit + log(max(r[4],50)) - log(max(rt[4],50)))
 			chi = chit
 			r = copy(rt)
@@ -104,7 +104,7 @@ function oxfordrk2(zinit,yinit,total,dt,beta,sigma,rtheta,psi)
 	tout[1] = 0.
 	interval = 1
 
-	t = 0
+	t = 1
 	# Runge Kutta 2 method
 	for n = 1:totalN
 		y1 = dt*(beta*y*(1-z)-sigma*y)/2
@@ -142,7 +142,7 @@ function oxford(zinit,yinit,total,dt,beta,sigma,rtheta,psi)
 	tout[1] = 0.
 	interval = 1
 
-	t = 0
+	t = 1
 	# Euler method
 	for n = 1:totalN
 		y += dt*(beta*y*(1-z)-sigma*y)
