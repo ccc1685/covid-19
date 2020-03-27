@@ -118,7 +118,7 @@ function oxfordrk2(zinit,yinit,total,dt,beta,sigma,rtheta,psi)
 			zout[t] = z
 			yout[t] = y
 			dout[t] = rtheta*zout[max(t-psi,0)+1]
-			tout[t] = (n-1)*dt
+			tout[t] = n*dt
 		end
 	end
 	return dout,zout,yout,tout
@@ -152,7 +152,7 @@ function oxford(zinit,yinit,total,dt,beta,sigma,rtheta,psi)
 			zout[t] = z
 			yout[t] = y
 			dout[t] = rtheta*zout[max(t-psi,0)+1]
-			tout[t] = (n-1)*dt
+			tout[t] = n*dt
 		end
 	end
 	return dout,zout,yout,tout
