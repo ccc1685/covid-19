@@ -171,7 +171,11 @@ function sirc!(du,u,p,t)
 	du[6] = dR = sigmar*Y
 end
 
-# function compare(datain,p)
-#
-#
-# end
+function compare(p,total,Population)
+	sol = model(p,total,Population)
+	prediction = zeros(total,3)
+	for set in 1:3
+		prediction[max(0,Int(p[end]))+1:end,set] .= sol[set,max(0,-Int(p[end]))+1:end]
+	end
+	return prediction*Population
+end
