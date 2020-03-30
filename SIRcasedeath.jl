@@ -49,145 +49,107 @@ end
 # parameters except start day with scale parameter manually adjusted so approximately a third of guesses are accepted
 function sampleparams!(pt,p)
 	for i in 1:length(p) - 1
-		d = Distributions.LogNormal(log(p[i]),.001)
+		d = Distributions.LogNormal(log(p[i]),.01)
 		pt[i] = rand(d)
 	end
-	pt[end] = p[end] + .1*randn()
+	pt[end] = p[end] + .2*randn()
 end
 
 # loglikelihood of data given parameters at r using a Poisson likelihood function
 function ll(data,cols,p,Population)
 	total = length(data[!,cols[1]])-1
-	start = round(p[end])
-	if p[end] > total - 2
-		chi = 1e6
-	else
-		prediction = model(p,total,Population)
-		chi = 0
-		startabs = Int(abs(start))
-		if p[end] > 0.
-			for set in 1:3
-				if data[startabs+1, cols[set]] > 0
-					chi = 1e6
-				else
-					for i in 2:length(prediction[set,:])
-						d = Distributions.Poisson(max(Population*prediction[set, i],1e-100))
-						chi -= loglikelihood(d,[data[startabs + i,cols[set]]])
-					end
-				end
-			end
-		else
-			for set in 1:3
-				for i in 2:length(data[!,cols[set]])-1
-					d = Distributions.Poisson(max(Population*prediction[set, startabs + i],1e-100))
-					chi -= loglikelihood(d,[data[i,cols[set]]])
-				end
-			end
+	prediction = model(p,total,Population)
+	chi = 0
+	for set in 1:3
+		for i in 1:total
+			d = Distributions.Poisson(max(prediction[i,set],1.))
+			chi -= loglikelihood(d,[data[i,cols[set]]])
 		end
 	end
 	return chi
 end
 
+# loglikelihood of data given parameters at r using a Poisson likelihood function
+# function llold(data,cols,p,Population)
+# 	total = length(data[!,cols[1]])-1
+# 	start = round(p[end])
+# 	if p[end] > total - 2
+# 		chi = 1e6
+# 	else
+# 		prediction = model(p,total,Population)
+# 		chi = 0
+# 		startabs = Int(abs(start))
+# 		if p[end] > 0.
+# 			for set in 1:3
+# 				if data[startabs+1, cols[set]] > 0
+# 					chi = 1e6
+# 				else
+# 					for i in 2:length(prediction[set,:])
+# 						d = Distributions.Poisson(max(Population*prediction[set, i],1e-100))
+# 						chi -= loglikelihood(d,[data[startabs + i,cols[set]]])
+# 					end
+# 				end
+# 			end
+# 		else
+# 			for set in 1:3
+# 				for i in 2:length(data[!,cols[set]])-1
+# 					d = Distributions.Poisson(max(Population*prediction[set, startabs + i],1e-100))
+# 					chi -= loglikelihood(d,[data[i,cols[set]]])
+# 				end
+# 			end
+# 		end
+# 	end
+# 	return chi
+# end
+
 # produce arrays of cases and deaths
 function model(pin,total,Population)
 	u0 = [0.,0.,0.,1/Population,0.,0.]
 	p = pin[1:end-1]
-	tspan = (pin[end],total-1)
-	prob = ODEProblem(sirc!,u0,tspan,p)
-	sol = solve(prob,saveat=1)
-	return sol
+	if (start=round(Int,pin[end])) < total - 1
+		tspan = (round(pin[end]),total-1)
+		prob = ODEProblem(sirc!,u0,tspan,p)
+		sol = solve(prob,saveat=1)
+		# align solutions to time 0 of data and reorder rows and cols
+		prediction = zeros(total,3)
+		for set in 1:3
+			prediction[max(0,start)+1:end,set] .= sol[set,max(0,-start)+1:end]
+		end
+		return prediction*Population
+	else
+		return zeros(total,3)
+	end
 end
 
-# SIR ODE model with new death model, Euler stepper
-# function sir(zinit,yinit,r,P,total,dt=.01)
-#
-# 	z = zinit
-# 	y = yinit
-# 	d = 0.
-#
-# 	beta = r[1]
-# 	sigmad = r[2]
-# 	sigmar = r[3]
-# 	f = r[4]
-#
-# 	totalN = Int(total/dt)
-#
-# 	zout = [zinit]
-# 	yout = [yinit]
-# 	tout = [0.]
-# 	dout = [0.]
-# 	cout = [0.]
-# 	zout[1] = zinit
-# 	yout[1] = yinit
-# 	tout[1] = 0.
-# 	interval = 1
-#
-# 	m = 0
-# 	c = 0.
-#
-# 	# Euler method, run until at least one case appears
-# 	while C*P < .5 && m < 1000
-# 		step()
-# 		m += 1
-# 		Y += dt*(beta*y*(1-Z)-sigmad*Y - sigmar*Y)
-# 		Z += dt*beta*Y*(1-Z)
-# 		D += dt*sigmad*Y
-# 		R += dt*sigmar*Y
-# 		C += dt*f*Y
-# 		CR += dt*f*R
-# 		if m*dt%interval == 0
-# 			push!(zout,1-Z)
-# 			push!(yout,Y)
-# 			push!(dout,P*D)
-# 			push!(cout,P*C)
-# 			push!(tout,m*dt)
-# 		end
-# 	end
-# 	# Continue for total more days
-# 	for n in m+1:m+totalN
-# 		Y += dt*(beta*Y*(1-Z)-sigma*Y)
-# 		Z += dt*beta*Y*(1-Z)
-# 		D += dt*sigma*Y*psi/(1+psi)
-# 		C += dt*f*Y
-# 		CR += dt*f*R
-# 		if n*dt%interval == 0
-# 			push!(zout,Z)
-# 			push!(yout,Y)
-# 			push!(dout,P*D)
-# 			push!(cout,P*D)
-# 			push!(tout,n*dt)
-# 		end
-# 	end
-# 	return cout,dout,zout,yout,tout
+# SIRC ODE model using Differential Equations
+
+# function sircold!(du,u,p,t)
+# 	C,D,CR,Y,Z,R = u
+# 	beta,sigmad,sigmar,f = p
+# 	du[1] = dC = f*Y
+# 	du[2] = dD = sigmad*Y
+# 	du[3] = dCR = f*R
+# 	du[4] = dY = beta*Y*(1-Z) - sigmad*Y - sigmar*Y
+# 	du[5] = dZ = beta*Y*(1-Z)
+# 	du[6] = dR = sigmar*Y
 # end
-
-function sircold!(du,u,p,t)
-	C,D,CR,Y,Z,R = u
-	beta,sigmad,sigmar,f = p
-	du[1] = dC = f*Y
-	du[2] = dD = sigmad*Y
-	du[3] = dCR = f*R
-	du[4] = dY = beta*Y*(1-Z) - sigmad*Y - sigmar*Y
-	du[5] = dZ = beta*Y*(1-Z)
-	du[6] = dR = sigmar*Y
-end
 
 function sirc!(du,u,p,t)
 	C,D,CR,Y,Z,R = u
-	beta,sigmac,sigmad,sigmar,gammad,gammar = p
+	beta,sigmac,sigmar,gammad,gammar = p
 	du[1] = dC = sigmac*Y - gammar*C - gammad*C
-	du[2] = dD = sigmad*Y + gammad*C
+	du[2] = dD = gammad*C
 	du[3] = dCR = gammar*C
-	du[4] = dY = beta*Y*(1-Z) - sigmac*Y - sigmar*Y - sigmad*Y
+	du[4] = dY = beta*Y*(1-Z) - sigmac*Y - sigmar*Y
 	du[5] = dZ = beta*Y*(1-Z)
 	du[6] = dR = sigmar*Y
 end
 
-function compare(p,total,Population)
+function align(p,total,Population)
 	sol = model(p,total,Population)
 	prediction = zeros(total,3)
 	for set in 1:3
-		prediction[max(0,Int(p[end]))+1:end,set] .= sol[set,max(0,-Int(p[end]))+1:end]
+		prediction[max(0,round(Int,p[end]))+1:end,set] .= sol[set,max(0,-round(Int,p[end]))+1:end]
 	end
 	return prediction*Population
 end
