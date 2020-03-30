@@ -49,36 +49,37 @@ end
 # parameters except start day with scale parameter manually adjusted so approximately a third of guesses are accepted
 function sampleparams!(pt,p)
 	for i in 1:length(p) - 1
-		d = Distributions.LogNormal(log(p[i]),.02)
+		d = Distributions.LogNormal(log(p[i]),.001)
 		pt[i] = rand(d)
 	end
-	pt[end] = round(p[end] + randn())
+	pt[end] = p[end] + .1*randn()
 end
 
 # loglikelihood of data given parameters at r using a Poisson likelihood function
 function ll(data,cols,p,Population)
 	total = length(data[!,cols[1]])-1
+	start = round(p[end])
 	if p[end] > total - 2
 		chi = 1e6
 	else
 		prediction = model(p,total,Population)
 		chi = 0
-		start = Int(abs(p[end]))
+		startabs = Int(abs(start))
 		if p[end] > 0.
 			for set in 1:3
-				if data[start+1, cols[set]] > 0
+				if data[startabs+1, cols[set]] > 0
 					chi = 1e6
 				else
 					for i in 2:length(prediction[set,:])
 						d = Distributions.Poisson(max(Population*prediction[set, i],1e-100))
-						chi -= loglikelihood(d,[data[start + i,cols[set]]])
+						chi -= loglikelihood(d,[data[startabs + i,cols[set]]])
 					end
 				end
 			end
 		else
 			for set in 1:3
 				for i in 2:length(data[!,cols[set]])-1
-					d = Distributions.Poisson(max(Population*prediction[set, start + i],1e-100))
+					d = Distributions.Poisson(max(Population*prediction[set, startabs + i],1e-100))
 					chi -= loglikelihood(d,[data[i,cols[set]]])
 				end
 			end
@@ -160,13 +161,24 @@ end
 # 	return cout,dout,zout,yout,tout
 # end
 
-function sirc!(du,u,p,t)
+function sircold!(du,u,p,t)
 	C,D,CR,Y,Z,R = u
 	beta,sigmad,sigmar,f = p
 	du[1] = dC = f*Y
 	du[2] = dD = sigmad*Y
 	du[3] = dCR = f*R
 	du[4] = dY = beta*Y*(1-Z) - sigmad*Y - sigmar*Y
+	du[5] = dZ = beta*Y*(1-Z)
+	du[6] = dR = sigmar*Y
+end
+
+function sirc!(du,u,p,t)
+	C,D,CR,Y,Z,R = u
+	beta,sigmac,sigmad,sigmar,gammad,gammar = p
+	du[1] = dC = sigmac*Y - gammar*C - gammad*C
+	du[2] = dD = sigmad*Y + gammad*C
+	du[3] = dCR = gammar*C
+	du[4] = dY = beta*Y*(1-Z) - sigmac*Y - sigmar*Y - sigmad*Y
 	du[5] = dZ = beta*Y*(1-Z)
 	du[6] = dR = sigmar*Y
 end
