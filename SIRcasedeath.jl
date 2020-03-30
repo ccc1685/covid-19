@@ -1,6 +1,8 @@
 using Distributions
 using DifferentialEquations
 using DataFrames
+using CSV
+using PyPlot
 
 """
 	function mcmc(data,cols,p,Population,total::Int)
@@ -90,7 +92,6 @@ function model(pin,total,Population)
 end
 
 # SIRC ODE model using Differential Equations
-
 function sirc!(du,u,p,t)
 	C,D,R,Y,Z,U = u
 	beta,sigmac,sigmar,gammad,gammar = p
