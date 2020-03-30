@@ -8,7 +8,7 @@ using DataFrames
 Metropolis-Hastings MCMC of the SIR ODE model assuming a Poisson likelihood
 for the cumulative number of cases and deaths, and a noninformative prior
 data = DataFrame of
-cols = [cumulative cases, deaths, recovered]
+cols = [active cases, deaths, recovered cases]
 p[1:end-1] = array of parameters used in the model
 p[end] = day of first infection relative to day 0 of data (Jan 22, 2020)
 Population = population of region in data
@@ -49,10 +49,10 @@ end
 # parameters except start day with scale parameter manually adjusted so approximately a third of guesses are accepted
 function sampleparams!(pt,p)
 	for i in 1:length(p) - 1
-		d = Distributions.LogNormal(log(p[i]),.01)
+		d = Distributions.LogNormal(log(p[i]),.002)
 		pt[i] = rand(d)
 	end
-	pt[end] = p[end] + .2*randn()
+	pt[end] = p[end] + .05*randn()
 end
 
 # loglikelihood of data given parameters at r using a Poisson likelihood function
@@ -69,47 +69,15 @@ function ll(data,cols,p,Population)
 	return chi
 end
 
-# loglikelihood of data given parameters at r using a Poisson likelihood function
-# function llold(data,cols,p,Population)
-# 	total = length(data[!,cols[1]])-1
-# 	start = round(p[end])
-# 	if p[end] > total - 2
-# 		chi = 1e6
-# 	else
-# 		prediction = model(p,total,Population)
-# 		chi = 0
-# 		startabs = Int(abs(start))
-# 		if p[end] > 0.
-# 			for set in 1:3
-# 				if data[startabs+1, cols[set]] > 0
-# 					chi = 1e6
-# 				else
-# 					for i in 2:length(prediction[set,:])
-# 						d = Distributions.Poisson(max(Population*prediction[set, i],1e-100))
-# 						chi -= loglikelihood(d,[data[startabs + i,cols[set]]])
-# 					end
-# 				end
-# 			end
-# 		else
-# 			for set in 1:3
-# 				for i in 2:length(data[!,cols[set]])-1
-# 					d = Distributions.Poisson(max(Population*prediction[set, startabs + i],1e-100))
-# 					chi -= loglikelihood(d,[data[i,cols[set]]])
-# 				end
-# 			end
-# 		end
-# 	end
-# 	return chi
-# end
-
 # produce arrays of cases and deaths
 function model(pin,total,Population)
 	u0 = [0.,0.,0.,1/Population,0.,0.]
 	p = pin[1:end-1]
-	if (start=round(Int,pin[end])) < total - 1
-		tspan = (round(pin[end]),total-1)
+	if pin[end] < total - 1
+		start = ceil(Int,pin[end])
+		tspan = (pin[end],total-1)
 		prob = ODEProblem(sirc!,u0,tspan,p)
-		sol = solve(prob,saveat=1)
+		sol = solve(prob,saveat=collect(start:total-1))
 		# align solutions to time 0 of data and reorder rows and cols
 		prediction = zeros(total,3)
 		for set in 1:3
@@ -123,33 +91,13 @@ end
 
 # SIRC ODE model using Differential Equations
 
-# function sircold!(du,u,p,t)
-# 	C,D,CR,Y,Z,R = u
-# 	beta,sigmad,sigmar,f = p
-# 	du[1] = dC = f*Y
-# 	du[2] = dD = sigmad*Y
-# 	du[3] = dCR = f*R
-# 	du[4] = dY = beta*Y*(1-Z) - sigmad*Y - sigmar*Y
-# 	du[5] = dZ = beta*Y*(1-Z)
-# 	du[6] = dR = sigmar*Y
-# end
-
 function sirc!(du,u,p,t)
-	C,D,CR,Y,Z,R = u
+	C,D,R,Y,Z,U = u
 	beta,sigmac,sigmar,gammad,gammar = p
 	du[1] = dC = sigmac*Y - gammar*C - gammad*C
 	du[2] = dD = gammad*C
-	du[3] = dCR = gammar*C
+	du[3] = dR = gammar*C
 	du[4] = dY = beta*Y*(1-Z) - sigmac*Y - sigmar*Y
 	du[5] = dZ = beta*Y*(1-Z)
-	du[6] = dR = sigmar*Y
-end
-
-function align(p,total,Population)
-	sol = model(p,total,Population)
-	prediction = zeros(total,3)
-	for set in 1:3
-		prediction[max(0,round(Int,p[end]))+1:end,set] .= sol[set,max(0,-round(Int,p[end]))+1:end]
-	end
-	return prediction*Population
+	du[6] = dU = sigmar*Y
 end
