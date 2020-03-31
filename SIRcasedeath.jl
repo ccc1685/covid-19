@@ -26,10 +26,15 @@ function mcmc(data::DataFrame,cols::Array,p::Array,Population::Float64,total::In
 	chiml = chi
 	pml = copy(p)
 
-	chiout = Array{Float64,1}(undef,total)
-	pout = Array{Float64,2}(undef,total,length(p))
+	# chiout = Array{Float64,1}(undef,total)
+	# pout = Array{Float64,2}(undef,total,length(p))
+	chiout = Array{Float64,1}(undef,100000)
+	pout = Array{Float64,2}(undef,100000,length(p))
 
 	for step in 1:total
+		if mod(step,total/100) == 1  #print percent complete
+			print("\r",round(Int,100*step/total))
+		end
 		sampleparams!(pt,p)
 		chit = ll(data,cols,pt,Population)
 		if rand() < exp(chi - chit)
@@ -41,9 +46,12 @@ function mcmc(data::DataFrame,cols::Array,p::Array,Population::Float64,total::In
 				pml = copy(p)
 			end
 		end
-		chiout[step] = chi
-		pout[step,:] = p
+		if step > total - 100000
+			chiout[step - total + 100000] = chi
+			pout[step - total + 100000,:] = p
+		end
 	end
+	print("\r")
 	return chiout, pout, accept/total, chiml, pml
 end
 
@@ -101,4 +109,35 @@ function sirc!(du,u,p,t)
 	du[4] = dY = beta*Y*(1-Z) - sigmac*Y - sigmar*Y
 	du[5] = dZ = beta*Y*(1-Z)
 	du[6] = dU = sigmar*Y
+end
+
+function sicr!(du,u,p,t)
+	# variables are concentrations X/N
+	C,D,R,I,Z,U = u
+	beta,sigmac,sigmar,gammad,gammar = p
+	du[1] = dC = sigmac*I - gammar*C - gammad*C
+	du[2] = dD = gammad*C
+	du[3] = dR = gammar*C
+	du[4] = dI = beta*I*(1-Z) - sigmac*I - sigmar*I
+	du[5] = dZ = beta*I*(1-Z)
+	du[6] = dU = sigmar*I
+end
+
+function modelsol(pin,total,N)
+	u0 = [0.,0.,0.,1/N,0.,0.]
+	p = pin[1:end-1]
+	if pin[end] < total - 1
+		start = ceil(Int,pin[end])
+		tspan = (pin[end],total-1)
+		prob = ODEProblem(sicr!,u0,tspan,p)
+		sol = solve(prob,saveat=collect(start:total-1))
+		# align solutions to time 0 of data and reorder rows and cols
+		prediction = zeros(total,3)
+		for set in 1:3
+			prediction[max(0,start)+1:end,set] .= sol[set,max(0,-start)+1:end]
+		end
+		return prediction*N, sol
+	else
+		return zeros(total,3)
+	end
 end
