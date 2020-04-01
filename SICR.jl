@@ -144,3 +144,15 @@ function modelprediction(data,cols,p,N,sicrfn!,lastday)
 	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
 	modelsol(p,float.(uin),float.(tspan),N,sicrfn!)
 end
+
+# returns statistics for posteriors and other measures
+function measures(psamples,pml)
+	nparams = size(psamples,2)
+	pout = Array{Tuple,1}(undef,nparams)
+	for i in 1:nparams
+		p = psamples[:,i]
+		pout[i] = pml[i],mean(p),std(p),quantile(p,[.025,.5,.975])
+	end
+	R0 = pml[1]/(pml[2]+pml[3]+pml[4])
+	return pout,R0
+end
