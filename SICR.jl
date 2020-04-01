@@ -74,37 +74,21 @@ function ll(data,cols,p,N,sicrfn!)
 	return chi
 end
 
-# function llnb(data,cols,p,N,sicrfn!)
-# 	firstday = findfirst(data[:,cols[1]] .>0)
-# 	lastday = length(data[:,cols[1]])
-# 	tspan = (firstday,lastday)
-# 	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
-# 	prediction,days = model(p,float.(uin),float.(tspan),N,sicrfn!)
-# 	chi = 0
-# 	for set in 1:3
-# 		for i in eachindex(days)
-# 			lambda = max(prediction[set,i],1)
-# 			r = 10
-# 			p = lambda/(r+lambda)
-# 			d = Distributions.NegativeBinomial(r,p)
-# 			chi -= loglikelihood(d,[data[days[i],cols[set]]])
-# 		end
-# 	end
-# 	return chi
-# end
-
 # produce arrays of cases and deaths
 function model(pin,uin,tspan,N,sicrfn!)
+	sol = modelsol(pin,uin,tspan,N,sicrfn!)
+	return sol[1:3,:]*N, Int.(sol.t)
+end
+
+function modelsol(pin,uin,tspan,N,sicrfn!)
 	p = pin[1:end-1]
 	Z0 = pin[end]/N
 	I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
 	u0 = vcat(uin,[I0,Z0])
 	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
 	prob = ODEProblem(sicrfn!,u0,tspan,p)
-	sol = solve(prob,saveat=1.)
-	return sol[1:3,:]*N, Int.(sol.t)
+	solve(prob,saveat=1.)
 end
-
 
 # SICR ODE model using DifferentialEquations.jl
 # variables are concentrations X/N
@@ -143,27 +127,20 @@ function makehistograms(out)
 	tight_layout()
 end
 
-# generate matching prediction and data arrays, rows = days, cols = (C,R,D)
-function modelsol(data,cols,p,N,sicrfn!)
+# returns predictions for C,R,D, matching data, and array of days
+# solution array is in same row col order as data
+# data columns have been ordered to match solutions.
+function modelprediction(data,cols,p,N,sicrfn!)
 	firstday = findfirst(data[:,cols[1]] .>0)
 	lastday = length(data[:,cols[1]])
-	tspan = (firstday,lastday)
-	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
-	prediction,days = model(p,float.(uin),float.(tspan),N,sicrfn!)
-	return prediction', data[days,cols]
-
+	sol = modelpredictions(data,cols,p,N,sicrfn!,lastday)
+	return sol[1:3,:]'*N, data[firstday:end,cols], Int.(sol.t)
 end
 
-function modelsol(data,cols,pin,N,sicrfn!,lastday)
+# returns solutions to model from day of first case to requested last day
+function modelprediction(data,cols,p,N,sicrfn!,lastday)
 	firstday = findfirst(data[:,cols[1]] .>0)
 	tspan = (firstday,lastday)
 	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
-	p = pin[1:end-1]
-	Z0 = pin[end]/N
-	I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
-	u0 = vcat(uin,[I0,Z0])
-	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
-	prob = ODEProblem(sicrfn!,float.(u0),tspan,p)
-	sol = solve(prob,saveat=1.)
-
+	modelsol(p,float.(uin),float.(tspan),N,sicrfn!)
 end
