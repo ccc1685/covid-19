@@ -19,7 +19,7 @@ output = (loglikelihoods, parameters, maximum loglikelihood, max loglikelihood p
 sicrfn! = ODE file to use
 
 """
-function mcmc(data::DataFrame,cols::Array,p::Array,N::Float64,total::Int,sicrfn! = sicr!)
+function mcmc(data::DataFrame,cols::Array,p::Array,N::Float64,total::Int,sicrfn! = sicr!,temp = 1.)
 
 	chi = ll(data,cols,p,N,sicrfn!)
 	accept = 0
@@ -33,7 +33,7 @@ function mcmc(data::DataFrame,cols::Array,p::Array,N::Float64,total::Int,sicrfn!
 	for step in 1:total
 		sampleparams!(pt,p)
 		chit = ll(data,cols,pt,N,sicrfn!)
-		if rand() < exp(chi - chit)
+		if rand() < exp((chi - chit)/temp)
 			chi = chit
 			p = copy(pt)
 			accept += 1
@@ -74,63 +74,64 @@ function ll(data,cols,p,N,sicrfn!)
 	return chi
 end
 
-function llnb(data,cols,p,N,sicrfn!)
-	firstday = findfirst(data[:,cols[1]] .>0)
-	lastday = length(data[:,cols[1]])
-	tspan = (firstday,lastday)
-	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
-	prediction,days = model(p,float.(uin),float.(tspan),N,sicrfn!)
-	chi = 0
-	for set in 1:3
-		for i in eachindex(days)
-			lambda = max(prediction[set,i],1)
-			r = 10
-			p = lambda/(r+lambda)
-			d = Distributions.NegativeBinomial(r,p)
-			chi -= loglikelihood(d,[data[days[i],cols[set]]])
-		end
-	end
-	return chi
-end
+# function llnb(data,cols,p,N,sicrfn!)
+# 	firstday = findfirst(data[:,cols[1]] .>0)
+# 	lastday = length(data[:,cols[1]])
+# 	tspan = (firstday,lastday)
+# 	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
+# 	prediction,days = model(p,float.(uin),float.(tspan),N,sicrfn!)
+# 	chi = 0
+# 	for set in 1:3
+# 		for i in eachindex(days)
+# 			lambda = max(prediction[set,i],1)
+# 			r = 10
+# 			p = lambda/(r+lambda)
+# 			d = Distributions.NegativeBinomial(r,p)
+# 			chi -= loglikelihood(d,[data[days[i],cols[set]]])
+# 		end
+# 	end
+# 	return chi
+# end
 
 # produce arrays of cases and deaths
 function model(pin,uin,tspan,N,sicrfn!)
 	p = pin[1:end-1]
 	Z0 = pin[end]/N
 	I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
-	u0 = vcat(uin,[I0,Z0,0.])
+	u0 = vcat(uin,[I0,Z0])
 	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
 	prob = ODEProblem(sicrfn!,u0,tspan,p)
 	sol = solve(prob,saveat=1.)
 	return sol[1:3,:]*N, Int.(sol.t)
 end
 
-# SICR ODE model using Differential Equations
+
+# SICR ODE model using DifferentialEquations.jl
+# variables are concentrations X/N
+# Cases are not quarantined
+# 5 parameters
 function sicr!(du,u,p,t)
-	# variables are concentrations X/N
-	# Cases are quarantined
-	C,D,R,I,Z,U = u
-	beta,sigmac,sigmau,gammad,gammar = p
-	du[1] = dC = sigmac*I - gammad*C - gammar*C
-	du[2] = dD = gammad*C
-	du[3] = dR = gammar*C
-	du[4] = dI = beta*I*(1-Z) - sigmac*I - sigmau*I
-	du[5] = dZ = beta*I*(1-Z)
-	du[6] = dU = sigmau*I
+	C,D,R,I,Z = u
+	beta,sigmac,sigmad,sigmar = p
+	du[1] = dC = sigmac*I - (sigmar + sigmad)*C
+	du[2] = dD = sigmad*C
+	du[3] = dR = sigmar*C
+	du[4] = dI = beta*(I+C)*(1-Z) - (sigmac + sigmar + sigmad)*I
+	du[5] = dZ = beta*(I+C)*(1-Z)
 end
 
-# SICRC ODE model using Differential Equations
-function sicrc!(du,u,p,t)
-	# variables are concentrations X/N
-	# Cases are not quarantined
-	C,D,R,I,Z,U = u
-	beta,sigmac,sigmau,gammad,gammar = p
-	du[1] = dC = sigmac*I - gammar*C - gammad*C
-	du[2] = dD = gammad*C
-	du[3] = dR = gammar*C
-	du[4] = dI = beta*(I+C)*(1-Z) - sigmac*I - sigmau*I
-	du[5] = dZ = beta*(I+C)*(1-Z)
-	du[6] = dU = sigmau*I
+# SICRq ODE
+# variables are concentrations X/N
+# Cases are quarantined with effectiveness q
+# 6 parameters
+function sicrq!(du,u,p,t)
+	C,D,R,I,Z = u
+	beta,sigmac,sigmad,sigmar,q = p
+	du[1] = dC = sigmac*I - (sigmar + sigmad)*C
+	du[2] = dD = sigmad*C
+	du[3] = dR = sigmar*C
+	du[4] = dI = beta*(I+q*C)*(1-Z) - (sigmac + sigmar + sigmad)*I
+	du[5] = dZ = beta*(I+q*C)*(1-Z)
 end
 
 function makehistograms(out)
@@ -143,9 +144,9 @@ function makehistograms(out)
 end
 
 # generate matching prediction and data arrays, rows = days, cols = (C,R,D)
-function modelsol(data,cols,p,N,sicrfn!,projection = 0)
+function modelsol(data,cols,p,N,sicrfn!)
 	firstday = findfirst(data[:,cols[1]] .>0)
-	lastday = length(data[:,cols[1]]) + projection
+	lastday = length(data[:,cols[1]])
 	tspan = (firstday,lastday)
 	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
 	prediction,days = model(p,float.(uin),float.(tspan),N,sicrfn!)
@@ -160,9 +161,9 @@ function modelsol(data,cols,pin,N,sicrfn!,lastday)
 	p = pin[1:end-1]
 	Z0 = pin[end]/N
 	I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
-	u0 = vcat(uin,[I0,Z0,0.])
+	u0 = vcat(uin,[I0,Z0])
 	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
-	prob = ODEProblem(sicrfn!,u0,tspan,p)
+	prob = ODEProblem(sicrfn!,float.(u0),tspan,p)
 	sol = solve(prob,saveat=1.)
 
 end
