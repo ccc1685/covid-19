@@ -133,7 +133,7 @@ end
 function modelprediction(data,cols,p,N,sicrfn!)
 	firstday = findfirst(data[:,cols[1]] .>0)
 	lastday = length(data[:,cols[1]])
-	sol = modelpredictions(data,cols,p,N,sicrfn!,lastday)
+	sol = modelprediction(data,cols,p,N,sicrfn!,lastday)
 	return sol[1:3,:]'*N, data[firstday:end,cols], Int.(sol.t)
 end
 
