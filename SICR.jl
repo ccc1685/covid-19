@@ -87,8 +87,8 @@ function modelsol(pin,uin,tspan,N,sicrfn!)
 	if sicrfn! == sir!
 		u0 = vcat(uin,0.)
 	else
-		Z0 = pin[end]/N
-		I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
+		I0 = (p[1]- p[3]-p[4])/p[2] * uin[1] + pin[end]/N
+		Z0 = p[1]/p[2]*uin[1]
 		u0 = vcat(uin,[I0,Z0])
 	end
 	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
