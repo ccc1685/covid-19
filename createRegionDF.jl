@@ -3,7 +3,7 @@ using DataFrames
 
 function loadData()
     startDate = "1/22/20"
-    endDate = "3/20/20"
+    endDate = "3/30/20"
     roi = [(0,"Italy"), (0,"Spain"), ("Hubei","China"), (0,"Germany"), (0,"France"), (0,"Iran"), (0,"United Kingdom"), (0,"Switzerland"), (0,"Turkey"), (0,"Belgium"), (0,"Netherlands"), (0,"Austria"), (0,"Korea, South")] #(Province/State, Country/Region); Province/State=0 if data empty
 
     for i = 1:length(roi)
