@@ -4,6 +4,8 @@ using DataFrames
 using CSV
 using PyPlot
 
+include("SICRmodels.jl")
+
 """
 	function mcmc(data,cols,p,N,total::Int,sicrfn!)
 
@@ -82,41 +84,18 @@ end
 
 function modelsol(pin,uin,tspan,N,sicrfn!)
 	p = pin[1:end-1]
-	Z0 = pin[end]/N
-	I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
-	u0 = vcat(uin,[I0,Z0])
+	if sicrfn! == sir!
+		u0 = vcat(uin,0.)
+	else
+		Z0 = pin[end]/N
+		I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
+		u0 = vcat(uin,[I0,Z0])
+	end
 	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
 	prob = ODEProblem(sicrfn!,u0,tspan,p)
 	solve(prob,saveat=1.)
 end
 
-# SICR ODE model using DifferentialEquations.jl
-# variables are concentrations X/N
-# Cases are not quarantined
-# 5 parameters
-function sicr!(du,u,p,t)
-	C,D,R,I,Z = u
-	beta,sigmac,sigmad,sigmar = p
-	du[1] = dC = sigmac*I - (sigmar + sigmad)*C
-	du[2] = dD = sigmad*C
-	du[3] = dR = sigmar*C
-	du[4] = dI = beta*(I+C)*(1-Z) - (sigmac + sigmar + sigmad)*I
-	du[5] = dZ = beta*(I+C)*(1-Z)
-end
-
-# SICRq ODE
-# variables are concentrations X/N
-# Cases are quarantined with effectiveness q
-# 6 parameters
-function sicrq!(du,u,p,t)
-	C,D,R,I,Z = u
-	beta,sigmac,sigmad,sigmar,q = p
-	du[1] = dC = sigmac*I - (sigmar + sigmad)*C
-	du[2] = dD = sigmad*C
-	du[3] = dR = sigmar*C
-	du[4] = dI = beta*(I+q*C)*(1-Z) - (sigmac + sigmar + sigmad)*I
-	du[5] = dZ = beta*(I+q*C)*(1-Z)
-end
 
 function makehistograms(out)
 	for i in 1:size(out)[2]
