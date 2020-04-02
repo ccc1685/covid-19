@@ -4,6 +4,8 @@ using DataFrames
 using CSV
 using PyPlot
 
+include("SICRmodels.jl")
+
 """
 	function mcmc(data,cols,p,N,total::Int,sicrfn!)
 
@@ -74,65 +76,26 @@ function ll(data,cols,p,N,sicrfn!)
 	return chi
 end
 
-# function llnb(data,cols,p,N,sicrfn!)
-# 	firstday = findfirst(data[:,cols[1]] .>0)
-# 	lastday = length(data[:,cols[1]])
-# 	tspan = (firstday,lastday)
-# 	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
-# 	prediction,days = model(p,float.(uin),float.(tspan),N,sicrfn!)
-# 	chi = 0
-# 	for set in 1:3
-# 		for i in eachindex(days)
-# 			lambda = max(prediction[set,i],1)
-# 			r = 10
-# 			p = lambda/(r+lambda)
-# 			d = Distributions.NegativeBinomial(r,p)
-# 			chi -= loglikelihood(d,[data[days[i],cols[set]]])
-# 		end
-# 	end
-# 	return chi
-# end
-
 # produce arrays of cases and deaths
 function model(pin,uin,tspan,N,sicrfn!)
-	p = pin[1:end-1]
-	Z0 = pin[end]/N
-	I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
-	u0 = vcat(uin,[I0,Z0])
-	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
-	prob = ODEProblem(sicrfn!,u0,tspan,p)
-	sol = solve(prob,saveat=1.)
+	sol = modelsol(pin,uin,tspan,N,sicrfn!)
 	return sol[1:3,:]*N, Int.(sol.t)
 end
 
-
-# SICR ODE model using DifferentialEquations.jl
-# variables are concentrations X/N
-# Cases are not quarantined
-# 5 parameters
-function sicr!(du,u,p,t)
-	C,D,R,I,Z = u
-	beta,sigmac,sigmad,sigmar = p
-	du[1] = dC = sigmac*I - (sigmar + sigmad)*C
-	du[2] = dD = sigmad*C
-	du[3] = dR = sigmar*C
-	du[4] = dI = beta*(I+C)*(1-Z) - (sigmac + sigmar + sigmad)*I
-	du[5] = dZ = beta*(I+C)*(1-Z)
+function modelsol(pin,uin,tspan,N,sicrfn!)
+	p = pin[1:end-1]
+	if sicrfn! == sir!
+		u0 = vcat(uin,0.)
+	else
+		I0 = (p[1]- p[3]-p[4])/p[2] * uin[1] + pin[end]/N
+		Z0 = p[1]/p[2]*uin[1]
+		u0 = vcat(uin,[I0,Z0])
+	end
+	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
+	prob = ODEProblem(sicrfn!,u0,tspan,p)
+	solve(prob,saveat=1.)
 end
 
-# SICRq ODE
-# variables are concentrations X/N
-# Cases are quarantined with effectiveness q
-# 6 parameters
-function sicrq!(du,u,p,t)
-	C,D,R,I,Z = u
-	beta,sigmac,sigmad,sigmar,q = p
-	du[1] = dC = sigmac*I - (sigmar + sigmad)*C
-	du[2] = dD = sigmad*C
-	du[3] = dR = sigmar*C
-	du[4] = dI = beta*(I+q*C)*(1-Z) - (sigmac + sigmar + sigmad)*I
-	du[5] = dZ = beta*(I+q*C)*(1-Z)
-end
 
 function makehistograms(out)
 	for i in 1:size(out)[2]
@@ -143,27 +106,32 @@ function makehistograms(out)
 	tight_layout()
 end
 
-# generate matching prediction and data arrays, rows = days, cols = (C,R,D)
-function modelsol(data,cols,p,N,sicrfn!)
+# returns predictions for C,R,D, matching data, and array of days
+# solution array is in same row col order as data
+# data columns have been ordered to match solutions.
+function modelprediction(data,cols,p,N,sicrfn!)
 	firstday = findfirst(data[:,cols[1]] .>0)
 	lastday = length(data[:,cols[1]])
-	tspan = (firstday,lastday)
-	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
-	prediction,days = model(p,float.(uin),float.(tspan),N,sicrfn!)
-	return prediction', data[days,cols]
-
+	sol = modelprediction(data,cols,p,N,sicrfn!,lastday)
+	return sol[1:3,:]'*N, data[firstday:end,cols], Int.(sol.t)
 end
 
-function modelsol(data,cols,pin,N,sicrfn!,lastday)
+# returns solutions to model from day of first case to requested last day
+function modelprediction(data,cols,p,N,sicrfn!,lastday)
 	firstday = findfirst(data[:,cols[1]] .>0)
 	tspan = (firstday,lastday)
 	uin = [data[firstday,cols[1]],data[firstday,cols[2]],data[firstday,cols[3]]]/N
-	p = pin[1:end-1]
-	Z0 = pin[end]/N
-	I0 = Z0 + (p[2]+p[3])/p[1]*log(1-Z0) + 1/N
-	u0 = vcat(uin,[I0,Z0])
-	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
-	prob = ODEProblem(sicrfn!,float.(u0),tspan,p)
-	sol = solve(prob,saveat=1.)
+	modelsol(p,float.(uin),float.(tspan),N,sicrfn!)
+end
 
+# returns statistics for posteriors and other measures
+function measures(psamples,pml)
+	nparams = size(psamples,2)
+	pout = Array{Tuple,1}(undef,nparams)
+	for i in 1:nparams
+		p = psamples[:,i]
+		pout[i] = pml[i],mean(p),std(p),quantile(p,[.025,.5,.975])
+	end
+	R0 = pml[1]/(pml[2]+pml[3]+pml[4])
+	return pout,R0
 end
