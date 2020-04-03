@@ -4,7 +4,7 @@
 # U = are noninfectious include both recovered and dead
 
 function sicuprep(data)
-    df = data[1]
+    df = data
     df[:,:uninfected] = df[:,:cum_recover] + df[:,:cum_death]
     return df
 end
