@@ -65,7 +65,7 @@ function sicuqfm!(du,u,p,t)
         beta *= m
     end
 	du[1] = dC = sigmac*I - sigmau*C
-	du[2] = dU = sigmad*C
+	du[2] = dU = sigmau*C
 	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I + f*sigmau*I
 	du[4] = dZ = beta*(I+q*C)*(1-Z)
 end
