@@ -15,7 +15,6 @@ function sicr!(du,u,p,t)
 	du[5] = dZ = beta*(I)*(1-Z)
 end
 
-
 # SICRq ODE
 # Cases are quarantined with effectiveness q
 # 6 parameters
@@ -56,13 +55,22 @@ function sicrqf!(du,u,p,t)
 	du[5] = dZ = beta*(I+q*C)*(1-Z)
 end
 
+function sicrm!(du,u,p,t)
+	C,D,R,I,Z = u
+	beta,sigmac,sigma,sigmar,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dD = (sigma - sigmar)*C
+	du[3] = dR = sigmar*C
+	du[4] = dI = beta*(I)*(1-Z) - sigmac*I - sigma*I
+	du[5] = dZ = beta*(I)*(1-Z)
+end
 
+# Mitigation applied
 function sicrfm!(du,u,p,t)
 	C,D,R,I,Z = u
-	beta,sigmac,sigma,sigmar,f,m = p
-    if C > 500
-        beta *= f
-    end
+	beta,sigmac,sigma,sigmar,f,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dD = (sigma - sigmar)*C
 	du[3] = dR = sigmar*C
@@ -71,25 +79,21 @@ function sicrfm!(du,u,p,t)
 
 end
 
-function sicrfm!(du,u,p,t)
+function sicrqm!(du,u,p,t)
 	C,D,R,I,Z = u
-	beta,sigmac,sigma,sigmar,f,m = p
-    if C > 500
-        beta *= f
-    end
+	beta,sigmac,sigma,sigmar,q,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dD = (sigma - sigmar)*C
 	du[3] = dR = sigmar*C
-	du[4] = dI = beta*(I)*(1-Z) - sigmac*I - f*sigma*I
-	du[5] = dZ = beta*(I)*(1-Z)
+	du[4] = dI = beta*(I+q*C)*(1-Z) - sigmac*I - sigma*I
+	du[5] = dZ = beta*(I+q*C)*(1-Z)
 end
 
 function sicrqfm!(du,u,p,t)
 	C,D,R,I,Z = u
-	beta,sigmac,sigma,sigmar,q,f,m = p
-    if C > 500
-        beta *= f
-    end
+	beta,sigmac,sigma,sigmar,q,f,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dD = (sigma - sigmar)*C
 	du[3] = dR = sigmar*C

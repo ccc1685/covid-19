@@ -62,21 +62,19 @@ end
 # Mitigation applied
 function sicum!(du,u,p,t)
 	C,U,I,Z = u
-	beta,sigmac,sigma,f,ml,mr = p
-    beta *= 1/(1 + exp(mr*(t- 35 - ml)))
+	beta,sigmac,sigma,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dU = sigma*C
-	du[3] = dI = beta*(I)*(1-Z) - sigmac*I + f*sigma*I
+	du[3] = dI = beta*(I)*(1-Z) - sigmac*I + sigma*I
 	du[4] = dZ = beta*(I)*(1-Z)
 end
 
 # Mitigation applied after C > 500
 function sicufm!(du,u,p,t)
 	C,U,I,Z = u
-	beta,sigmac,sigma,f,m = p
-    if C > 500
-        beta *= m
-    end
+	beta,sigmac,sigma,f,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dU = sigma*C
 	du[3] = dI = beta*(I)*(1-Z) - sigmac*I + f*sigma*I
@@ -84,12 +82,21 @@ function sicufm!(du,u,p,t)
 end
 
 # Mitigation applied after C > 500
+function sicuqm!(du,u,p,t)
+	C,U,I,Z = u
+	beta,sigmac,sigma,q,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I - sigma*I
+	du[4] = dZ = beta*(I+q*C)*(1-Z)
+end
+
+# Mitigation applied after C > 500
 function sicuqfm!(du,u,p,t)
 	C,U,I,Z = u
-	beta,sigmac,sigma,q,f,m = p
-    if C > 500
-        beta *= m
-    end
+	beta,sigmac,sigma,q,f,mc,ml = p
+    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dU = sigma*C
 	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I - f*sigma*I
