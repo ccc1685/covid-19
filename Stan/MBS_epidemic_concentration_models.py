@@ -114,11 +114,11 @@ class model1a:
                     lambda[i,2] = y_hat[i,3]*n_pop;
 
 
-                    //target += poisson_lpmf(y[i,1]|lambda[i,1]);
-                    //target += poisson_lpmf(recovered_death[i,1]|lambda[i,2]);
+                    target += poisson_lpmf(y[i,1]|lambda[i,1]);
+                    target += poisson_lpmf(recovered_death[i,1]|lambda[i,2]);
                 }
-                y[:,1] ~ poisson(lambda[:,1]);
-                recovered_death[:,1] ~ poisson(lambda[:,2]);
+                //y[:,1] ~ poisson(lambda[:,1]);
+                //recovered_death[:,1] ~ poisson(lambda[:,2]);
             }
 
             generated quantities {
