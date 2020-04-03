@@ -9,63 +9,89 @@ function sicuprep(data)
     return df
 end
 
-# Classic SIR model, all infected our cases
-# 4 parameters
-function scu!(du,u,p,t)
-C,U,Z = u
-beta,sigmau = p
-du[1] = dC = beta*(1-Z)*C - sigmau*C
-du[2] = dU = sigmau*C
-du[3] = dZ = beta*(1-Z)*C
-end
-
-# SICR ODE model using DifferentialEquations.jl
-
-# Cases are not quarantined
-# 5 parameters
-function sicuf!(du,u,p,t)
+# SICUq ODE
+# Cases are quarantined with effectiveness q
+# 6 parameters
+function sicu!(du,u,p,t)
 	C,U,I,Z = u
-	beta,sigmac,sigmau,f = p
-	du[1] = dC = sigmac*I - sigmau*C
-	du[2] = dU = sigmau*C
-	du[3] = dI = beta*(I+C)*(1-Z) - sigmac*I + f*sigmau*I
-	du[4] = dZ = beta*(I+C)*(1-Z)
+	beta,sigmac,sigma = p
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I)*(1-Z) - sigmac*I - sigma*I
+	du[4] = dZ = beta*(I)*(1-Z)
 end
 
-# SICRq ODE
+# SICUq ODE
 # Cases are quarantined with effectiveness q
 # 6 parameters
 function sicuq!(du,u,p,t)
 	C,U,I,Z = u
-	beta,sigmac,sigmau,q = p
-	du[1] = dC = sigmac*I - sigmau*C
-	du[2] = dU = sigmau*C
-	du[3] = dI = beta*(I+q*C)*(1-Z) - (sigmac + sigmau)*I
+	beta,sigmac,sigma,q = p
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I - sigma*I
 	du[4] = dZ = beta*(I+q*C)*(1-Z)
 end
 
-# SICRq ODE
+# SICUf ODE
+# Cases are quarantined with factor q
+# Cases recover or die with factor f
+# 6 parameters
+function sicuf!(du,u,p,t)
+	C,U,I,Z = u
+	beta,sigmac,sigma,f = p
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I)*(1-Z) - sigmac*I - f*sigma*I
+	du[4] = dZ = beta*(I)*(1-Z)
+end
+
+# SICUqf ODE
 # Cases are quarantined with factor q
 # Cases recover or die with factor f
 # 6 parameters
 function sicuqf!(du,u,p,t)
 	C,U,I,Z = u
-	beta,sigmac,sigmau,q,f = p
-	du[1] = dC = sigmac*I - sigmau*C
-	du[2] = dU = sigmau*C
-	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I + f*sigmau*I
+	beta,sigmac,sigma,q,f = p
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I - f*sigma*I
 	du[4] = dZ = beta*(I+q*C)*(1-Z)
+end
+
+# Mitigation applied
+function sicum!(du,u,p,t)
+	C,U,I,Z = u
+	beta,sigmac,sigma,f,ml,mr = p
+    beta *= 1/(1 + exp(mr*(t- 35 - ml)))
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I)*(1-Z) - sigmac*I + f*sigma*I
+	du[4] = dZ = beta*(I)*(1-Z)
+end
+
+# Mitigation applied after C > 500
+function sicufm!(du,u,p,t)
+	C,U,I,Z = u
+	beta,sigmac,sigma,f,m = p
+    if C > 500
+        beta *= m
+    end
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I)*(1-Z) - sigmac*I + f*sigma*I
+	du[4] = dZ = beta*(I)*(1-Z)
 end
 
 # Mitigation applied after C > 500
 function sicuqfm!(du,u,p,t)
 	C,U,I,Z = u
-	beta,sigmac,sigmau,q,f,m = p
+	beta,sigmac,sigma,q,f,m = p
     if C > 500
         beta *= m
     end
-	du[1] = dC = sigmac*I - sigmau*C
-	du[2] = dU = sigmau*C
-	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I + f*sigmau*I
+	du[1] = dC = sigmac*I - sigma*C
+	du[2] = dU = sigma*C
+	du[3] = dI = beta*(I+q*C)*(1-Z) - sigmac*I - f*sigma*I
 	du[4] = dZ = beta*(I+q*C)*(1-Z)
 end
