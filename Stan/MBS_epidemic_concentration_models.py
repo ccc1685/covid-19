@@ -1,9 +1,9 @@
-# #save compartment models here as classes
-# #text description + Stan C++ code as string + networkx + maybe latex
-# import matplotlib.pyplot as plt
-# plt.ion()
-# import numpy as np
-# import networkx as nx
+#save compartment models here as classes
+#text description + Stan C++ code as string + networkx + maybe latex
+import matplotlib.pyplot as plt
+plt.ion()
+import numpy as np
+import networkx as nx
 
 # class model1a:
 #     def __init__(self):
@@ -406,7 +406,7 @@
 
 #         generated quantities {
 #             real R_0;      // Basic reproduction number
-#             R_0 = (theta[4])/(theta[1]+theta[2]+theta[3]);
+#             R_0 = (theta[5])/(theta[1]+theta[2]+theta[3]);
 #         }
 #         """
 #     def plotnetwork(self):
@@ -438,7 +438,7 @@ class model2new:
         print(self.descript)
         #initialize model specific parameters expected by Stan code
         self.stan_data = {
-            'n_theta':5,
+            'n_theta':6,
             'n_difeq':5,
             'n_ostates':3
             }
@@ -492,7 +492,6 @@ class model2new:
           int y[n_obs,n_ostates];           // data, per-day-tally [cases,recovered,death]
           real t0;                // initial time point 
           real ts[n_obs];         // time points that were observed
-          int max_num_steps; 
         }
 
         transformed data {
@@ -565,7 +564,7 @@ class model2new:
 
         generated quantities {
             real R_0;      // Basic reproduction number
-            R_0 = (theta[4])/(theta[1]+theta[2]+theta[3]);
+            R_0 = theta[5]/(theta[1]+theta[2]+theta[3]);
         }
         """
     def plotnetwork(self):
