@@ -272,7 +272,7 @@ class model2:
         self.descript = """
         About: \n
         SICRDq model \n
-        Some unknown I and known C, both go to recoverd and death \n
+        Some unknown I and known C, both go to recovered and death \n
         I and C have same leak to r and d but different to total infected Z
         """
         print(self.descript)
@@ -308,7 +308,6 @@ class model2:
             real beta = theta[5];
             real N = 1;
             
-
             real I = u[4];  # unknown infected
             real C = u[1];  # cases
             real S = u[5];  # susceptible
@@ -375,11 +374,11 @@ class model2:
 
             //priors
             S0 ~ beta(2, 2); //some prior for between 0 and 1 fraction of the population
-            theta[1] ~ lognormal(0,0.1);
-            theta[2] ~ lognormal(0,0.1);
-            theta[3] ~ lognormal(0,0.1);
-            theta[4] ~ lognormal(0,0.1);
-            theta[5] ~ lognormal(0,0.25);
+            theta[1] ~ lognormal(0,0.1); //sigmac
+            theta[2] ~ lognormal(0,0.1); //sigmar
+            theta[3] ~ lognormal(0,0.1); //sigmad
+            theta[4] ~ lognormal(0,0.1); //q
+            theta[5] ~ lognormal(0,0.25); //beta
             //theta[5] ~ normal(n_scale,0.1*n_scale);
             
             
