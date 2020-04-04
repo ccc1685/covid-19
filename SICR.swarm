@@ -1,1 +1,1 @@
-julia -p SICRscriptBW.jl
+julia -p 32 SICRscriptBW.jl
