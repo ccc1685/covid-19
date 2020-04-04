@@ -22,7 +22,7 @@ output = (loglikelihoods, parameters, maximum loglikelihood, max loglikelihood p
 sicrfn! = ODE file to use
 
 """
-function mcmc(data::DataFrame,cols::Array,p::Array,N::Float64,total::Int,sicrfn! = sicr!,temp = 1.)
+function mcmc(data::DataFrame,cols::Array,p::Array,N::Float64,total::Int,sicrfn!,temp::Float64 = 1.)
 
 	chi = ll(data,cols,p,N,sicrfn!)
 	accept = 0
@@ -88,19 +88,14 @@ end
 # produce arrays of cases and deaths
 function model(pin,uin,tspan,N,sicrfn!)
 	sol = modelsol(pin,uin,tspan,N,sicrfn!)
-	return sol[1:3,:]*N, Int.(sol.t)
+	return sol[1:3,:]*N, round.(Int,sol.t)
 end
 
 function modelsol(pin,uin,tspan,N,sicrfn!)
 	p = pin[1:end-1]
-	if sicrfn! == sir!
-		u0 = vcat(uin,0.)
-	else
-		I0 = (p[1]- p[3])/p[2] * uin[1] + pin[end]/N
-		Z0 = p[1]/p[2]*uin[1]
-		u0 = vcat(uin,[I0,Z0])
-	end
-	# u0 = [uin,p[end],p[end]*exp(p[1]/(p[1]-p[2])),0.]
+	I0 = (p[1]- p[3])/p[2] * uin[1] + pin[end]/N
+	Z0 = p[1]/p[2]*uin[1]
+	u0 = vcat(uin,[I0,Z0])
 	prob = ODEProblem(sicrfn!,u0,tspan,p)
 	solve(prob,saveat=1.)
 end
