@@ -74,12 +74,11 @@ colsr = [5,3,4]
 colsu = [5,6]
 
 N = 1e7
-total = 10000
+total = Int(1e6)
 temp = 1.
 
 modeltype = (sicr!,sicrq!,sicrf!,sicrm!,sicu!,sicuq!,sicuf!,sicum!)
 
-out = Array{Tuple,2}(undef,length(modeltype),length(datafiles))
 
 for j in eachindex(datafiles)
     datafile = datafiles[j]
@@ -108,38 +107,32 @@ for j in eachindex(datafiles)
             println(name[modrun],": No prior")
         end
 
-        out[i,j] = @time mcmc(data,cols,p,N,total,modrun,temp)
-        
-        println("maxll: ",out[i][4],", Accept: ",out[i][3])
+        outtuple = @time mcmc(data,cols,p,N,total,modrun,temp)
+
+        println("maxll: ",outtuple[4],", Accept: ",outtuple[3])
+
+        modrun = modeltype[i]
+        region = regions[j]
+
+        mlstr = pathout * "maxll" * "_" * region * "_" * name[modrun] * txtstr
+        llstr = pathout * "llsamples" * "_" * region * "_" * name[modrun] * txtstr
+        pstr = pathout * "pl" * "_" * region * "_" * name[modrun] * txtstr
+
+        fml=open(mlstr,"w")
+        fml=open(mlstr,"a")
+        writedlm(fml,[outtuple[4];outtuple[5]])
+        close(fml)
+
+        fchil=open(llstr,"w")
+        fchil=open(llstr,"a")
+        writedlm(fchil,outtuple[1])
+        close(fchil)
+
+        fpl=open(pstr,"w")
+        fpll=open(pstr,"a")
+        writedlm(fpl,outtuple[1])
+        close(fpl)
 
     end
 end
-
-
-for j in eachindex(datafiles), i in eachindex(modeltype)
-    modrun = modeltype[i]
-    outtuple = out[i,j]
-    region = regions[j]
-
-    mlstr = pathout * "maxll" * "_" * region * "_" * name[modrun] * txtstr
-    llstr = pathout * "llsamples" * "_" * region * "_" * name[modrun] * txtstr
-    pstr = pathout * "pl" * "_" * region * "_" * name[modrun] * txtstr
-
-    fml=open(mlstr,"w")
-    fml=open(mlstr,"a")
-    writedlm(fml,[outtuple[4];out[i][5]])
-    close(fml)
-
-    fchil=open(llstr,"w")
-    fchil=open(llstr,"a")
-    writedlm(fchil,outtuple[1])
-    close(fchil)
-
-    fpl=open(pstr,"w")
-    fpll=open(pstr,"a")
-    writedlm(fpl,outtuple[1])
-    close(fpl)
-
-end
-
 println(" Time: ",time()-t0)
