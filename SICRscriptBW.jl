@@ -128,7 +128,7 @@ for j in eachindex(datafiles), i in eachindex(modeltype)
 
     fml=open(mlstr,"w")
     fml=open(mlstr,"a")
-    writedlm(fml,[outtuple[4];out[i][5]])
+    writedlm(fml,[outtuple[4];outtuple[5]])
     close(fml)
 
     fchil=open(llstr,"w")
