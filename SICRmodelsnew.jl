@@ -4,7 +4,7 @@
 
 # SICR ODE
 # Cases are noninfective
-# 6 parameters
+# 4+1 parameters
 function sicr!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar = p
@@ -17,7 +17,7 @@ end
 
 # SICRq ODE
 # Cases are quarantined with effectiveness q
-# 6 parameters
+# 5+1 parameters
 function sicrq!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar,q = p
@@ -30,7 +30,7 @@ end
 
 # SICRf ODE
 # Cases are quarantined with effectiveness q
-# 6 parameters
+# 5+1 parameters
 function sicrf!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar,f = p
@@ -44,7 +44,7 @@ end
 # SICRqf ODE
 # Cases are quarantined with factor q
 # Cases recover or die with factor f
-# 6 parameters
+# 6+1 parameters
 function sicrqf!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar,q,f = p
@@ -55,10 +55,12 @@ function sicrqf!(du,u,p,t)
 	du[5] = dZ = beta*(I+q*C)*(1-Z)
 end
 
+# Mitigation applied
+#6+1
 function sicrm!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar,mc,ml = p
-    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
+    beta *= mc + (1-mc)/(1 + exp(t - 35. - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dD = (sigma - sigmar)*C
 	du[3] = dR = sigmar*C
@@ -67,10 +69,11 @@ function sicrm!(du,u,p,t)
 end
 
 # Mitigation applied
+# 7+1
 function sicrfm!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar,f,mc,ml = p
-    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
+    beta *= mc + (1-mc)/(1 + exp(t - 35. - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dD = (sigma - sigmar)*C
 	du[3] = dR = sigmar*C
@@ -79,10 +82,11 @@ function sicrfm!(du,u,p,t)
 
 end
 
+# 7+1
 function sicrqm!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar,q,mc,ml = p
-    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
+    beta *= mc + (1-mc)/(1 + exp(t - 35. - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dD = (sigma - sigmar)*C
 	du[3] = dR = sigmar*C
@@ -90,10 +94,11 @@ function sicrqm!(du,u,p,t)
 	du[5] = dZ = beta*(I+q*C)*(1-Z)
 end
 
+# 8+1
 function sicrqfm!(du,u,p,t)
 	C,D,R,I,Z = u
 	beta,sigmac,sigma,sigmar,q,f,mc,ml = p
-    beta *= mc + (1-mc)/(1 + exp(t - 35 - ml))
+    beta *= mc + (1-mc)/(1 + exp(t - 35. - ml))
 	du[1] = dC = sigmac*I - sigma*C
 	du[2] = dD = (sigma - sigmar)*C
 	du[3] = dR = sigmar*C
