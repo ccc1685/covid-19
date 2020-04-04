@@ -55,7 +55,7 @@ end
 # parameters except start day with scale parameter manually adjusted so approximately a third of guesses are accepted
 function sampleparams!(pt,p)
 	for i in eachindex(p)
-		d = Distributions.LogNormal(log(p[i]),.01)
+		d = Distributions.LogNormal(log(p[i]),.002)
 		pt[i] = rand(d)
 	end
 end
