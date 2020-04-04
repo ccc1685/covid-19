@@ -500,7 +500,7 @@ class model2new:
         }
 
         parameters {
-            real<lower = 0, upper = 1> S0;  // initial fraction of susceptible individuals
+            //real<lower = 0, upper = 1> S0;  // initial fraction of susceptible individuals
             real<lower = 0> theta[6]; // model parameters 
             
             
@@ -531,7 +531,7 @@ class model2new:
             real lambda[n_obs,3]; //poisson parameter [cases, deaths, recovered]
 
             //priors
-            S0 ~ beta(2, 2); //some prior for between 0 and 1 fraction of the population
+            //S0 ~ beta(2, 2); //some prior for between 0 and 1 fraction of the population
             theta[1] ~ lognormal(log(0.1),1); //sigmac
             theta[2] ~ lognormal(log(0.1),1); //sigmar
             theta[3] ~ lognormal(log(0.1),1); //sigmad
