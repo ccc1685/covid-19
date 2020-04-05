@@ -121,7 +121,7 @@ class model_sicu:
         generated quantities {
             real R_0;      // Basic reproduction number
             real ll_lambda[n_obs,n_ostates-1]; //poisson parameter [cases, recover/death]
-            real ll_; // log-likelihood for model
+            real ll_[n_obs]; // log-likelihood for model
             
             real sigmac = theta[1];
             real sigma = theta[2];
@@ -133,8 +133,8 @@ class model_sicu:
                 ll_lambda[i,1] = u[i,1]*n_scale; //cases
                 ll_lambda[i,2] = u[i,2]*n_scale; //recovered + death
                 
-                ll_ += poisson_lpmf(y[i,1]|max([ll_lambda[i,1],0.0]));
-                ll_ += poisson_lpmf(y[i,2]+y[i,3]|max([ll_lambda[i,2],0.0]));
+                ll_[i] = poisson_lpmf(y[i,1]|max([ll_lambda[i,1],0.0]));
+                ll_[i] += poisson_lpmf(y[i,2]+y[i,3]|max([ll_lambda[i,2],0.0]));
                 
             }
         }
