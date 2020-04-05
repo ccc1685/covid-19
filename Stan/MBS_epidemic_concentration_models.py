@@ -123,11 +123,11 @@ class model_sicu:
             real ll_lambda[n_obs,n_ostates-1]; //poisson parameter [cases, recover/death]
             real ll_[n_obs]; // log-likelihood for model
             
-            real sigmac = theta[1];
-            real sigma = theta[2];
-            real beta = theta[3];
+            real ll_sigmac = theta[1];
+            real ll_sigma = theta[2];
+            real ll_beta = theta[3];
             
-            R_0 = beta/(sigma+sigmac);
+            R_0 = ll_beta/(ll_sigma+ll_sigmac);
             
             for (i in 1:n_obs){
                 ll_lambda[i,1] = u[i,1]*n_scale; //cases
@@ -199,13 +199,13 @@ class model_sicrq:
             real beta = theta[5];
             real N = 1;
             
-            real I = u[4];  # unknown infected
             real C = u[1];  # cases
+            real I = u[4];  # unknown infected
             real S = u[5];  # susceptible
 
             du_dt[1] = sigmac*I - (sigmar + sigmad)*C; // dC  
-            du_dt[2] = sigmad*C; // dD  
-            du_dt[3] = sigmar*C; // dR  
+            du_dt[2] = sigmar*C; // dR 
+            du_dt[3] = sigmad*C; // dD  
             du_dt[4] = beta*N*(I+q*C)*S - (sigmac + sigmar + sigmad)*I; // dI  
             du_dt[5] = -beta*N*(I+q*C)*S; // dS
             
@@ -242,14 +242,9 @@ class model_sicrq:
             real u[n_obs, n_difeq]; // solution from the ODE solver
             real u_init[5];     // initial conditions for fractions
            
-            // yhat for model is larger than y observed
-            // also y initialized are not the same as y observed
-            // y observed are cases (C), recovered (R), and deaths (D)
-            // y init are latent infected (I), cases (C), and latent susceptible (S)
-
             u_init[1] = y[1,1]/n_scale; //C
-            u_init[2] = y[1,3]/n_scale; //D 
-            u_init[3] = y[1,2]/n_scale; //R 
+            u_init[2] = y[1,2]/n_scale; //R 
+            u_init[3] = y[1,3]/n_scale; //D 
             u_init[4] = (theta[5] - theta[2] - theta[3] )/theta[1] * u_init[1] + theta[6]/n_scale; // I
             u_init[5] = 1-theta[5]/theta[1]*u_init[1]; // 
             
@@ -275,28 +270,37 @@ class model_sicrq:
             //likelihood
             for (i in 1:n_obs){
                 lambda[i,1] = u[i,1]*n_scale; //cases
-                lambda[i,2] = u[i,3]*n_scale; //recovered
-                lambda[i,3] = u[i,2]*n_scale; //dead
+                lambda[i,2] = u[i,2]*n_scale; //recovered
+                lambda[i,3] = u[i,3]*n_scale; //dead
                 
-                //target += poisson_lpmf(y[i,1]|lambda[i,1]);
-                //target += poisson_lpmf(y[i,2]|lambda[i,2]);
-                //target += poisson_lpmf(y[i,3]|lambda[i,3]);
-
                 target += poisson_lpmf(y[i,1]|max([lambda[i,1],0.0]));
                 target += poisson_lpmf(y[i,2]|max([lambda[i,2],0.0]));
                 target += poisson_lpmf(y[i,3]|max([lambda[i,3],0.0]));
 
-                //y[i,1] ~ poisson(lambda[i,1]);
-                //y[i,2] ~ poisson(lambda[i,2]);
-                //y[i,3] ~ poisson(lambda[i,3]);
             }
 
         }
 
         generated quantities {
             real R_0;      // Basic reproduction number
-            R_0 = theta[5]/(theta[1]+theta[2]+theta[3]);
-        }
+            real ll_lambda[n_obs,n_ostates-1]; //poisson parameter [cases, recover/death]
+            real ll_[n_obs]; // log-likelihood for model
+            
+            real ll_sigma = theta[1] + theta[2] + theta[3];
+            real ll_beta = theta[5];
+            
+            R_0 = ll_beta/ll_sigma;
+            
+            for (i in 1:n_obs){
+                ll_lambda[i,1] = u[i,1]*n_scale; //cases
+                ll_lambda[i,2] = u[i,2]*n_scale; //recovered 
+                ll_lambda[i,3] = u[i,3]*n_scale; //death
+                
+                ll_[i] = poisson_lpmf(y[i,1]|max([ll_lambda[i,1],0.0]));
+                ll_[i] += poisson_lpmf(y[i,2]|max([ll_lambda[i,2],0.0]));
+                ll_[i] += poisson_lpmf(y[i,3]|max([ll_lambda[i,3],0.0]));
+                
+            }
         """
     def plotnetwork(self):
         print("S: susceptible")
