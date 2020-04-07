@@ -728,6 +728,7 @@ class model_sicuq:
     
 class model_sicrq:
     def __init__(self):
+        self.name = "sicrq"
         self.descript = """
         About: \n
         SICRDq model \n
@@ -820,12 +821,12 @@ class model_sicrq:
             real lambda[n_obs,3]; //poisson parameter [cases, deaths, recovered]
 
             //priors
-            theta[1] ~ lognormal(log(0.1),1); //sigmac
-            theta[2] ~ lognormal(log(0.1),1); //sigmar
-            theta[3] ~ lognormal(log(0.1),1); //sigmad
-            theta[4] ~ lognormal(log(0.1),1); //q
-            theta[5] ~ lognormal(log(0.25),1); //beta
-            theta[6] ~ lognormal(log(0.1),1); // initial condition uncertainty
+            theta[1] ~ lognormal(log(0.1),10); //sigmac
+            theta[2] ~ lognormal(log(0.1),10); //sigmar
+            theta[3] ~ lognormal(log(0.1),10); //sigmad
+            theta[4] ~ lognormal(log(0.1),10); //q
+            theta[5] ~ lognormal(log(0.25),10); //beta
+            theta[6] ~ lognormal(log(0.1),10); // initial condition uncertainty
             
             
 
