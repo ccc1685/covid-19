@@ -21,7 +21,7 @@ end
 function linearrd!(du,u,p,t)
 	I,C = u
 	beta,sigmac,sigmar,sigmad,q,f,mbase,mlocation,mrate,cmax,c50 = p
-    beta *= mbase + mbase + (1-mbase)/(1 + exp(mrate*(t - mlocation)))
+    beta *= mbase + (1-mbase)/(1 + exp(mrate*(t - mlocation)))
     sigmac *= 1 + cmax*t/(c50+t)
     du[1] = dI = beta*(I+q*C) - sigmac*I - f*(sigmar+sigmad)*I
 	du[2] = dC = sigmac*I - (sigmar+sigmad)*C
@@ -30,7 +30,7 @@ end
 function nonlinearrd!(du,u,p,t)
 	I,C,S = u
 	beta,sigmac,sigmar,sigmad,q,f,mbase,mlocation,mrate,cmax,c50 = p
-    beta *= mbase + mbase + (1-mbase)/(1 + exp(mrate*(t - mlocation)))
+    beta *= mbase + (1-mbase)/(1 + exp(mrate*(t - mlocation)))
     sigmac *= 1 + cmax*t/(c50+t)
     du[1] = dI = beta*(I+q*C)*S - sigmac*I - f*(sigmar+sigmad)*I
 	du[2] = dC = sigmac*I - (sigmar+sigmad)*C
