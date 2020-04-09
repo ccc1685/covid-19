@@ -1,4 +1,7 @@
 # Julia script to run set of models in tuple modeltypes on region
+# User sets total number of mcmc steps, folders for input and output and temperature
+# run using:  julia -p #nprocs SICRPoissonscrptBW.jl
+
 t0 = time()
 
 using Distributed
