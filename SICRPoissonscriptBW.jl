@@ -4,18 +4,30 @@
 
 t0 = time()
 
+using CSV
+using DataFrames
+using Dates
+using DelimitedFiles
+using DifferentialEquations
 using Distributed
-@everywhere using Distributed
-@everywhere using DelimitedFiles
+using Distributions
+using LinearAlgebra
+using StatsBase
+using Statistics
+using NLsolve
+using StochasticDiffEq
+@everywhere using CSV
+@everywhere using DataFrames
 @everywhere using Dates
+@everywhere using DelimitedFiles
+@everywhere using DifferentialEquations
+@everywhere using Distributed
+@everywhere using Distributions
 @everywhere using LinearAlgebra
 @everywhere using StatsBase
 @everywhere using Statistics
-@everywhere using Distributions
-@everywhere using DifferentialEquations
-@everywhere using DataFrames
-@everywhere using CSV
-
+@everywhere using NLsolve
+@everywhere using StochasticDiffEq
 
 
 @everywhere include("SICRPoisson.jl")
@@ -169,7 +181,6 @@ for j in eachindex(datafiles), i in eachindex(modeltype)
     pstr = pathout * "pl" * "_" * region * "_" * name * txtstr
 
     pstats,R0 = measures(outtuple[2],outtuple[5])
-
     fpstat = open(pstatstr,"a")
     writedlm(fpstat,[region * "_" * name])
     writedlm(fpstat,[outtuple[4] R0[1] R0[2] R0[3] R0[4]'])
