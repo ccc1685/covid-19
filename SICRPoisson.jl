@@ -166,7 +166,24 @@ function measures(psamples,pml)
 		p = psamples[:,i]
 		pout[i] = pml[i],mean(p),std(p),quantile(p,[.025,.5,.975])
 	end
-	# R0 = pml[1]/(pml[2]+pml[3]+pml[4]), mean(psamples[:,1] ./ (sum(psamples[:,2:4],dims=2))), std(psamples[:,1] ./ (sum(psamples[:,2:4],dims=2))), quantile(psamples[:,1] ./ (psamples[:,2] .+ psamples[:,3] .+ psamples[:,4]),[.025,.5,.975])
-	R0 = pml[1]/(pml[2]+pml[3]+pml[4]), mean(psamples[:,1] ./ (psamples[:,2] .+ psamples[:,3] .+ psamples[:,4])), std(psamples[:,1] ./ (psamples[:,2] .+ psamples[:,3] .+ psamples[:,4])), quantile(psamples[:,1] ./ (psamples[:,2] .+ psamples[:,3] .+ psamples[:,4]),[.025,.5,.975])
+
+	R0 = r0(pml), mean(r0(psamples)),std(r0(psamples)),quantile(r0(psamples),[.025,.5,.975])
 	return pout, R0
+end
+
+function r0(p::Array{Float64,1})
+	beta,sigmac,sigmar,sigmad,q,f = p[1:6]
+	sigma = sigmar + sigmad
+	return (beta * (sigma + q * sigmac)) / (sigma * (sigmac + f * sigma))
+end
+
+function r0(p::Array{Float64,2})
+	beta = p[:,1]
+	sigmac = p[:,2]
+	sigmar = p[:,3]
+	sigmad = p[:,4]
+	q = p[:,5]
+	f = p[:,6]
+	sigma = sigmar .+ sigmad
+	return (beta .* (sigma .+ q .* sigmac)) ./ (sigma .* (sigmac .+ f .* sigma))
 end
