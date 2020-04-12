@@ -1,3 +1,6 @@
 .ipynb_checkpoints*
 *.pyc
 *.stanc
+Stan/fits/*
+Results
+Stan/stanrunmodel.pkl
