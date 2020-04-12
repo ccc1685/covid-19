@@ -113,14 +113,14 @@ functions {
             //lambda[1,2] =  sigma_r * C for day
             //lambda[1,3] =  sigma_d * C for day
 
-            target += poisson_lpmf(y[1,1]|max([lambda[1,1],1.0])); //C
-            target += poisson_lpmf(y[1,2]|max([lambda[1,2],1.0])); //R
-            target += poisson_lpmf(y[1,3]|max([lambda[1,3],1.0])); //D
+            target += poisson_lpmf(max(y[1,1],0)|max([lambda[1,1],1.0])); //C
+            target += poisson_lpmf(max(y[1,2],0)|max([lambda[1,2],1.0])); //R
+            target += poisson_lpmf(max(y[1,3],0)|max([lambda[1,3],1.0])); //D
 
             for (i in 2:n_obs){
-                target += poisson_lpmf(y[i,1]|max([lambda[i,1],1.0])); //C
-                target += poisson_lpmf(y[i,2]|max([lambda[i,2],1.0])); //R
-                target += poisson_lpmf(y[i,3]|max([lambda[i,3],1.0])); //D
+                target += poisson_lpmf(max(y[i,1],0)|max([lambda[i,1],1.0])); //C
+                target += poisson_lpmf(max(y[i,2],0)|max([lambda[i,2],1.0])); //R
+                target += poisson_lpmf(max(y[i,3],0)|max([lambda[i,3],1.0])); //D
             }
         }
 
@@ -160,4 +160,3 @@ functions {
             print(ll_)
 
         }
-        
