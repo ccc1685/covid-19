@@ -62,8 +62,9 @@ fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control, chai
                             warmup=n_warmups, iter=n_iter, thin=n_thin, seed=13219, n_jobs=n_jobs)
 
 ## save fit
-save_path = Path(__file__).parent / "fits" / ("model_fit_%s_%s.pkl" % (model_name, roi))
-save_path.mkdir(parents=True, exist_ok=True)
+save_dir = Path(__file__).parent / "fits"
+save_dir.mkdir(parents=True, exist_ok=True)
+save_path = save_dir / ("model_fit_%s_%s.pkl" % (model_name, roi))
 with open(save_path, "wb") as f:
     pickle.dump({'model_name' : model_name, 'model_code': stanrunmodel.model_code, 'fit' : fit}, f, protocol=-1)
 
