@@ -1,6 +1,7 @@
 import os
 import pickle
 import platform
+import pystan
 
 def load_or_compile_stan_model(stan_name, force_recompile=False):
     stan_raw = '%s.stan' % stan_name
@@ -15,7 +16,7 @@ def load_or_compile_stan_model(stan_name, force_recompile=False):
         with open(stan_compiled, 'wb') as f:
             pickle.dump(sm, f)
     else:
-        print("Loading from cache...")
+        print("Loading %s from cache..." % stan_name)
         with open(stan_compiled, 'rb') as f:
             sm = pickle.load(f)
     return sm
