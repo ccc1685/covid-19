@@ -207,7 +207,6 @@ functions {
         }
         """
 
-
 ##uncomment to compile model
 # stanrunmodel = pystan.StanModel(model_code=stancode)
 
