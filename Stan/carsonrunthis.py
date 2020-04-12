@@ -138,12 +138,12 @@ functions {
 
             //priors
 
-            theta[1] ~ lognormal(log(0.25),3); //beta
-            theta[2] ~ lognormal(log(0.1),3); //sigmac
-            theta[3] ~ lognormal(log(0.02),3); //sigmar
-            theta[4] ~ lognormal(log(0.02),3); //sigmad
+            theta[1] ~ lognormal(log(0.3),3); //beta
+            theta[2] ~ lognormal(log(0.2),3); //sigmac
+            theta[3] ~ lognormal(log(0.05),1); //sigmar
+            theta[4] ~ lognormal(log(0.05),1); //sigmad
             theta[5] ~ lognormal(log(0.01),3); //q
-            theta[6] ~ lognormal(log(0.02),3); //sigmau
+            theta[6] ~ lognormal(log(0.05),1); //sigmau
             theta[7] ~ lognormal(log(0.1),3); //mbase
             theta[8] ~ lognormal(log(tm),3); //mlocation
             theta[9] ~ lognormal(log(1),3); //mrate
