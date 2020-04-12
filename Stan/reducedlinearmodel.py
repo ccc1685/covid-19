@@ -15,6 +15,7 @@ control = {'adapt_delta':0.98}
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 stancode = """
 functions {
             real[] SIR(real t,  // time
@@ -189,6 +190,10 @@ stanrunmodel = pystan.StanModel(model_code=stancode)
 
 ##uncomment to load compiled model
 # stanrunmodel = pickle.load(open('stanrunmodel.pkl', 'rb'))
+=======
+stan_name = 'reducedlinearmodel'
+stanrunmodel = load_or_compile_stan_model(stan_name, force_recompile=False)
+>>>>>>> 17a657d9ebb86c2bbcbe17a6c72a40d98d89c6b6
 =======
 stan_name = 'reducedlinearmodel'
 stanrunmodel = load_or_compile_stan_model(stan_name, force_recompile=False)
