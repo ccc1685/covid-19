@@ -140,15 +140,15 @@ functions {
 
             theta[1] ~ lognormal(log(0.3),3); //beta
             theta[2] ~ lognormal(log(0.2),3); //sigmac
-            theta[3] ~ lognormal(log(0.05),1); //sigmar
-            theta[4] ~ lognormal(log(0.05),1); //sigmad
+            theta[3] ~ lognormal(log(0.1),1); //sigmar
+            theta[4] ~ lognormal(log(0.1),1); //sigmad
             theta[5] ~ lognormal(log(0.01),3); //q
-            theta[6] ~ lognormal(log(0.05),1); //sigmau
+            theta[6] ~ lognormal(log(0.1),1); //sigmau
             theta[7] ~ lognormal(log(0.1),3); //mbase
-            theta[8] ~ lognormal(log(tm),3); //mlocation
-            theta[9] ~ lognormal(log(1),3); //mrate
+            theta[8] ~ lognormal(log(tm),1); //mlocation
+            theta[9] ~ lognormal(log(1),1.5); //mrate
             theta[10] ~ lognormal(log(0.1),3);//cmax
-            theta[11] ~ lognormal(log(20),3);//c50
+            theta[11] ~ lognormal(log(10),3);//c50
             theta[12] ~ lognormal(log(1),3);// theta_init
 
             //likelihood
@@ -277,12 +277,12 @@ stan_data['n_obs'] = len(DF['dates2']) - t0
 ## function used to initialize parameters
 def init_fun():
         x = {'theta':
-             [np.random.lognormal(np.log(0.25),2)]+
+             [np.random.lognormal(np.log(0.3),2)]+
+             [np.random.lognormal(np.log(0.2),2)]+
              [np.random.lognormal(np.log(0.1),2)]+
-             [np.random.lognormal(np.log(0.02),2)]+
-             [np.random.lognormal(np.log(0.02),2)]+
+             [np.random.lognormal(np.log(0.1),2)]+
              [np.random.lognormal(np.log(0.01),2)]+
-             [np.random.lognormal(np.log(0.01),1)]+
+             [np.random.lognormal(np.log(0.1),1)]+
              [np.random.lognormal(np.log(0.1),1)]+
              [np.random.lognormal(np.log(stan_data['tm']),3)]+
              [np.random.lognormal(np.log(1),3)]+
