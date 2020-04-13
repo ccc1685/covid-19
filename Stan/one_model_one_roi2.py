@@ -16,8 +16,8 @@ csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
 n_chains=4
-n_warmups=500
-n_iter=1000
+n_warmups=5000
+n_iter=10000
 n_thin=1
 control = {'adapt_delta':0.98}
 
