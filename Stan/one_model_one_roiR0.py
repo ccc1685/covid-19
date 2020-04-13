@@ -15,11 +15,11 @@ csv = Path(__file__).parent / ".." / "data" / ("covid_timeseries_%s.csv" % roi)
 csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
-n_chains=1
-n_warmups=0
-n_iter=1
+n_chains=4
+n_warmups=1000
+n_iter=2000
 n_thin=1
-control = {'adapt_delta':0.98}
+control = {'adapt_delta':0.995}
 
 stanrunmodel = load_or_compile_stan_model(model_name, force_recompile=False)
 
@@ -47,21 +47,21 @@ stan_data['n_obs'] = len(DF['dates2']) - t0
 ## function used to initialize parameters
 def init_fun():
         x = {'theta':
-             [np.random.uniform(2.,8.)]
-             + [np.random.uniform(0.01,.2)]
-             + [np.random.uniform(0.01,.2)]
-             + [np.random.uniform(0.01,.2)]
-             + [np.random.uniform(0.01,.2)]
-             + [np.random.uniform(0.1,.2)]
-             + [np.random.uniform(0.,1.)]
+             [np.random.gamma(1.3,.4)]
+             + [np.random.gamma(0.1,1.5)]
+             + [np.random.gamma(0.05,2.)]
+             + [np.random.gamma(0.05,2.)]
+             + [np.random.gamma(0.05,2.)]
+             + [np.random.exponential(1.)]
+             + [np.random.beta(2.,5.)]
              + [np.random.lognormal(np.log(stan_data['tm']),.2)]
              #[np.random.lognormal(np.log(.01),1)]
             }
         return x
 
-init_fixed =  [{'theta':[2.5,0.1,0.01,0.01,0.01,.01,0.1,10.0]}]
+init_fixed =  [{'theta':[2.6,0.05,0.05,0.05,0.05,.05,0.1,10.0]}]
 # ## Fit Stan
-fit = stanrunmodel.sampling(data=stan_data, init=init_fixed, control=control, chains=n_chains, chain_id=np.arange(n_chains),
+fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control, chains=n_chains, chain_id=np.arange(n_chains),
                             warmup=n_warmups, iter=n_iter, thin=n_thin)
 
 ## uncomment to print fit summary

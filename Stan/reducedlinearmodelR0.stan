@@ -82,9 +82,9 @@ functions {
             u_init[4] = cinit;        // N_C total cumulative cases
             u_init[5] = cinit;        // integral of active C
 
-            print(theta)
+          //  print(theta)
           //  print(u_init)
-            u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,20000);
+            u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,2000);
 
             lambda[1,1] = (u[1,4]-u_init[4])*n_scale; //C: cases per day
             lambda[1,2] = sigmar*(u[1,5]-u_init[5])*n_scale; //R: recovered per day
@@ -99,13 +99,13 @@ functions {
 
         model {
             //priors
-            theta[1] ~ lognormal(log(3.),2);    //R0
-            theta[2] ~ exponential(5.);   //sigmac
-            theta[3] ~ exponential(5.);  //sigmar
-            theta[4] ~ exponential(5.);  //sigmad
-            theta[5] ~ exponential(5.);  //sigmau
-            theta[6] ~ uniform(.01,.3);         //q
-            theta[7] ~ uniform(0.,1.);             //mbase
+            theta[1] ~ gamma(1.3,.2);    //R0
+            theta[2] ~ gamma(.1,1.);   //sigmac
+            theta[3] ~ gamma(.05,2.);  //sigmar
+            theta[4] ~ gamma(.05,2.);  //sigmad
+            theta[5] ~ gamma(.05,2.);  //sigmau
+            theta[6] ~ exponential(1.);         //q
+            theta[7] ~ beta(2.,5.);  //mbase
             theta[8] ~ lognormal(log(tm+5),.3); //mlocation
 
             //likelihood
