@@ -15,9 +15,9 @@ csv = Path(__file__).parent / ".." / "data" / ("covid_timeseries_%s.csv" % roi)
 csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
-n_chains=8
-n_warmups=5000
-n_iter=10000
+n_chains=4
+n_warmups=500
+n_iter=1000
 n_thin=1
 control = {'adapt_delta':0.98}
 
@@ -32,7 +32,7 @@ t0 = np.where(DF["new_cases"].values>=10)[0][0]
 tm = t0 + 10
 
 stan_data = {}
-stan_data['n_scale'] = 1000#10000000 #use this instead of population
+stan_data['n_scale'] = 1000 #use this instead of population
 stan_data['n_theta'] = 8
 stan_data['n_difeq'] = 5
 stan_data['n_ostates'] = 3
@@ -41,6 +41,8 @@ stan_data['tm'] = tm
 stan_data['ts'] = np.arange(t0,len(DF['dates2']))
 stan_data['y'] = (DF[['new_cases','new_recover','new_deaths']].to_numpy()).astype(int)[t0:,:]
 stan_data['n_obs'] = len(DF['dates2']) - t0
+# stan_data['rel_tol'] = 1e-2
+# stan_data['max_num_steps'] = 1000
 
 ## function used to initialize parameters
 def init_fun():
@@ -52,7 +54,7 @@ def init_fun():
              + [np.random.lognormal(np.log(0.1),.5)]
              + [np.random.lognormal(np.log(0.001),1)]
              + [np.random.lognormal(np.log(0.5),.2)]
-             + [np.random.lognormal(np.log(stan_data['tm']),1)]
+             + [np.random.lognormal(np.log(stan_data['tm']),.2)]
              #[np.random.lognormal(np.log(.01),1)]
             }
         return x
