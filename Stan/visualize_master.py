@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-#from IP
+import argparse
 from multiprocessing import Pool, TimeoutError
 import os
 import papermill as pm
@@ -11,36 +11,64 @@ from tqdm import tqdm
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-model_name = 'reducedlinearmodelR0'
-fits_path = Path('/home/rgerkin/dev/covid-fits')
+# Parse all the command-line arguments
+parser = argparse.ArgumentParser(description='Executes all of the analysis notebooks')
 
-rois = []
-for file in fits_path.iterdir():
-    if 'US_' in str(file) and str(file).endswith('.pkl'):
-        roi = '_'.join(file.name.split('.')[0].split('_')[3:])
-        rois.append(roi)
-print("There are %d ROIs: %s" % (len(rois), rois))
+parser.add_argument('-m', '--model_name', default='reducedlinearmodelR0',
+                    help='Name of the Stan model file (without extension)')
+parser.add_argument('-p', '--fits_path', default='./fits',
+                    help='Path to directory containing pickled fit files')
+parser.add_argument('-r', '--rois', default=[], nargs='+',
+                    help='Space separated list of ROIs')
+args = parser.parse_args()
 
+# Set default ROIs if not provided
+if not args.rois:
+    for file in fits_path.iterdir():
+        if 'US_' in str(file) and str(file).endswith('.pkl'):
+            roi = '_'.join(file.name.split('.')[0].split('_')[3:])
+            args.rois.append(roi)
+
+# pathlibify the fits_path            
+args.fits_path = Path(args.fits_path)
+
+# Make sure all ROI pickle files exist
+for roi in args.rois:
+    file = args.fits_path / ('%s_%s.pkl' % (args.model_name, roi))
+    assert file.is_file(), "No such pickled fit file: %s" % file.resolve()
+
+# Say what we are doing
+print("Analyzing fits for model %s using the %d ROIs selected at %s" % (args.model_name, len(args.rois), args.fits_path))
+
+# Function to be execute on each ROI
 def execute(model_name, roi):
     os.makedirs('fits', exist_ok=True)
     result = pm.execute_notebook(
         'visualize.ipynb',
-        str(fits_path / ('visualize_%s_%s.ipynb' % (model_name, roi))),
+        str(args.fits_path / ('visualize_%s_%s.ipynb' % (model_name, roi))),
         parameters={'model_name': model_name, 'roi': roi},
         nest_asyncio=True)
     exception = result['metadata']['papermill']['exception']
     return exception
 
-pool = Pool(processes=16)
-jobs = {roi: pool.apply_async(execute, [model_name, roi]) for roi in rois}
+# Top progress bar (how many ROIs have finished)
+pbar = tqdm(total=len(args.rois), desc="All notebooks", leave=True)
+def update(*a):
+    pbar.update()
 
-def check_status():
+# Execute up to 16 ROIs notebooks at once
+pool = Pool(processes=16)
+jobs = {roi: pool.apply_async(execute, [args.model_name, roi], callback=update) for roi in args.rois}
+pool.close()
+
+# Check to see how many have finished.  
+def check_status(rois):
     finished = []
     unfinished = []
     failed = []
     for roi in rois:
         try:
-            exception = jobs[roi].get(timeout=0.5)
+            exception = jobs[roi].get(timeout=0.1)
         except TimeoutError:
             unfinished.append(roi)
         else:
@@ -49,16 +77,13 @@ def check_status():
             else:
                 failed.append('%s: %s' % (roi, exception))
     #clear_output()
-    print("Finished: %s" % ','.join(finished))
-    print("=====")
-    print("Unfinished: %s" % ','.join(unfinished))
-    print("=====")
-    print("Failed: %s" % ','.join(failed))
-    if len(unfinished):
-        return 1
-    else:
-        return 0
+    #print("Finished: %s" % ','.join(finished))
+    #print("=====")
+    #print("Unfinished: %s" % ','.join(unfinished))
+    #print("=====")
+    #print("Failed: %s" % ','.join(failed))
+    return len(finished) + len(failed)
 
-while True:
-    if not check_status():
-        break
+# Wait for all jobs to finish
+pool.join()
+print('')
