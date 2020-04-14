@@ -47,17 +47,18 @@ stan_data['n_obs'] = len(DF['dates2']) - t0
 ## function used to initialize parameters
 def init_fun():
         x = {'theta':
-             [np.random.gamma(1.3,.4)]
-             + [np.random.gamma(0.1,1.5)]
-             + [np.random.gamma(0.05,2.)]
-             + [np.random.gamma(0.05,2.)]
-             + [np.random.gamma(0.05,2.)]
-             + [np.random.exponential(1.)]
+             [np.random.gamma(1.8,2.6/1.8)]
+             + [np.random.gamma(1.5,.2/1.5)]
+             + [np.random.gamma(2.,.1/2)]
+             + [np.random.gamma(2.,.1/2)]
+             + [np.random.gamma(2.,.1/2)]
+             + [np.random.exponential(2.)]
              + [np.random.beta(2.,5.)]
              + [np.random.lognormal(np.log(stan_data['tm']),.2)]
              #[np.random.lognormal(np.log(.01),1)]
             }
         return x
+
 
 init_fixed =  [{'theta':[2.6,0.05,0.05,0.05,0.05,.05,0.1,10.0]}]
 # ## Fit Stan
