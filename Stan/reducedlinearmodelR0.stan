@@ -76,7 +76,7 @@ functions {
 
             real cinit = y[1,1]/n_scale;
 
-            u_init[1] = cinit; //max([(beta-sigmau-sigmac)/max([sigmac,.001])*cinit, cinit]);  // I set
+            u_init[1] = max([(beta-sigmau-sigmac)/max([sigmac,.001])*cinit, cinit]);  // I set from C
             u_init[2] = cinit;    //C  from data
             u_init[3] = u_init[1];        // N_I cumulative infected
             u_init[4] = cinit;        // N_C total cumulative cases
@@ -99,12 +99,12 @@ functions {
 
         model {
             //priors
-            theta[1] ~ gamma(1.3,.2);    //R0
-            theta[2] ~ gamma(.1,1.);   //sigmac
-            theta[3] ~ gamma(.05,2.);  //sigmar
-            theta[4] ~ gamma(.05,2.);  //sigmad
-            theta[5] ~ gamma(.05,2.);  //sigmau
-            theta[6] ~ exponential(1.);         //q
+            theta[1] ~ gamma(1.8,1.8/2.6);    //R0
+            theta[2] ~ gamma(1.5,1.5/.2);   //sigmac
+            theta[3] ~ gamma(2.,20);  //sigmar
+            theta[4] ~ gamma(2.,20);  //sigmad
+            theta[5] ~ gamma(2.,20);  //sigmau
+            theta[6] ~ exponential(2.);         //q
             theta[7] ~ beta(2.,5.);  //mbase
             theta[8] ~ lognormal(log(tm+5),.3); //mlocation
 
