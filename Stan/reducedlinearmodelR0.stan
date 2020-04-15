@@ -1,13 +1,16 @@
 functions {
-            real[] SIR(real t,  // time
+            real[] SIR(
+            real t,             // time
             real[] u,           // system state {infected,cases,susceptible}
             real[] theta,       // parameters
             real[] x_r,
-            int[] x_i) {
+            int[] x_i
+            )
+            {
             real du_dt[5];
 
-            real R0 = theta[1];
-            real sigmac = theta[2];
+            real f1 = theta[1];
+            real f2 = theta[2];
             real sigmar = theta[3];
             real sigmad =  theta[4];
             real sigmau = theta[5];
@@ -15,8 +18,9 @@ functions {
             real mbase = theta[7];
             real mlocation = theta[8];
 
+            real sigmac = f2/(1+f1);
+            real beta = f2 + sigmau;
             real sigma = sigmar + sigmad;
-            real beta = R0*sigma*(sigmac +sigmau)/(sigma+q*sigmac);
 
             real I = u[1];  // infected, latent
             real C = u[2];  // cases, observed
@@ -27,7 +31,7 @@ functions {
             du_dt[2] = sigmac*I - sigma*C;       //C
             du_dt[3] = beta*(I+q*C);                       //N_I
             du_dt[4] = sigmac*I; // N_C case appearance rate
-            du_dt[5] = C; // cumulative C
+            du_dt[5] = C; // integrated C
 
             return du_dt;
           }
@@ -43,8 +47,8 @@ functions {
           real t0;                    // initial time point
           real tm;                    // start day of mitigation
           real ts[n_obs];             // time points that were observed
-          //real rel_tol;               // relative tolerance for ODE solver
-          //real max_num_steps;         // for ODE solver
+          //real rel_tol;             // relative tolerance for ODE solver
+          //real max_num_steps;       // for ODE solver
           }
 
         transformed data {
@@ -57,56 +61,71 @@ functions {
         }
 
         transformed parameters{
+
+          real lambda[n_obs,3]; //poisson rate [new cases, new recovered, new deaths]
+          real car[n_obs];      //total cases / total infected
+          real ifr[n_obs];      //total dead / total infected
+
+          real f1 = theta[1];
+          real f2 = theta[2];
+          real sigmar = theta[3];
+          real sigmad =  theta[4];
+          real sigmau = theta[5];
+          real q = theta[6];
+          real mbase = theta[7];
+          real mlocation = theta[8];
+
+          real u_init[n_difeq];     // initial conditions for fractions
+
+          real sigmac = f2/(1+f1);
+          real beta = f2 + sigmau;
+          real sigma = sigmar + sigmad;
+          real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
+
+          {
             real u[n_obs, n_difeq];   // solution from the ODE solver
-            real u_init[n_difeq];     // initial conditions for fractions
-
-            real R0 = theta[1];
-            real sigmac = theta[2];
-            real sigmar = theta[3];
-            real sigmad =  theta[4];
-            real sigmau = theta[5];
-            real q = theta[6];
-            real mbase = theta[7];
-            real mlocation = theta[8];
-
-            real sigma = sigmar + sigmad;
-            real beta = R0*sigma*(sigmac +sigmau)/(sigma+q*sigmac);
-
-            real lambda[n_obs,3]; //poisson parameter [cases, deaths, recovered]
 
             real cinit = y[1,1]/n_scale;
 
-            u_init[1] = max([(beta-sigmau-sigmac)/max([sigmac,.001])*cinit, cinit]);  // I set from C
-            u_init[2] = cinit;    //C  from data
-            u_init[3] = u_init[1];        // N_I cumulative infected
-            u_init[4] = cinit;        // N_C total cumulative cases
-            u_init[5] = cinit;        // integral of active C
+            u_init[1] = f1*cinit;      // I set from f1 * C initial
+            u_init[2] = cinit;         //C  from data
+            u_init[3] = u_init[1];     // N_I cumulative infected
+            u_init[4] = cinit;         // N_C total cumulative cases
+            u_init[5] = cinit;         // integral of active C
 
-          //  print(theta)
-          //  print(u_init)
+            //print(theta)
+            //print(u_init)
+
             u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,2000);
+
+            car[1] = u[1,4]/u[1,3];
+            ifr[1] = sigmad*u[1,5]/u[1,3];
 
             lambda[1,1] = (u[1,4]-u_init[4])*n_scale; //C: cases per day
             lambda[1,2] = sigmar*(u[1,5]-u_init[5])*n_scale; //R: recovered per day
             lambda[1,3] = sigmad*(u[1,5]-u_init[5])*n_scale; //D: dead per day
 
             for (i in 2:n_obs){
+                car[i] = u[i,4]/u[i,3];
+                ifr[i] = sigmad*u[i,5]/u[i,3];
+
                 lambda[i,1] = (u[i,4]-u[i-1,4])*n_scale; //C: cases per day
                 lambda[i,2] = sigmar*(u[i,5]-u[i-1,5])*n_scale; //R: recovered rate per day
                 lambda[i,3] = sigmad*(u[i,5]-u[i-1,5])*n_scale; //D: dead rate per day
+                }
             }
         }
 
         model {
             //priors
-            theta[1] ~ gamma(1.8,1.8/2.6);    //R0
-            theta[2] ~ gamma(1.5,1.5/.2);   //sigmac
-            theta[3] ~ gamma(2.,20);  //sigmar
-            theta[4] ~ gamma(2.,20);  //sigmad
-            theta[5] ~ gamma(2.,20);  //sigmau
-            theta[6] ~ exponential(2.);         //q
-            theta[7] ~ beta(2.,5.);  //mbase
-            theta[8] ~ lognormal(log(tm+5),.3); //mlocation
+            theta[1] ~ gamma(1.5,1.5);          //f1  initital infected to case ratio
+            theta[2] ~ gamma(1.5,4.5);          //f2  beta - sigmau
+            theta[3] ~ gamma(2.,20);            //sigmar
+            theta[4] ~ gamma(2.,20);            //sigmad
+            theta[5] ~ gamma(2.,20);            //sigmau
+            theta[6] ~ exponential(2.);          //q
+            theta[7] ~ exponential(3.);          //mbase
+            theta[8] ~ lognormal(log(tm+5),.5);  //mlocation
 
             //likelihood
             //lambda[1,1] =  sigma_c * I for day
@@ -125,32 +144,14 @@ functions {
         }
 
         generated quantities {
-            real car[n_obs];
-            real ifr[n_obs];
-
-            //u[3]:NI
-            //u[4]:NC
-            //u[5]: integrated C
 
             real ll_; // log-likelihood for model
-
-            //likelihood
-            //R0 = beta*(sigmar+sigmad+q*sigmac)/((sigmar+sigmad)*(sigmac+sigmau));
-            //real sigma = sigmar + sigmad;
-            //beta = R0*sigma*(sigmac +sigmau)/(sigma+q*sigmac);
-
-            car[1] = u[1,4]/u[1,3];         //total cases / total infected
-            ifr[1] = sigmad*u[1,5]/u[1,3];  // total dead / total infected
 
             ll_ = poisson_lpmf(max(y[1,1],0)|max([lambda[1,1],1.0]));
             ll_ += poisson_lpmf(max(y[1,2],0)|max([lambda[1,2],1.0]));
             ll_ += poisson_lpmf(max(y[1,3],0)|max([lambda[1,3],1.0]));
-
             for (i in 2:n_obs){
-                car[i] = u[i,4]/u[i,3];
-                ifr[i] = sigmad*u[i,5]/u[i,3];
-
-                ll_ += poisson_lpmf(max(y[i,1],0)|max([lambda[i,1],1.0]));
+              ll_ += poisson_lpmf(max(y[i,1],0)|max([lambda[i,1],1.0]));
                 ll_ += poisson_lpmf(max(y[i,2],0)|max([lambda[i,2],1.0]));
                 ll_ += poisson_lpmf(max(y[i,3],0)|max([lambda[i,3],1.0]));
             }
