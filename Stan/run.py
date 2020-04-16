@@ -31,6 +31,8 @@ parser.add_argument('-th', '--n_threads', type=int, default=0,
                     help='Number of threads to use the whole run')
 parser.add_argument('-ad', '--adapt_delta', type=float, default=0.995,
                     help='Adapt delta control parameter')
+parser.add_argument('-f', '--fit_format', type=int, default=1,
+                    help='Version of fit format')
 args = parser.parse_args()
 if args.n_threads == 0:
     args.n_threads = args.n_chains
@@ -90,5 +92,11 @@ print(fit)
 # Save fit
 save_dir = Path(args.fits_path)
 save_dir.mkdir(parents=True, exist_ok=True)
-save_path = save_dir / ("%s_%s.csv" % (args.model_name, args.roi))
-result = fit.to_dataframe().to_csv(save_path)
+if args.fit_format == 0:
+    save_path = save_dir / ("%s_%s.csv" % (args.model_name, args.roi))
+    result = fit.to_dataframe().to_csv(save_path)
+else:
+    save_path = save_dir / ("%s_%s.pkl" % (args.model_name, args.roi))
+    with open(save_path, "wb") as f:
+        pickle.dump({'model_name' : args.model_name, 'model_code': stanrunmodel.model_code, 'fit' : fit},
+                    f, protocol=-1)

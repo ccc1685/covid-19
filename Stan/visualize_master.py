@@ -28,7 +28,7 @@ parser.add_argument('-r', '--rois', default=[], nargs='+',
                     help='Space separated list of ROIs')
 parser.add_argument('-n', '--n_threads', type=int, default=16, nargs='+',
                     help='Number of threads to use for analysis')
-parser.add_argument('-f', '--fit_format', type=int, default=0,
+parser.add_argument('-f', '--fit_format', type=int, default=1,
                     help='Version of fit format')
 parser.add_argument('-v', '--verbose', type=int, default=0,
                     help='Verbose error reporting')
