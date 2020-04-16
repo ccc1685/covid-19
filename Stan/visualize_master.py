@@ -16,38 +16,48 @@ parser = argparse.ArgumentParser(description='Executes all of the analysis noteb
 
 parser.add_argument('-m', '--model_name', default='reducedlinearmodelR0',
                     help='Name of the Stan model file (without extension)')
-parser.add_argument('-p', '--fits_path', default='./fits',
+parser.add_argument('-dp', '--data_path', default='../data',
+                    help='Path to directory containing the data files')
+parser.add_argument('-fp', '--fits_path', default='./fits',
                     help='Path to directory containing pickled fit files')
 parser.add_argument('-r', '--rois', default=[], nargs='+',
                     help='Space separated list of ROIs')
+parser.add_argument('-n', '--n_threads', default=16, nargs='+',
+                    help='Number of threads to use for analysis')
 args = parser.parse_args()
+
+# pathlibify the fits_path            
+fits_path = Path(args.fits_path)
 
 # Set default ROIs if not provided
 if not args.rois:
     for file in fits_path.iterdir():
-        if 'US_' in str(file) and str(file).endswith('.pkl'):
-            roi = '_'.join(file.name.split('.')[0].split('_')[3:])
+        if str(file).endswith('.csv'):
+            roi = '_'.join(file.name.split('.')[0].split('_')[1:])
             args.rois.append(roi)
-
-# pathlibify the fits_path            
-args.fits_path = Path(args.fits_path)
+            
+print(args.rois)
 
 # Make sure all ROI pickle files exist
 for roi in args.rois:
-    file = args.fits_path / ('%s_%s.pkl' % (args.model_name, roi))
-    assert file.is_file(), "No such pickled fit file: %s" % file.resolve()
+    file = fits_path / ('%s_%s.csv' % (args.model_name, roi))
+    assert file.is_file(), "No such csv file: %s" % file.resolve()
 
 # Say what we are doing
 print("Analyzing fits for model %s using the %d ROIs selected at %s" % (args.model_name, len(args.rois), args.fits_path))
 
 # Function to be execute on each ROI
-def execute(model_name, roi):
+def execute(model_name, roi, data_path, fits_path):
     os.makedirs('fits', exist_ok=True)
     result = pm.execute_notebook(
         'visualize.ipynb',
-        str(args.fits_path / ('visualize_%s_%s.ipynb' % (model_name, roi))),
-        parameters={'model_name': model_name, 'roi': roi},
+        str(fits_path / ('visualize_%s_%s.ipynb' % (model_name, roi))),
+        parameters={'model_name': model_name,
+                    'roi': roi,
+                    'data_path': data_path,
+                    'fits_path': str(fits_path)},
         nest_asyncio=True)
+    # Possible exception that was raised (or `None` if notebook completed successfully)
     exception = result['metadata']['papermill']['exception']
     return exception
 
@@ -57,8 +67,11 @@ def update(*a):
     pbar.update()
 
 # Execute up to 16 ROIs notebooks at once
-pool = Pool(processes=16)
-jobs = {roi: pool.apply_async(execute, [args.model_name, roi], callback=update) for roi in args.rois}
+pool = Pool(processes=args.n_threads)
+jobs = {roi: pool.apply_async(execute,
+                              [args.model_name, roi, args.data_path, fits_path],
+                              callback=update)
+        for roi in args.rois}
 pool.close()
 
 # Check to see how many have finished.  
@@ -77,13 +90,16 @@ def check_status(rois):
             else:
                 failed.append('%s: %s' % (roi, exception))
     #clear_output()
-    #print("Finished: %s" % ','.join(finished))
-    #print("=====")
-    #print("Unfinished: %s" % ','.join(unfinished))
-    #print("=====")
-    #print("Failed: %s" % ','.join(failed))
-    return len(finished) + len(failed)
+    print("Finished: %s" % ','.join(finished))
+    print("=====")
+    print("Unfinished: %s" % ','.join(unfinished))
+    print("=====")
+    print("Failed: %s" % ','.join(failed))
+    return len(unfinished)
 
 # Wait for all jobs to finish
+#while True:
+#    if not check_status(args.rois):
+#        break
 pool.join()
 print('')
