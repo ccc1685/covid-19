@@ -19,22 +19,21 @@ parser.add_argument('-fp', '--fits_path', default='./fits',
                     help='Path to directory to save fit files')
 parser.add_argument('-r', '--roi', default='US_NY',
                     help='ROI to use')
-parser.add_argument('-ch', '--n_chains', default=4,
+parser.add_argument('-ch', '--n_chains', type=int, default=4,
                     help='Number of chains to run')
-parser.add_argument('-wm', '--n_warmups', default=500,
+parser.add_argument('-wm', '--n_warmups', type=int, default=500,
                     help='Number of chains to run')
-parser.add_argument('-it', '--n_iter', default=1000,
+parser.add_argument('-it', '--n_iter', type=int, default=1000,
                     help='Number of chains to run')
-parser.add_argument('-tn', '--n_thin', default=1,
+parser.add_argument('-tn', '--n_thin', type=int, default=1,
                     help='Number of chains to run')
-parser.add_argument('-th', '--n_threads', default=0,
+parser.add_argument('-th', '--n_threads', type=int, default=0,
                     help='Number of threads to use the whole run')
-parser.add_argument('-ad', '--adapt_delta', default=0.995,
+parser.add_argument('-ad', '--adapt_delta', type=float, default=0.995,
                     help='Adapt delta control parameter')
 args = parser.parse_args()
 if args.n_threads == 0:
     args.n_threads = args.n_chains
-
 
 csv = Path(args.data_path) / ("covid_timeseries_%s.csv" % args.roi)
 csv = csv.resolve()
