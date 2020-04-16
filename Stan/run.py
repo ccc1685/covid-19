@@ -46,7 +46,13 @@ df = pd.read_csv(csv)
 # t0 := where to start time series, index space
 t0 = np.where(df["new_cases"].values>1)[0][0]
 # tm := start of mitigation, index space
-tm = t0 + 10
+
+try:
+    dfm = pd.read_csv(args.data_path / 'mitigationprior.csv')
+    tmdate = dfm.loc[dfm.region==args.roi, 'date'].values[0]
+    tm = np.where(df["dates2"]==tmdate)[0][0]
+except:
+    tm = t0 + 10
 
 stan_data = {}
 stan_data['n_scale'] = 1000 #use this instead of population
