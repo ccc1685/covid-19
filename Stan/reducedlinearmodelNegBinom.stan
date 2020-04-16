@@ -119,12 +119,12 @@ functions {
         }
 
         model {
-            //priors
+            //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
             theta[1] ~ gamma(1.5,1.5);           // f1  initital infected to case ratio
             theta[2] ~ gamma(1.5,4.5);           // f2  beta - sigmau
-            theta[3] ~ gamma(2.,20);             // sigmar
-            theta[4] ~ gamma(2.,20);             // sigmad
-            theta[5] ~ gamma(2.,20);             // sigmau
+            theta[3] ~ inv_gamma(2.78,.185);             // sigmar
+            theta[4] ~ inv_gamma(2.78,.185);             // sigmad
+            theta[5] ~ inv_gamma(2.78,.185);             // sigmau
             theta[6] ~ exponential(2.);          // q
             theta[7] ~ exponential(3.);          // mbase
             theta[8] ~ lognormal(log(tm+5),.5);  // mlocation
