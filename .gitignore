@@ -4,3 +4,4 @@
 Stan/fits/*
 Results
 Stan/stanrunmodel.pkl
+.DS_store
