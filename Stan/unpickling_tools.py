@@ -169,7 +169,7 @@ def get_module_name(path, open_func=None, open_kwargs=None):
     return module_name
 
 
-def unpickle_fit(path, open_func=None, open_kwargs=None, encoding="ASCII", module_name=None, return_model=False):
+def unpickle_fit(path, open_func=None, open_kwargs=None, module_name=None, return_model=False):
     """Load pickled (compressed) fit object without model binary.
     Parameters
     ----------
@@ -216,7 +216,7 @@ def unpickle_fit(path, open_func=None, open_kwargs=None, encoding="ASCII", modul
         open_kwargs = {"mode": "rb"}
 
     with open_func(path, **open_kwargs) as f:
-        fit = pickle.load(f, encoding=encoding)
+        fit = pickle.load(f)
     if return_model:
         logger.warning("The model binary is built against fake model code. Model should not be used.")
         return fit, model
