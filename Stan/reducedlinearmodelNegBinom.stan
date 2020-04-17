@@ -120,7 +120,7 @@ functions {
 
         model {
             //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
-            theta[1] ~ lognormal(2.5,1./20.);           // f1  initital infected to case ratio
+            theta[1] ~ lognormal(2.,1./20.);           // f1  initital infected to case ratio
             theta[2] ~ gamma(1.5,1./10.);           // f2  beta - sigmau
             theta[3] ~ inv_gamma(4.,.2);             // sigmar
             theta[4] ~ inv_gamma(2.78,.185);             // sigmad
