@@ -2,14 +2,23 @@
 # coding: utf-8
 
 import argparse
+import blib2to3
+import logging
 from multiprocessing import Pool, TimeoutError
 import os
 import papermill as pm
 from pathlib import Path
 import subprocess
+import sys
 from tqdm import tqdm
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
+for lib in ['blib2to3', 'papermill']:
+    logger = logging.getLogger(lib)
+    logger.setLevel(logging.WARNING)
+
+#papermill_logger = logging.getLogger('papermill')
+#papermill_logger.setLevel(logging.WARNING)
 
 # Parse all the command-line arguments
 parser = argparse.ArgumentParser(description='Executes all of the analysis notebooks')
@@ -34,6 +43,10 @@ parser.add_argument('-v', '--verbose', type=int, default=0,
                     help='Verbose error reporting')
 args = parser.parse_args()
 
+for key, value in args.__dict__.items():
+    if '_path' in key:
+        assert Path(value).is_dir(), "%s is not a directory" % Path(value).resolve()
+
 # pathlibify some paths
 data_path = Path(args.data_path)
 fits_path = Path(args.fits_path)
@@ -48,22 +61,19 @@ assert any([x.name == '__init__.py' for x in package_path.iterdir()]),\
     "No __init__.py file found in package_path %s" % (package_path.resolve())
 assert any([x.name.endswith('.pkl') or x.name.endswith('.csv') for x in fits_path.iterdir()]),\
     "No .pkl or .csv files found in package_path %s" % (fits_path.resolve())
-
-# Set default ROIs if not provided
-if args.fit_format in [0]:
-    ending = '.csv'
-elif args.fit_format==1:
-    ending = '.pkl'
-else:
-    raise Exception("No such fit format: %s" % args.fit_format)
     
+sys.path.insert(0, str(package_path.resolve()))
+from __init__ import list_rois, get_data_prefix, get_ending
+
+ending = get_ending(args.fit_format)
+
 if not args.rois:
-    for file in fits_path.iterdir():
-        if str(file).endswith(ending):
-            roi = '_'.join(file.name.split('.')[0].split('_')[1:])
-            args.rois.append(roi)
-            
-print(args.rois)
+    data_rois = list_rois(data_path, get_data_prefix(), '.csv')
+    fit_rois = list_rois(fits_path, args.model_name, ending)
+    print(data_rois, fit_rois)
+    args.rois = list(set(data_rois).intersection(fit_rois))
+        
+print("Running visualization notebook for %d rois" % len(args.rois))
 
 # Make sure all ROI pickle files exist
 for roi in args.rois:
