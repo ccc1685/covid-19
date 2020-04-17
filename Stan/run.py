@@ -37,7 +37,7 @@ args = parser.parse_args()
 if args.n_threads == 0:
     args.n_threads = args.n_chains
 
-csv = Path(args.data_path) / ("covid_timeseries_%s.csv" % args.roi)
+csv = Path(args.data_path) / ("covidtimeseries_%s.csv" % args.roi)
 csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
