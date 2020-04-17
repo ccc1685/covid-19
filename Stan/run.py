@@ -70,8 +70,9 @@ stan_data['n_obs'] = len(df['dates2']) - t0
 # function used to initialize parameters
 def init_fun():
         x = {'theta':
-               [np.random.gamma(2,20)]
-             + [np.random.gamma(2,20)]
+        # Numpy convention: gamma(shape,scale)
+               [np.random.gamma(2.5,20.)]
+             + [np.random.gamma(1.5,10.)]
              + [np.random.gamma(2.,.1/2)]
              + [np.random.gamma(2.,.1/2)]
              + [np.random.gamma(2.,.1/2)]
