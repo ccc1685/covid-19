@@ -22,11 +22,11 @@ parser.add_argument('-r', '--roi', default='US_NY',
 parser.add_argument('-ch', '--n_chains', type=int, default=4,
                     help='Number of chains to run')
 parser.add_argument('-wm', '--n_warmups', type=int, default=500,
-                    help='Number of chains to run')
+                    help='Number of warmups')
 parser.add_argument('-it', '--n_iter', type=int, default=1000,
-                    help='Number of chains to run')
+                    help='Number of iterations')
 parser.add_argument('-tn', '--n_thin', type=int, default=1,
-                    help='Number of chains to run')
+                    help='thinning number')
 parser.add_argument('-th', '--n_threads', type=int, default=0,
                     help='Number of threads to use the whole run')
 parser.add_argument('-ad', '--adapt_delta', type=float, default=0.995,
