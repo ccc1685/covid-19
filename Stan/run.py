@@ -58,7 +58,7 @@ except:
 
 stan_data = {}
 stan_data['n_scale'] = 1000 #use this instead of population
-stan_data['n_theta'] = 9
+# stan_data['n_theta'] = 8
 stan_data['n_difeq'] = 5
 stan_data['n_ostates'] = 3
 stan_data['t0'] = t0-1 #to for ODE is one day, index before start of series
@@ -68,23 +68,35 @@ stan_data['y'] = (df[['new_cases','new_recover','new_deaths']].to_numpy()).astyp
 stan_data['n_obs'] = len(df['dates2']) - t0
 
 # function used to initialize parameters
-def init_fun():
+def init_funNB():
         x = {'theta':
         # Numpy convention: gamma(shape,scale)
-               [np.random.gamma(2.,20.)]
-             + [np.random.gamma(1.5,10.)]
-             + [np.random.gamma(2.,.1/2)]
-             + [np.random.gamma(2.,.1/2)]
-             + [np.random.gamma(2.,.1/2)]
-             + [np.random.exponential(2.)]
-             + [np.random.exponential(3.)]
-             + [np.random.lognormal(np.log(stan_data['tm']),.5)]
-             + [np.random.exponential(1.)]
+               [np.random.gamma(1.5,2.)]    #f1
+             + [np.random.gamma(1.5,1.5)]   #f2
+             + [np.random.gamma(2.,.1/2)]   #sigmar
+             + [np.random.gamma(2.,.1/2)]   #sigmad
+             + [np.random.gamma(2.,.1/2)]   #sigmau
+             + [0.*np.random.exponential(.01)]  #q
+             + [np.random.exponential(.5)]  #mbase
+             + [np.random.lognormal(np.log(stan_data['tm']),.5)]   #mlocation
+             + [np.random.exponential(1.)]   # extra_std
             }
         return x
 
+
+def init_funq0():
+         return dict(f1=np.random.gamma(1.5,2.),
+                     f2=np.random.gamma(1.5,1.5),
+                     sigmar=np.random.gamma(2.,.1/2.),
+                     sigmad=np.random.gamma(2.,.1/2.),
+                     sigmau=np.random.gamma(2.,.1/2.),
+                     mbase=np.random.gamma(2.,.1/2.),
+                     mlocation=np.random.lognormal(np.log(stan_data['tm']),1.),
+                     extra_std=np.random.exponential(1.)
+                     )
+
 # Fit Stan
-fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
+fit = stanrunmodel.sampling(data=stan_data, init=init_funq0, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
                             warmup=args.n_warmups, iter=args.n_iter, thin=args.n_thin)
 
 # Uncomment to print fit summary
