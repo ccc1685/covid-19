@@ -61,14 +61,14 @@ stan_data['n_scale'] = 1000 #use this instead of population
 # stan_data['n_theta'] = 8
 stan_data['n_difeq'] = 5
 stan_data['n_ostates'] = 3
-stan_data['t0'] = t0-1 #to for ODE is one day, index before start of series
+stan_data['t0'] = t0-1 #to for ODE is day one, index before start of series
 stan_data['tm'] = tm
 stan_data['ts'] = np.arange(t0,len(df['dates2']))
 stan_data['y'] = (df[['new_cases','new_recover','new_deaths']].to_numpy()).astype(int)[t0:,:]
 stan_data['n_obs'] = len(df['dates2']) - t0
 
-# function used to initialize parameters
-def init_funNB():
+# functions used to initialize parameters
+def init_funNB():  # old format
         x = {'theta':
         # Numpy convention: gamma(shape,scale)
                [np.random.gamma(1.5,2.)]    #f1
@@ -83,8 +83,7 @@ def init_funNB():
             }
         return x
 
-
-def init_funq0():
+def init_funq0():  # new format
          return dict(f1=np.random.gamma(1.5,2.),
                      f2=np.random.gamma(1.5,1.5),
                      sigmar=np.random.gamma(2.,.1/2.),
@@ -95,8 +94,21 @@ def init_funq0():
                      extra_std=np.random.exponential(1.)
                      )
 
+def init_funq0ct():
+         return dict(f1=np.random.gamma(1.5,2.),
+                     f2=np.random.gamma(1.5,1.5),
+                     sigmar=np.random.gamma(2.,.1/2.),
+                     sigmad=np.random.gamma(2.,.1/2.),
+                     sigmau=np.random.gamma(2.,.1/2.),
+                     mbase=np.random.gamma(2.,.1/2.),
+                     mlocation=np.random.lognormal(np.log(stan_data['tm']),1.),
+                     extra_std=np.random.exponential(1.),
+                     cbase=np.random.gamma(2.,1.),
+                     clocation=np.random.lognormal(np.log(20.),1.)
+                     )
+
 # Fit Stan
-fit = stanrunmodel.sampling(data=stan_data, init=init_funq0, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
+fit = stanrunmodel.sampling(data=stan_data, init=init_funq0ct, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
                             warmup=args.n_warmups, iter=args.n_iter, thin=args.n_thin)
 
 # Uncomment to print fit summary
@@ -112,4 +124,4 @@ else:
     save_path = save_dir / ("%s_%s.pkl" % (args.model_name, args.roi))
     with open(save_path, "wb") as f:
         pickle.dump({'model_name' : args.model_name, 'model_code': stanrunmodel.model_code, 'fit' : fit},
-                    f, protocol=-1)
+                    f, protocol=pickle.HIGHEST_PROTOCOL)
