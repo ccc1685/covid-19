@@ -275,7 +275,7 @@ def get_waic(samples):
     n_samples, n_obs = ll.shape
     # Convert to likelihoods (pray for no numeric precision issues)
     l = exp(ll)
-    # log of the mean (across samples) likelihood for each observation
+    # log of the mean (across samples) of the likelihood for each observation
     lml = log(mean(l, axis=0))
     # Sum (across observations) of lml
     lppd = sum(lml)
@@ -291,8 +291,19 @@ def get_waic(samples):
 
 
 def get_loo(samples):
+    raise NotImplementedError("Doesn't work yet")
+    from numpy import log, exp, sum, mean, var, sqrt
+    from scipy.stats import hmean
     """https://arxiv.org/pdf/1507.04544.pdf"""
-    raise NotImplementedError("")
+    # I named the Stan array 'llx'
+    ll = samples[[c for c in samples if 'llx' in c]] 
+    n_samples, n_obs = ll.shape
+    # Convert to likelihoods (pray for no numeric precision issues)
+    l = exp(ll)
+    # Harmonic of the mean (across samples) of the likelihood for each observation
+    hml = hmean(l, axis=0)
+    loo = sum(log(hml))
+    return {'loo': loo}
 
             
 def get_waic_and_loo(fit):
