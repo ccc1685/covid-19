@@ -9,7 +9,22 @@ import pickle
 import platform
 import pystan
 import re
+from scipy.stats import norm
 import sys
+
+
+def get_fit_path(fits_path, model_name, roi):
+    path = Path(fits_path)
+    path = path / ('%s_%s.pkl' % (model_name, roi))
+    assert path.is_file(), "No pickled fit file found at %s" % path
+    return path
+
+
+def get_model_path(models_path, model_name):
+    file_path = Path(models_path) / ('%s.stan' % model_name)
+    assert file_path.is_file(), "No .stan file found at %s" % file_path
+    path = Path(models_path) / model_name
+    return path
 
 
 def get_data(roi, data_path='data'):
@@ -102,39 +117,35 @@ def extract_samples(fits_path, models_path, model_name, roi, fit_format):
     elif fit_format==1:
         # Load the format that is a pickle fit containing a Stan fit instance and some other things
         fit_path = Path(fits_path) / ("%s_%s.pkl" % (model_name, roi))
-        model_full_path = Path(models_path) / model_name
+        model_full_path = get_model_path(models_path, model_name)
         fit = load_fit(fit_path, model_full_path)
         samples = fit.to_dataframe()
     return samples
 
 
-def make_table(roi, samples, params, quantiles=[0.05, 0.25, 0.5, 0.75, 0.95], chain=None):
-    new_params = []
-    for param in params:
-        found = False
-        if param in samples:
-            new_params.append(param)
-            found = True
-        else:  # If not found in pure form
-            for i in range(1000, 0, -1):  # Search for it in series from latest to earliest
-                candidate = '%s[%d]' % (param, i)
-                if candidate in samples:
-                    new_params.append(candidate)  # Pick the latest one found
-                    found = True
-                    break  # And move on
-        if not found:
-            print("No param like %s is in the samples dataframe" % param)
-    
-    dfs = []
-    cols = [col for col in samples if col in new_params]
+def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0.975], chain=None):
     if chain:
         samples = samples[samples['chain']==chain]
-    samples = samples[cols]
-    q = samples.quantile(quantiles)#.reset_index(drop=True)
-    dfs.append(q)
-    df = pd.concat(dfs)
-    df.columns = [x.split('[')[0] for x in df.columns]  # Drop the index
-    df.index = pd.MultiIndex.from_product(([roi], df.index), names=['roi', 'quantile'])
+    dfs = []
+    for param in params:
+        if param in samples:
+            cols = [param]
+        else:
+            cols = [col for col in samples if col.startswith('%s[' % param)]
+        if not cols:
+            print("No param like %s is in the samples dataframe" % param)
+        else:
+            df = samples[cols].quantile(quantiles).median(axis=1).to_frame(name=param)
+            df.columns = [x.split('[')[0] for x in df.columns]  # Drop the index
+            df.index = pd.MultiIndex.from_product(([roi], df.index), names=['roi', 'quantile'])
+            dfs.append(df)
+    df = pd.concat(dfs, axis=1)
+    for stat in ['waic', 'loo']:
+        if stat in stats:
+            for q in quantiles:
+                m = stats[stat]
+                s = stats['%s_se' % stat]
+                df.loc[(roi, q), stat] = norm.ppf(q, m, s)
     return df
 
 
@@ -278,8 +289,14 @@ def get_waic(samples):
     se = 2*sqrt(n_obs*var(elpdi))  
     return {'waic': waic, 'se': se}
 
+
+def get_loo(samples):
+    """https://arxiv.org/pdf/1507.04544.pdf"""
+    raise NotImplementedError("")
+
             
 def get_waic_and_loo(fit):
+    """Compute WAIC and LOO from a fit instance"""
     idata = az.from_pystan(fit, log_likelihood="llx")
     result = {}
     result.update(dict(az.loo(idata)))
