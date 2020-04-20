@@ -100,6 +100,7 @@ def init_funq0ct():
                      sigmar=np.random.gamma(2.,.1/2.),
                      sigmad=np.random.gamma(2.,.1/2.),
                      sigmau=np.random.gamma(2.,.1/2.),
+                     q = np.random.exponential(.1),
                      mbase=np.random.gamma(2.,.1/2.),
                      mlocation=np.random.lognormal(np.log(stan_data['tm']),1.),
                      extra_std=np.random.exponential(1.),

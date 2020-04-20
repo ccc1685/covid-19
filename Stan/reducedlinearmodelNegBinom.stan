@@ -1,3 +1,5 @@
+// Latent variable SIR model, Negative Binomial likelihood
+
 functions {
             real[] SIR(
             real t,             // time
@@ -8,7 +10,6 @@ functions {
             )
             {
             real du_dt[5];
-
             real f1 = theta[1];
             real f2 = theta[2];
             real sigmar = theta[3];
@@ -39,7 +40,6 @@ functions {
 
         data {
           int<lower = 1> n_obs;       // number of days observed
-          int<lower = 1> n_theta;     // number of model parameters
           int<lower = 1> n_difeq;     // number of differential equations for yhat
           int<lower = 1> n_ostates;   // number of observed states
           real<lower = 1> n_scale;    // scale to match observed scale
@@ -57,7 +57,16 @@ functions {
         }
 
         parameters {
-            real<lower = 0> theta[n_theta]; // model parameters
+            // model parameters
+              real<lower=0> f1;       //initital infected to case ratio
+              real<lower=0> f2;       // f2  beta - sigmau
+              real<lower=0> sigmar;   // recovery rate
+              real<lower=0> sigmad;   // death rate
+              real<lower=0> sigmau;   // I disapperance rate
+              real<lower=0> mbase;          // mitigation strength
+              real<lower=0> mlocation;      // day of mitigation application
+              real<lower=0> extra_std;      // phi = 1/extra_std^2 in neg_binomial_2(mu,phi)
+              real<lower=0> q;              // infection factor for cases
         }
 
         transformed parameters{
@@ -66,48 +75,41 @@ functions {
           real car[n_obs];      //total cases / total infected
           real ifr[n_obs];      //total dead / total infected
 
-          real f1 = theta[1];
-          real f2 = theta[2];
-          real sigmar = theta[3];
-          real sigmad =  theta[4];
-          real sigmau = theta[5];
-          real q = theta[6];
-          real mbase = theta[7];
-          real mlocation = theta[8];
-
           real u_init[n_difeq];     // initial conditions for fractions
 
           real sigmac = f2/(1+f1);
           real beta = f2 + sigmau;
           real sigma = sigmar + sigmad;
           real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
+          real Rlast =R0 * (mbase + (1-mbase)/(1 + exp(.2*(n_obs - mlocation))));   // R(t=last day)
 
-          real phi = 1/(theta[9]^2);  // likelihood over dispersion std
+          real phi = 1/(extra_std^2);  // likelihood over-dispersion of std
 
           {
-            real u[n_obs, n_difeq];   // solution from the ODE solver
+             real theta[8] = {f1, f2, sigmar, sigmad, sigmau, q, mbase, mlocation};
+             real u[n_obs, n_difeq];   // solution from the ODE solver
 
-            real cinit = y[1,1]/n_scale;
+             real cinit = y[1,1]/n_scale;
 
-            u_init[1] = f1*cinit;      // I set from f1 * C initial
-            u_init[2] = cinit;         //C  from data
-            u_init[3] = u_init[1];     // N_I cumulative infected
-            u_init[4] = cinit;         // N_C total cumulative cases
-            u_init[5] = cinit;         // integral of active C
+             u_init[1] = f1*cinit;      // I set from f1 * C initial
+             u_init[2] = cinit;         //C  from data
+             u_init[3] = u_init[1];     // N_I cumulative infected
+             u_init[4] = cinit;         // N_C total cumulative cases
+             u_init[5] = cinit;         // integral of active C
 
             //print(theta)
             //print(u_init)
 
-            u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,2000);
+             u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,2000);
 
-            car[1] = u[1,4]/u[1,3];
-            ifr[1] = sigmad*u[1,5]/u[1,3];
+             car[1] = u[1,4]/u[1,3];
+             ifr[1] = sigmad*u[1,5]/u[1,3];
 
-            lambda[1,1] = (u[1,4]-u_init[4])*n_scale; //C: cases per day
-            lambda[1,2] = sigmar*(u[1,5]-u_init[5])*n_scale; //R: recovered per day
-            lambda[1,3] = sigmad*(u[1,5]-u_init[5])*n_scale; //D: dead per day
+             lambda[1,1] = (u[1,4]-u_init[4])*n_scale; //C: cases per day
+             lambda[1,2] = sigmar*(u[1,5]-u_init[5])*n_scale; //R: recovered per day
+             lambda[1,3] = sigmad*(u[1,5]-u_init[5])*n_scale; //D: dead per day
 
-            for (i in 2:n_obs){
+             for (i in 2:n_obs){
                 car[i] = u[i,4]/u[i,3];
                 ifr[i] = sigmad*u[i,5]/u[i,3];
 
@@ -120,15 +122,15 @@ functions {
 
         model {
             //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
-            theta[1] ~ gamma(2.,1./20.);           // f1  initital infected to case ratio
-            theta[2] ~ gamma(1.5,1.);           // f2  beta - sigmau
-            theta[3] ~ inv_gamma(4.,.2);             // sigmar
-            theta[4] ~ inv_gamma(2.78,.185);             // sigmad
-            theta[5] ~ inv_gamma(2.3,.15);             // sigmau
-            theta[6] ~ exponential(2.);          // q
-            theta[7] ~ exponential(3.);          // mbase
-            theta[8] ~ lognormal(log(tm+5),.5);  // mlocation
-            theta[9] ~ exponential(1.);          // likelihood over dispersion std
+            f1 ~ gamma(2.,1./10.);                 // f1  initital infected to case ratio
+            f2 ~ gamma(1.5,1.);                    // f2  beta - sigmau
+            sigmar ~ inv_gamma(4.,.2);             // sigmar
+            sigmad ~ inv_gamma(2.78,.185);         // sigmad
+            sigmau ~ inv_gamma(2.3,.15);           // sigmau
+            q ~ exponential(2.);                  // q
+            mbase ~ exponential(3.);               // mbase
+            mlocation ~ lognormal(log(tm+5),.5);   // mlocation
+            extra_std ~ exponential(1.);           // likelihood over dispersion std
 
             //likelihood
             //lambda[1,1] =  sigma_c * I for day

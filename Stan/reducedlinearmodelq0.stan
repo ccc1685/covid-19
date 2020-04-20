@@ -1,6 +1,5 @@
 // Latent variable SIR model with q=0 (i.e. perfect quarantine of cases)
 
-
 functions {// SIR model
             real[] SIR(
             real t,             // time
@@ -41,7 +40,6 @@ functions {// SIR model
 
         data {
           int<lower=1> n_obs;       // number of days observed
-          //int<lower=1> n_theta;     // number of model parameters
           int<lower=1> n_difeq;     // number of differential equations for yhat
           int<lower=1> n_ostates;   // number of observed states
           real<lower=1> n_scale;    // scale to match observed scale
