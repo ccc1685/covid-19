@@ -146,17 +146,15 @@ functions {
             }
         }
 
-        generated quantities {
-
+         generated quantities {
             real ll_; // log-likelihood for model
+            real llx[n_obs, 3];
 
-            ll_ = neg_binomial_2_lpmf(max(y[1,1],0)|max([lambda[1,1],1.0]),phi);
-            ll_ += neg_binomial_2_lpmf(max(y[1,2],0)|max([lambda[1,2],1.0]),phi);
-            ll_ += neg_binomial_2_lpmf(max(y[1,3],0)|max([lambda[1,3],1.0]),phi);
-            for (i in 2:n_obs){
-                ll_ += neg_binomial_2_lpmf(max(y[i,1],0)|max([lambda[i,1],1.0]),phi);
-                ll_ += neg_binomial_2_lpmf(max(y[i,2],0)|max([lambda[i,2],1.0]),phi);
-                ll_ += neg_binomial_2_lpmf(max(y[i,3],0)|max([lambda[i,3],1.0]),phi);
+            ll_ = 0;
+            for (i in 1:n_obs) {
+                for (j in 1:3) {
+                    llx[i, j] = neg_binomial_2_lpmf(max(y[i,j],0)|max([lambda[i,j],1.0]),phi);
+                    ll_ += llx[i, j];
+                    }
+                }
             }
-          //  print(ll_)
-        }
