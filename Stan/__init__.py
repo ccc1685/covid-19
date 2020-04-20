@@ -302,3 +302,42 @@ def get_waic_and_loo(fit):
     result.update(dict(az.loo(idata)))
     result.update(dict(az.waic(idata)))
     return result
+
+def getllxtensor_singleroi(roi,datapath,fits_path,models_path,model_name,fit_format):
+    #     extension = ['csv', 'pkl'][fit_format]
+    #     rois = list_rois(fits_path, model_name, extension)
+    #load data
+    csv = datapath + "covidtimeseries_"+roi+".csv"
+    df = pd.read_csv(csv)
+    t0 = np.where(df["new_cases"].values>1)[0][0]
+    y = (df[['new_cases','new_recover','new_deaths']].to_numpy()).astype(int)[t0:,:]
+    #load samples
+    samples = extract_samples(fits_path, models_path, model_name, roi, fit_format)
+    S = np.shape(samples['lambda[0,0]'])[0]
+    # print(S)
+    #get number of observations, check against data above
+    for i in range(1000, 0, -1):  # Search for it in series from latest to earliest
+        candidate = '%s[%d,0]' % ('lambda', i)
+        if candidate in samples:
+            N = i+1 #N observations, add 1 since index starts at 0
+            break  # And move on
+    print(N) #run using old data
+    print(len(y))
+    llx = np.zeros((S,N,3))
+    # # conversion from Stan neg_binom2(n_stan | mu,phi)  to scipy.stats.nbinom(k,n_scipy,p)
+    # #     n_scipy = phi,    p = phi/mu, k = n_stan
+    #t0 = time.time()
+    for i in range(S):
+        phi = samples['phi'][i]
+        for j in range(N):
+            mu = max(samples['lambda['+str(j)+',0]'][i],1)
+            llx[i,j,0] = np.log(nbinom.pmf(max(y[j,0],0),phi,phi/mu))
+            mu = max(samples['lambda['+str(j)+',1]'][i],1)
+            llx[i,j,1] = np.log(nbinom.pmf(max(y[j,1],0),phi,phi/mu))
+            mu = max(samples['lambda['+str(j)+',2]'][i],1)
+            llx[i,j,2] = np.log(nbinom.pmf(max(y[j,2],0),phi,phi/mu))
+        print(np.sum(llx[i,:,:]))
+        print(samples['ll_'][i])
+        print('--')
+    #print(time.time()-t0)
+    return llx
