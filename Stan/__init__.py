@@ -1,3 +1,4 @@
+import arviz as az
 import math
 import matplotlib.pyplot as plt
 import numpy as np
@@ -254,13 +255,33 @@ def make_lineplots(samples, time_params, rows=4, cols=4, size=4):
     plt.tight_layout()
     
     
-### Not working yet
-def josh_likelihoods(samples):
-    log_likelihoods = samples['ll_']    
-    n = samples.shape[-1]
-    likelihoods = np.exp(log_likelihoods)   # Result is S x N
-    lppd = np.sum(np.log(np.mean(likelihoods, axis=0)))
-    pwaic = np.sum(np.var(log_likelihoods, axis=0))
-    elpdi = np.log(np.mean(likelihoods, axis=0)) - np.var(log_likelihoods, axis=0)
-    se = 2*np.sqrt(n*np.var(elpdi))
-    return {'waic': 2*(-lppd + pwaic), 'se': se}
+def get_waic(samples):
+    from numpy import log, exp, sum, mean, var, sqrt
+    """Extract all the observation-wise log-likelihoods from the samples dataframe
+    Only use if you don't have arviz"""
+    # I named the Stan array 'llx'
+    ll = samples[[c for c in samples if 'llx' in c]] 
+    n_samples, n_obs = ll.shape
+    # Convert to likelihoods (pray for no numeric precision issues)
+    l = exp(ll)
+    # log of the mean (across samples) likelihood for each observation
+    lml = log(mean(l, axis=0))
+    # Sum (across observations) of lml
+    lppd = sum(lml)
+    # Variance (across samples) of the log-likelihood for each observation
+    vll = var(ll, axis=0)
+    # Sum (across observations) of the vll
+    pwaic = sum(vll)  
+    elpdi = lml - vll
+    waic = 2*(-lppd + pwaic)
+    # Standar error of the measure
+    se = 2*sqrt(n_obs*var(elpdi))  
+    return {'waic': waic, 'se': se}
+
+            
+def get_waic_and_loo(fit):
+    idata = az.from_pystan(fit, log_likelihood="llx")
+    result = {}
+    result.update(dict(az.loo(idata)))
+    result.update(dict(az.waic(idata)))
+    return result
