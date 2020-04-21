@@ -94,7 +94,7 @@ def init_funq0():  # new format
                      extra_std=np.random.exponential(1.)
                      )
 
-def init_funq0ct():
+def init_fun():
          return dict(f1=np.random.gamma(1.5,2.),
                      f2=np.random.gamma(1.5,1.5),
                      sigmar=np.random.gamma(2.,.1/2.),
@@ -109,7 +109,7 @@ def init_funq0ct():
                      )
 
 # Fit Stan
-fit = stanrunmodel.sampling(data=stan_data, init=init_funq0ct, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
+fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
                             warmup=args.n_warmups, iter=args.n_iter, thin=args.n_thin)
 
 # Uncomment to print fit summary
