@@ -33,6 +33,8 @@ parser.add_argument('-p', '--params', default=['R0', 'car', 'ifr'], nargs='+',
                     help='Which params to include in the table')
 parser.add_argument('-ql', '--quantiles', default=[0.025, 0.25, 0.5, 0.75, 0.975], nargs='+',
                     help='Which quantiles to include in the table ([0-1])')
+parser.add_argument('-r', '--rois', default=[], nargs='+',
+                    help='Which rois to include in the table (default is all of them)')
 args = parser.parse_args()
 
 # Get all model_names, roi combinations
@@ -49,6 +51,8 @@ def roi_df(args, model_name, roi):
     model_path = cs.get_model_path(args.models_path, model_name)
     extension = ['csv', 'pkl'][args.fit_format]
     rois = cs.list_rois(args.fits_path, model_name, extension)
+    if args.rois:
+        rois = list(set(rois.intersection(args.rois)))
     fit_path = cs.get_fit_path(args.fits_path, model_name, roi)
     if args.fit_format==1:
         fit = cs.load_fit(fit_path, model_path)
@@ -60,6 +64,8 @@ def roi_df(args, model_name, roi):
     df = cs.make_table(roi, samples, args.params, stats, quantiles=args.quantiles)
     return model_name, roi, df
 
+#with Pool(2) as p:
+#    result = p.starmap(roi_df, zip(repeat(args), *combos))
 result = p_map(roi_df, repeat(args), *combos)
 tables_path = Path(args.fits_path) / 'tables'
 tables_path.mkdir(exist_ok=True)
