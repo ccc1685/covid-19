@@ -79,7 +79,7 @@ def list_rois(path, prefix, extension):
     rois = []
     for file in path.iterdir():
         file_name = str(file.name)
-        if file_name.startswith(prefix) and file_name.endswith(extension):
+        if file_name.startswith(prefix+'_') and file_name.endswith(extension):
             roi = file_name.replace(prefix, '').replace(extension, '').strip('.').strip('_')
             rois.append(roi)
     return rois
