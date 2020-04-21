@@ -36,7 +36,7 @@ def get_data(roi, data_path='data'):
     df.index.name = 'date'
     return df
     
-def load_or_compile_stan_model(stan_name, force_recompile=False):
+def load_or_compile_stan_model(stan_name, force_recompile=False, verbose=False):
     stan_raw = '%s.stan' % stan_name
     stan_compiled = '%s_%s_%s.stanc' % (stan_name, platform.platform(), platform.python_version())
     stan_raw_last_mod_t = os.path.getmtime(stan_raw) 
@@ -49,7 +49,8 @@ def load_or_compile_stan_model(stan_name, force_recompile=False):
         with open(stan_compiled, 'wb') as f:
             pickle.dump(sm, f)
     else:
-        print("Loading %s from cache..." % stan_name)
+        if verbose:
+            print("Loading %s from cache..." % stan_name)
         with open(stan_compiled, 'rb') as f:
             sm = pickle.load(f)
     return sm
@@ -146,6 +147,7 @@ def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0
                 m = stats[stat]
                 s = stats['%s_se' % stat]
                 df.loc[(roi, q), stat] = norm.ppf(q, m, s)
+    df = df.sort_index()
     return df
 
 
