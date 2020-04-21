@@ -124,6 +124,13 @@ def extract_samples(fits_path, models_path, model_name, roi, fit_format):
     return samples
 
 
+def last_sample_as_dict(fit_path, model_path):
+    """Return the last sample of a fit, for example for intializing a subsequent sampling session"""
+    fit = load_fit(fit_path, model_path)
+    last = {key: value[-1] for key, value in fit.extract().items()}
+    return last
+
+
 def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0.975], chain=None):
     if chain:
         samples = samples[samples['chain']==chain]

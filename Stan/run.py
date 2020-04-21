@@ -6,7 +6,11 @@ import pickle
 import pandas as pd
 import pystan
 import sys
-from __init__ import load_or_compile_stan_model
+
+# Get Stan directory onto path
+path = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(path))
+from Stan import load_or_compile_stan_model, load_fit, last_sample_as_dict
 
 # Parse all the command-line arguments
 parser = argparse.ArgumentParser(description='Runs all the Stan models')
@@ -35,6 +39,8 @@ parser.add_argument('-ad', '--adapt_delta', type=float, default=0.995,
                     help='Adapt delta control parameter')
 parser.add_argument('-f', '--fit_format', type=int, default=1,
                     help='Version of fit format')
+parser.add_argument('-i', '--init',
+                    help='Fit file to use for initial conditions (uses last sample)')
 args = parser.parse_args()
 if args.n_threads == 0:
     args.n_threads = args.n_chains
@@ -76,18 +82,24 @@ stan_data['n_obs'] = len(df['dates2']) - t0
 
 # functions used to initialize parameters
 def init_fun():
-         return dict(f1=np.random.gamma(1.5,2.),
-                     f2=np.random.gamma(1.5,1.5),
-                     sigmar=np.random.gamma(2.,.1/2.),
-                     sigmad=np.random.gamma(2.,.1/2.),
-                     sigmau=np.random.gamma(2.,.1/2.),
-                     q = np.random.exponential(.1),
-                     mbase=np.random.gamma(2.,.1/2.),
-                     mlocation=np.random.lognormal(np.log(stan_data['tm']),1.),
-                     extra_std=np.random.exponential(1.),
-                     cbase=np.random.gamma(2.,1.),
-                     clocation=np.random.lognormal(np.log(20.),1.)
-                     )
+    if args.init:
+        init_path = Path(args.fits_path) / args.init
+        result =  last_sample_as_dict(init_path, model_path) 
+    else:
+        from numpy.random import gamma, exponential, lognormal
+        result = {'f1': gamma(1.5,2.),
+                  'f2': gamma(1.5,1.5),
+                  'sigmar': gamma(2.,.1/2.),
+                  'sigmad': gamma(2.,.1/2.),
+                  'sigmau': gamma(2.,.1/2.),
+                  'q': exponential(.1),
+                  'mbase': gamma(2.,.1/2.),
+                  'mlocation': lognormal(np.log(stan_data['tm']),1.),
+                  'extra_std': exponential(1.),
+                  'cbase': gamma(2.,1.),
+                  'clocation': lognormal(np.log(20.),1.)
+                 }
+    return result
 
 # Fit Stan
 fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
