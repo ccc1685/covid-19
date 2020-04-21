@@ -21,7 +21,7 @@ import Stan as cs
 # Parse all the command-line arguments
 parser = argparse.ArgumentParser(description='Generates an all-regions table for a model')
 
-parser.add_argument('-ms', '--model_names', default=['reducedlinearmodelq0', 'reducedlinearmodelq0ctime', 'reducedlinearmodelNegBinom'], nargs='+',
+parser.add_argument('-ms', '--model_names', default=['reducedlinearmodelq0', 'reducedlinearmodelq0ctime', 'reducedlinearmodelNegBinom', 'fulllinearmodel'], nargs='+',
                     help='Name of the Stan model files (without .stan extension)')
 parser.add_argument('-mp', '--models_path', default='.',
                     help='Path to directory containing the .stan model files')
@@ -75,7 +75,7 @@ for model_name in args.model_names:
     median_locs = df.index.get_level_values('quantile')==0.5
     df = df[median_locs].droplevel('quantile')
     dfs.append(df)
-                              
+
 df = pd.concat(dfs).reset_index().set_index(['model', 'roi']).sort_index()
 out = tables_path / ('fit_table.csv')
 # Export the CSV file for the big table
