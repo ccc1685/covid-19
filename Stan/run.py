@@ -19,6 +19,8 @@ parser = argparse.ArgumentParser(description='Runs all the Stan models')
 
 parser.add_argument('model_name',
                     help='Name of the Stan model file (without extension)')
+parser.add_argument('-mp', '--models_path', default='.',
+                    help='Path to directory containing the .stan model files')
 parser.add_argument('-dp', '--data_path', default='../data',
                     help='Path to directory containing the data files')
 parser.add_argument('-fp', '--fits_path', default='./fits',
@@ -47,11 +49,15 @@ csv = Path(args.data_path) / ("covidtimeseries_%s.csv" % args.roi)
 csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
+model_path = Path(args.models_path) / ('%s.stan' % args.model_name)
+model_path = model_path.resolve()
+assert model_path.is_file(), "No such .stan file: %s" % model_path
+model_path = Path(args.models_path) / args.model_name
 
 m = import_module('Stan.%s' % args.model_name)
     
 control = {'adapt_delta': args.adapt_delta}
-stanrunmodel = load_or_compile_stan_model(args.model_name, force_recompile=False)
+stanrunmodel = load_or_compile_stan_model(model_path, force_recompile=False)
 df = pd.read_csv(csv)
 
 # t0 := where to start time series, index space
@@ -96,3 +102,5 @@ else:
     with open(save_path, "wb") as f:
         pickle.dump({'model_name' : args.model_name, 'model_code': stanrunmodel.model_code, 'fit' : fit},
                     f, protocol=pickle.HIGHEST_PROTOCOL)
+        
+print("Finished")
