@@ -136,14 +136,27 @@ def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0
         samples = samples[samples['chain']==chain]
     dfs = []
     for param in params:
+        by_week = False
         if param in samples:
             cols = [param]
+        elif '-by-week' in param:
+            param = param.replace('-by-week', '')
+            cols = [col for col in samples if col.startswith('%s[' % param)]
+            by_week = True
         else:
             cols = [col for col in samples if col.startswith('%s[' % param)]
         if not cols:
             print("No param like %s is in the samples dataframe" % param)
         else:
-            df = samples[cols].quantile(quantiles).median(axis=1).to_frame(name=param)
+            df = samples[cols]
+            if by_week:
+                df = df.T.rolling(7).mean().T.iloc[:, 6::7]  # Column 6 will be the last day of the first week
+                                                             # It will contain the average of the first week
+                                                             # Do this every 7 days
+                df.columns = ['%s (week %d)' % (param, i) for i in range(len(df.columns))]
+            df = df.quantile(quantiles)
+            if not by_week:
+                df = df.median(axis=1).to_frame(name=param)
             df.columns = [x.split('[')[0] for x in df.columns]  # Drop the index
             df.index = pd.MultiIndex.from_product(([roi], df.index), names=['roi', 'quantile'])
             dfs.append(df)
