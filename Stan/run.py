@@ -1,5 +1,4 @@
 import argparse
-from importlib import import_module
 import numpy as np
 import os
 from pathlib import Path
@@ -8,17 +7,18 @@ import pandas as pd
 import pystan
 import sys
 
-# Make sure the directory containing 'Stan' is on the path
+# Get Stan directory onto path
 path = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(path))
-
-from Stan import load_or_compile_stan_model
+from Stan import load_or_compile_stan_model, load_fit, last_sample_as_dict
 
 # Parse all the command-line arguments
 parser = argparse.ArgumentParser(description='Runs all the Stan models')
 
 parser.add_argument('model_name',
                     help='Name of the Stan model file (without extension)')
+parser.add_argument('-mp', '--models_path', default='.',
+                    help='Path to directory containing the .stan model files')
 parser.add_argument('-dp', '--data_path', default='../data',
                     help='Path to directory containing the data files')
 parser.add_argument('-fp', '--fits_path', default='./fits',
@@ -39,6 +39,8 @@ parser.add_argument('-ad', '--adapt_delta', type=float, default=0.995,
                     help='Adapt delta control parameter')
 parser.add_argument('-f', '--fit_format', type=int, default=1,
                     help='Version of fit format')
+parser.add_argument('-i', '--init',
+                    help='Fit file to use for initial conditions (uses last sample)')
 args = parser.parse_args()
 if args.n_threads == 0:
     args.n_threads = args.n_chains
@@ -47,11 +49,13 @@ csv = Path(args.data_path) / ("covidtimeseries_%s.csv" % args.roi)
 csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
+model_path = Path(args.models_path) / ('%s.stan' % args.model_name)
+model_path = model_path.resolve()
+assert model_path.is_file(), "No such .stan file: %s" % model_path
+model_path = Path(args.models_path) / args.model_name
 
-m = import_module('Stan.%s' % args.model_name)
-    
 control = {'adapt_delta': args.adapt_delta}
-stanrunmodel = load_or_compile_stan_model(args.model_name, force_recompile=False)
+stanrunmodel = load_or_compile_stan_model(model_path, force_recompile=False)
 df = pd.read_csv(csv)
 
 # t0 := where to start time series, index space
@@ -76,10 +80,29 @@ stan_data['ts'] = np.arange(t0,len(df['dates2']))
 stan_data['y'] = (df[['new_cases','new_recover','new_deaths']].to_numpy()).astype(int)[t0:,:]
 stan_data['n_obs'] = len(df['dates2']) - t0
 
-init = [m.init_func(stan_data)] * args.n_chains
+# functions used to initialize parameters
+def init_fun():
+    if args.init:
+        init_path = Path(args.fits_path) / args.init
+        result =  last_sample_as_dict(init_path, model_path) 
+    else:
+        from numpy.random import gamma, exponential, lognormal
+        result = {'f1': gamma(1.5,2.),
+                  'f2': gamma(1.5,1.5),
+                  'sigmar': gamma(2.,.1/2.),
+                  'sigmad': gamma(2.,.1/2.),
+                  'sigmau': gamma(2.,.1/2.),
+                  'q': exponential(.1),
+                  'mbase': gamma(2.,.1/2.),
+                  'mlocation': lognormal(np.log(stan_data['tm']),1.),
+                  'extra_std': exponential(1.),
+                  'cbase': gamma(2.,1.),
+                  'clocation': lognormal(np.log(20.),1.)
+                 }
+    return result
 
 # Fit Stan
-fit = stanrunmodel.sampling(data=stan_data, init=init, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
+fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control, chains=args.n_chains, chain_id=np.arange(args.n_chains),
                             warmup=args.n_warmups, iter=args.n_iter, thin=args.n_thin)
 
 # Uncomment to print fit summary
@@ -96,3 +119,5 @@ else:
     with open(save_path, "wb") as f:
         pickle.dump({'model_name' : args.model_name, 'model_code': stanrunmodel.model_code, 'fit' : fit},
                     f, protocol=pickle.HIGHEST_PROTOCOL)
+        
+print("Finished")
