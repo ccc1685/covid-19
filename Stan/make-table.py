@@ -72,7 +72,8 @@ tables_path.mkdir(exist_ok=True)
 
 dfs = []
 for model_name in args.model_names:
-    df = pd.concat([df_ for model_name_, roi, df_ in result if model_name_==model_name])
+    tables = [df_ for model_name_, roi, df_ in result if model_name_==model_name]
+    df = pd.concat(tables)
     out = tables_path / ('%s_fit_table.csv' % model_name)
     # Export the CSV file for this model
     df.to_csv(out)
