@@ -87,8 +87,12 @@ def init_fun(force_fresh=False):
             init_path = Path(args.fits_path) / args.init
             result = last_sample_as_dict(init_path, model_path) 
         except:
+            print("Couldn't use last sample from previous fit to initialize")
             return init_fun(force_fresh=True)
+        else:
+            print("Using last sample from previous fit to initialize")
     else:
+        print("Using default values to initialize fit")
         from numpy.random import gamma, exponential, lognormal
         result = {'f1': gamma(1.5,2.),
                   'f2': gamma(1.5,1.5),
