@@ -84,7 +84,7 @@ stan_data['n_obs'] = len(df['dates2']) - t0
 def init_fun():
     if args.init:
         init_path = Path(args.fits_path) / args.init
-        result =  last_sample_as_dict(init_path, model_path) 
+        result =  last_sample_as_dict(init_path, model_path)
     else:
         from numpy.random import gamma, exponential, lognormal
         result = {'f1': gamma(1.5,2.),
@@ -97,7 +97,8 @@ def init_fun():
                   'mlocation': lognormal(np.log(stan_data['tm']),1.),
                   'extra_std': exponential(1.),
                   'cbase': gamma(2.,1.),
-                  'clocation': lognormal(np.log(20.),1.)
+                  'clocation': lognormal(np.log(20.),1.),
+                  'n_pop': lognormal(np.log(1e5),1.)
                  }
     return result
 
@@ -119,5 +120,5 @@ else:
     with open(save_path, "wb") as f:
         pickle.dump({'model_name' : args.model_name, 'model_code': stanrunmodel.model_code, 'fit' : fit},
                     f, protocol=pickle.HIGHEST_PROTOCOL)
-        
+
 print("Finished")
