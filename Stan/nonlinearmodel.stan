@@ -1,165 +1,171 @@
-functions {
-            real[] SIR(real t,  // time
+// Latent variable SIR model with q=0 (i.e. perfect quarantine of cases)
+// include time dependence in sigmac to model change in case criteria or differences in testing
+
+
+functions {// SIR model
+            real[] SIR(
+            real t,             // time
             real[] u,           // system state {infected,cases,susceptible}
             real[] theta,       // parameters
             real[] x_r,
-            int[] x_i) {
+            int[] x_i
+            )
+            {
             real du_dt[5];
-
-            real beta = theta[1];
-            real sigmac = theta[2];
+            real f1 = theta[1];          // beta - sigmau - sigmac
+            real f2 = theta[2];          // beta - sigma u
             real sigmar = theta[3];
             real sigmad =  theta[4];
             real sigmau = theta[5];
             real q = theta[6];
             real mbase = theta[7];
             real mlocation = theta[8];
+            real cbase = theta[9];
+            real clocation = theta[10];
 
-            //real q = 0.001;
+            real sigma = sigmar + sigmad;
+            real sigmac = f2/(1+f1);
+            real beta = f2 + sigmau;
 
             real I = u[1];  // infected, latent
             real C = u[2];  // cases, observed
             real Z = u[3];  // total infected
 
+            sigmac *= cbase + (1-cbase)/(1 + exp(.2*(t - clocation)));  // case detection change
             beta *= mbase + (1-mbase)/(1 + exp(.2*(t - mlocation)));  // mitigation
 
             du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; //I
-            du_dt[2] = sigmac*I - (sigmar+sigmad)*C;       //C
+            du_dt[2] = sigmac*I - sigma*C;       //C
             du_dt[3] = beta*(I+q*C)*(1-Z);                       //N_I
             du_dt[4] = sigmac*I; // N_C case appearance rate
-            du_dt[5] = C; // cumulative C
+            du_dt[5] = C; // integrated C
 
             return du_dt;
           }
         }
 
         data {
-          int<lower = 1> n_obs;       // number of days observed
-          int<lower = 1> n_theta;     // number of model parameters
-          int<lower = 1> n_difeq;     // number of differential equations for yhat
-          int<lower = 1> n_ostates;   // number of observed states
-          real<lower = 1> n_scale;    // scale to match observed scale
+          int<lower=1> n_obs;         // number of days observed
+          int<lower=1> n_difeq;       // number of differential equations for yhat
+          int<lower=1> n_ostates;     // number of observed states
+          real<lower=1> n_scale;      // scale variables for numerical stability
           int y[n_obs,n_ostates];     // data, per-day-tally [cases,recovered,death]
           real t0;                    // initial time point
           real tm;                    // start day of mitigation
           real ts[n_obs];             // time points that were observed
-          //real rel_tol;               // relative tolerance for ODE solver
-          //real max_num_steps;         // for ODE solver
+          //real rel_tol;             // relative tolerance for ODE solver
+          //real max_num_steps;       // for ODE solver
           }
 
         transformed data {
             real x_r[0];
             int x_i[0];
+            real q = 0.;
         }
 
         parameters {
-            real<lower = 0> theta[n_theta]; // model parameters
+          // model parameters
+            real<lower=0> f1;       //initital infected to case ratio
+            real<lower=0> f2;       // f2  beta - sigmau
+            real<lower=0> sigmar;   // recovery rate
+            real<lower=0> sigmad;   // death rate
+            real<lower=0> sigmau;   // I disapperance rate
+            real<lower=0> q;              // infection factor for cases
+            real<lower=0> mbase;          // mitigation factor
+            real<lower=0> mlocation;      // day of mitigation application
+            real<lower=0> extra_std;      // phi = 1/extra_std^2 in neg_binomial_2(mu,phi)
+            real<lower=0> cbase;          // case detection factor
+            real<lower=0> clocation;      // day of case change
+            real<lower=1> n_pop;      // population size
         }
 
         transformed parameters{
-            real u[n_obs, n_difeq];   // solution from the ODE solver
-            real u_init[n_difeq];     // initial conditions for fractions
+            real lambda[n_obs,3];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
+            real car[n_obs];          //total cases / total infected
+            real ifr[n_obs];          //total dead / total infected
+            real u_init[n_difeq];     // initial conditions for odes
+            real sigmac = f2/(1+f1);
+            real beta = f2 + sigmau;
+            real sigma = sigmar + sigmad;
+            real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
+            //real Rlast =R0 * (mbase + (1-mbase)/(1 + exp(.2*(n_obs - mlocation))));  // R(t=last day)
+            real phi = 1/(extra_std^2);  // likelihood over-dispersion of std
 
-            real beta = theta[1];
-            real sigmac = theta[2];
-            real sigmar = theta[3];
-            real sigmad =  theta[4];
-            real sigmau = theta[5];
-            real q = theta[6];
-            real mbase = theta[7];
-            real mlocation = theta[8];
-            //real theta_init = theta[9];
+          {  // local
+             real theta[10] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation};
+             real u[n_obs, n_difeq];   // solution from the ODE solver
 
-            real lambda[n_obs,3]; //poisson parameter [cases, deaths, recovered]
+             real cinit = y[1,1]/n_pop;
 
-            real cinit = y[1,1]/n_scale;
+             u_init[1] = f1*cinit;      // I set from f1 * C initial
+             u_init[2] = cinit;         // C  from data
+             u_init[3] = u_init[1];     // N_I cumulative infected
+             u_init[4] = cinit;         // N_C total cumulative cases
+             u_init[5] = cinit;         // integral of active C
 
-            u_init[1] = max([(beta-sigmau-sigmac)/max([sigmac,.001])*cinit, cinit]);  // I set
-            u_init[2] = cinit;    //C  from data
-            u_init[3] = u_init[1];        // N_I cumulative infected
-            u_init[4] = cinit;        // N_C total cumulative cases
-            u_init[5] = cinit;        // integral of active C
-
+            //print(theta)
             //print(u_init)
-            u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,20000);
 
-            //lambda
+             u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,2000);
 
-            lambda[1,1] = (u[1,4]-u_init[4])*n_scale; //C: cases per day
-            lambda[1,2] = sigmar*(u[1,5]-u_init[5])*n_scale; //R: recovered per day
-            lambda[1,3] = sigmad*(u[1,5]-u_init[5])*n_scale; //D: dead per day
+             car[1] = u[1,4]/u[1,3];
+             ifr[1] = sigmad*u[1,5]/u[1,3];
 
-            for (i in 2:n_obs){
-                lambda[i,1] = (u[i,4]-u[i-1,4])*n_scale; //C: cases per day
-                lambda[i,2] = sigmar*(u[i,5]-u[i-1,5])*n_scale; //R: recovered rate per day
-                lambda[i,3] = sigmad*(u[i,5]-u[i-1,5])*n_scale; //D: dead rate per day
+             lambda[1,1] = (u[1,4]-u_init[4])*n_pop; //C: cases per day
+             lambda[1,2] = sigmar*(u[1,5]-u_init[5])*n_pop; //R: recovered per day
+             lambda[1,3] = sigmad*(u[1,5]-u_init[5])*n_pop; //D: dead per day
+
+             for (i in 2:n_obs){
+                car[i] = u[i,4]/u[i,3];
+                ifr[i] = sigmad*u[i,5]/u[i,3];
+
+                lambda[i,1] = (u[i,4]-u[i-1,4])*n_pop; //C: cases per day
+                lambda[i,2] = sigmar*(u[i,5]-u[i-1,5])*n_pop; //R: recovered rate per day
+                lambda[i,3] = sigmad*(u[i,5]-u[i-1,5])*n_pop; //D: dead rate per day
+                }
             }
         }
 
         model {
-            //priors
-            theta[1] ~ lognormal(log(0.4),1); //beta
-            theta[2] ~ lognormal(log(0.1),1); //sigmac
-            theta[3] ~ lognormal(log(0.1),.3); //sigmar
-            theta[4] ~ lognormal(log(0.1),.3); //sigmad
-            theta[5] ~ lognormal(log(0.1),.3); //sigmau
-            theta[6] ~ lognormal(log(0.001),.5); //q
-            theta[7] ~ lognormal(log(0.2),.2); //mbase
-            theta[8] ~ lognormal(log(tm+5),.3); //mlocation
-            //theta[9] ~ lognormal(log(1),1.5); //mrate
-            //theta[10] ~ lognormal(log(0.1),3);//cmax
-            //theta[11] ~ lognormal(log(10),3);//c50
-            //theta[9] ~ lognormal(log(1),3);// theta_init
+            // Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
+            f1 ~ gamma(2.,1./10.);                 // f1  initital infected to case ratio
+            f2 ~ gamma(1.5,1.);                    // f2  beta - sigmau
+            sigmar ~ inv_gamma(4.,.2);             // sigmar
+            sigmad ~ inv_gamma(2.78,.185);         // sigmad
+            sigmau ~ inv_gamma(2.3,.15);           // sigmau
+            q ~ exponential(10.);                // q
+            mbase ~ exponential(4.);               // mbase
+            mlocation ~ lognormal(log(tm+5),1.);   // mlocation
+            extra_std ~ exponential(1.);           // likelihood over dispersion std
+            cbase ~ exponential(.2);               // mbase
+            clocation ~ lognormal(log(20.),2.);   // mlocation
+            n_pop ~ lognormal(log(1e5),2.); // population
 
             //likelihood
             //lambda[1,1] =  sigma_c * I for day
             //lambda[1,2] =  sigma_r * C for day
             //lambda[1,3] =  sigma_d * C for day
 
-            target += poisson_lpmf(max(y[1,1],0)|max([lambda[1,1],1.0])); //C
-            target += poisson_lpmf(max(y[1,2],0)|max([lambda[1,2],1.0])); //R
-            target += poisson_lpmf(max(y[1,3],0)|max([lambda[1,3],1.0])); //D
+            target += neg_binomial_2_lpmf(max(y[1,1],0)|max([lambda[1,1],1.0]),phi); //C
+            target += neg_binomial_2_lpmf(max(y[1,2],0)|max([lambda[1,2],1.0]),phi); //R
+            target += neg_binomial_2_lpmf(max(y[1,3],0)|max([lambda[1,3],1.0]),phi); //D
 
             for (i in 2:n_obs){
-                target += poisson_lpmf(max(y[i,1],0)|max([lambda[i,1],1.0])); //C
-                target += poisson_lpmf(max(y[i,2],0)|max([lambda[i,2],1.0])); //R
-                target += poisson_lpmf(max(y[i,3],0)|max([lambda[i,3],1.0])); //D
+                target += neg_binomial_2_lpmf(max(y[i,1],0)|max([lambda[i,1],1.0]),phi); //C
+                target += neg_binomial_2_lpmf(max(y[i,2],0)|max([lambda[i,2],1.0]),phi); //R
+                target += neg_binomial_2_lpmf(max(y[i,3],0)|max([lambda[i,3],1.0]),phi); //D
             }
         }
 
         generated quantities {
-            real R0;
-            real car[n_obs];
-            real attack_ratio[n_obs];
-            real ifr[n_obs];
-
-            //u[3]:NI
-            //u[4]:NC
-            //u[5]:C cum
-
-            //real q = .001;
-
             real ll_; // log-likelihood for model
+            real llx[n_obs, 3];
 
-            //likelihood
-            R0 = beta*(sigmar+sigmad+q*sigmac)/((sigmar+sigmad)*(sigmac+sigmau));
-
-            car[1] = u[1,4]/u[1,3];         //total cases / total infected
-            attack_ratio[1] = u[1,3];       // total infected scaled by n_scale
-            ifr[1] = sigmad*u[1,5]/u[1,3];  // total dead / total infected
-
-            ll_ = poisson_lpmf(max(y[1,1],0)|max([lambda[1,1],1.0]));
-            ll_ += poisson_lpmf(max(y[1,2],0)|max([lambda[1,2],1.0]));
-            ll_ += poisson_lpmf(max(y[1,3],0)|max([lambda[1,3],1.0]));
-
-            for (i in 2:n_obs){
-                car[i] = u[i,4]/u[i,3];
-                attack_ratio[i] = u[i,3]; // u's are already scaled by n_scale
-                ifr[i] = sigmad*u[i,5]/u[i,3];
-
-                ll_ += poisson_lpmf(max(y[i,1],0)|max([lambda[i,1],1.0]));
-                ll_ += poisson_lpmf(max(y[i,2],0)|max([lambda[i,2],1.0]));
-                ll_ += poisson_lpmf(max(y[i,3],0)|max([lambda[i,3],1.0]));
+            ll_ = 0;
+            for (i in 1:n_obs) {
+                for (j in 1:3) {
+                    llx[i, j] = neg_binomial_2_lpmf(max(y[i,j],0)|max([lambda[i,j],1.0]),phi);
+                    ll_ += llx[i, j];
+                    }
+                }
             }
-          //  print(ll_)
-        }
