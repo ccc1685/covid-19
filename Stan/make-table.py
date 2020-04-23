@@ -35,6 +35,8 @@ parser.add_argument('-ql', '--quantiles', default=[0.025, 0.25, 0.5, 0.75, 0.975
                     help='Which quantiles to include in the table ([0-1])')
 parser.add_argument('-r', '--rois', default=[], nargs='+',
                     help='Which rois to include in the table (default is all of them)')
+parser.add_argument('-a', '--append', type=int, default=0,
+                    help='Append to old tables instead of overwriting them')
 args = parser.parse_args()
 
 # Get all model_names, roi combinations
@@ -87,5 +89,8 @@ for model_name in args.model_names:
 
 df = pd.concat(dfs).reset_index().set_index(['model', 'roi']).sort_index()
 out = tables_path / ('fit_table.csv')
+if args.append:
+    df_old = pd.read_csv(out, index_col=[0, 1])
+    df = pd.concat([df_old, df])
 # Export the CSV file for the big table
 df.to_csv(out)
