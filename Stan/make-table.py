@@ -21,7 +21,7 @@ import Stan as cs
 # Parse all the command-line arguments
 parser = argparse.ArgumentParser(description='Generates an all-regions table for a model')
 
-parser.add_argument('-ms', '--model_names', default=['reducedlinearmodelq0', 'reducedlinearmodelq0ctime', 'reducedlinearmodelNegBinom', 'fulllinearmodel'], nargs='+',
+parser.add_argument('-ms', '--model_names', default=['reducedlinearmodelq0', 'reducedlinearmodelq0ctime', 'reducedlinearmodelNegBinom', 'fulllinearmodel', 'nonlinearmodelq0ctime', 'nonlinearmodel'], nargs='+',
                     help='Name of the Stan model files (without .stan extension)')
 parser.add_argument('-mp', '--models_path', default='.',
                     help='Path to directory containing the .stan model files')
