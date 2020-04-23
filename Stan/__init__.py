@@ -332,13 +332,8 @@ def get_waic_and_loo(fit):
     """Compute WAIC and LOO from a fit instance"""
     idata = az.from_pystan(fit, log_likelihood="llx")
     result = {}
-<<<<<<< HEAD
     result.update(dict(az.loo(idata,scale='deviance')))
     result.update(dict(az.waic(idata,scale='deviance')))
-=======
-    result.update(dict(az.loo(idata, scale='deviance')))
-    result.update(dict(az.waic(idata, scale='deviance')))
->>>>>>> c1985b09ed346a6b5221f9ef4494d89746af6d3a
     return result
 
 def getllxtensor_singleroi(roi,datapath,fits_path,models_path,model_name,fit_format):
