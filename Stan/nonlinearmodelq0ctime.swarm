@@ -1,0 +1,513 @@
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Afghanistan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Albania'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Algeria'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Andorra'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Antigua and Barbuda'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Argentina'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Armenia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Austria'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Azerbaijan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Bahamas'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Bahrain'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Bangladesh'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Barbados'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Belarus'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Belgium'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Benin'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Bolivia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Bosnia and Herzegovina'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Brazil'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Brunei'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Bulgaria'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Burkina Faso'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Burma'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Cabo Verde'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Cameroon'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Chile'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='China'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Colombia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Congo (Brazzaville)'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Congo (Kinshasa)'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Costa Rica'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Cote d'Ivoire'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Croatia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Cuba'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Cyprus'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Czechia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Denmark'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Diamond Princess'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Djibouti'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Dominican Republic'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Ecuador'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Egypt'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='El Salvador'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Estonia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Ethiopia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Finland'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='France'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Gabon'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Gambia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Georgia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Germany'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Ghana'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Greece'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Guatemala'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Guinea'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Guyana'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Haiti'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Honduras'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Hungary'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Iceland'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='India'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Indonesia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Iran'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Iraq'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Ireland'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Israel'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Italy'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Jamaica'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Japan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Jordan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Kazakhstan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Kenya'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Korea, South'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Kosovo'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Kuwait'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Kyrgyzstan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Latvia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Lebanon'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Liberia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Libya'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Liechtenstein'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Lithuania'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Luxembourg'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Malaysia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Mali'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Malta'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Mauritius'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Mexico'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Moldova'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Monaco'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Montenegro'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Morocco'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Netherlands'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='New Zealand'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Niger'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Nigeria'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='North Macedonia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Norway'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Oman'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Pakistan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Panama'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Paraguay'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Peru'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Philippines'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Poland'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Portugal'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Qatar'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Romania'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Russia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='San Marino'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Saudi Arabia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Senegal'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Serbia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Singapore'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Slovakia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Slovenia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Somalia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='South Africa'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Spain'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Sri Lanka'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Sudan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Sweden'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Switzerland'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Syria'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Taiwan*'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Tanzania'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Thailand'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Togo'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Trinidad and Tobago'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Tunisia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Turkey'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_AK'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_AR'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_AZ'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_DC'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_DE'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_GU'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_HI'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_IA'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_KY'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_MD'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_ME'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_MI'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_MN'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_MT'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_ND'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_NH'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_NJ'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_NM'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_NY'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_OK'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_RI'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_SD'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_TN'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_TX'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_UT'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_VA'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_VI'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_VT'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_WV'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='US_WY'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Ukraine'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='United Arab Emirates'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='United Kingdom'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Uruguay'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Uzbekistan'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Venezuela'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='West Bank and Gaza'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Zambia'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python run.py	nonlinearmodelq0ctime	--roi='Zimbabwe'		--fits_path='/data/carsonc/covid-19/fit2/'	--n_iter=10000	--n_warmups=2000	--fit_format=1
