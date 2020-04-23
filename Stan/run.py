@@ -81,10 +81,13 @@ stan_data['y'] = (df[['new_cases','new_recover','new_deaths']].to_numpy()).astyp
 stan_data['n_obs'] = len(df['dates2']) - t0
 
 # functions used to initialize parameters
-def init_fun():
-    if args.init:
-        init_path = Path(args.fits_path) / args.init
-        result =  last_sample_as_dict(init_path, model_path)
+def init_fun(force_fresh=False):
+    if args.init and not force_fresh:
+        try:
+            init_path = Path(args.fits_path) / args.init
+            result = last_sample_as_dict(init_path, model_path) 
+        except:
+            return init_fun(force_fresh=True)
     else:
         from numpy.random import gamma, exponential, lognormal
         result = {'f1': gamma(1.5,2.),
