@@ -43,6 +43,8 @@ for model_name in args.model_names:
     model_path = cs.get_model_path(args.models_path, model_name)
     extension = ['csv', 'pkl'][args.fit_format]
     rois = cs.list_rois(args.fits_path, model_name, extension)
+    if args.rois:
+        rois = list(set(rois).intersection(args.rois))
     combos += [(model_name, roi) for roi in rois]
 # Organize into (model_name, roi) tuples
 combos = list(zip(*combos))
@@ -52,7 +54,7 @@ def roi_df(args, model_name, roi):
     extension = ['csv', 'pkl'][args.fit_format]
     rois = cs.list_rois(args.fits_path, model_name, extension)
     if args.rois:
-        rois = list(set(rois.intersection(args.rois)))
+        rois = list(set(rois).intersection(args.rois))
     fit_path = cs.get_fit_path(args.fits_path, model_name, roi)
     if args.fit_format==1:
         fit = cs.load_fit(fit_path, model_path)
