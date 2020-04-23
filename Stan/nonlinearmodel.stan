@@ -60,7 +60,7 @@ functions {// SIR model
         transformed data {
             real x_r[0];
             int x_i[0];
-            real q = 0.;
+            //real q = 0.;
         }
 
         parameters {
