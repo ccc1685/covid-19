@@ -88,7 +88,7 @@ functions {// SIR model
             real beta = f2 + sigmau;
             real sigma = sigmar + sigmad;
             real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
-            //real Rlast =R0 * (mbase + (1-mbase)/(1 + exp(.2*(n_obs - mlocation))));  // R(t=last day)
+            real Rlast =R0 * (mbase + (1-mbase)/(1 + exp(.2*(n_obs - mlocation))));  // R(t=last day)
             real phi = 1/(extra_std^2);  // likelihood over-dispersion of std
 
           {  // local
