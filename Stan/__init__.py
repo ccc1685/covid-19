@@ -35,13 +35,13 @@ def get_data(roi, data_path='data'):
     df = df[[x for x in df if 'Unnamed' not in x]]
     df.index.name = 'date'
     return df
-    
+
 def load_or_compile_stan_model(stan_name, force_recompile=False, verbose=False):
     stan_raw = '%s.stan' % stan_name
     stan_compiled = '%s_%s_%s.stanc' % (stan_name, platform.platform(), platform.python_version())
-    stan_raw_last_mod_t = os.path.getmtime(stan_raw) 
+    stan_raw_last_mod_t = os.path.getmtime(stan_raw)
     try:
-        stan_compiled_last_mod_t = os.path.getmtime(stan_compiled) 
+        stan_compiled_last_mod_t = os.path.getmtime(stan_compiled)
     except FileNotFoundError:
         stan_compiled_last_mod_t = 0
     if force_recompile or (stan_compiled_last_mod_t < stan_raw_last_mod_t):
@@ -88,7 +88,7 @@ def list_rois(path, prefix, extension):
 
 def load_fit(fit_path, model_full_path, new_module_name=None):
     """This function will try to load a pickle file containing a Stan fit instance (and other things)
-    If the compiled model is not found in memory, preventing the fit instance from being loaded, 
+    If the compiled model is not found in memory, preventing the fit instance from being loaded,
     it will trick Stan into thinking that the the model that is loaded is the model that belongs with that fit instance
     Then it will return samples"""
     try:
@@ -189,7 +189,7 @@ def get_timing(roi, data_path):
         print("No mitigation data found; falling back to default value")
         tm = t0 + 10
         tmdate = data.index[t0]
-    
+
     print(t0, t0date, tm, tmdate)
     print("t0 = %s (day %d)" % (t0date, t0))
     print("tm = %s (day %d)" % (tmdate, tm))
@@ -198,10 +198,10 @@ def get_timing(roi, data_path):
 
 def plot_data_and_fits(data_path, roi, samples, t0, tm, chains=None):
     data = get_data(roi, data_path)
-    
+
     if chains is None:
         chains = samples['chain'].unique()
-    
+
     fig, ax = plt.subplots(3, 2, figsize=(15, 10))
     days = range(data.shape[0])
     days_found = [day for day in days if 'lambda[%d,0]' % (day-t0) in samples]
@@ -210,13 +210,13 @@ def plot_data_and_fits(data_path, roi, samples, t0, tm, chains=None):
     #day_labels = get_day_labels(data, days, t0)
     estimates = {}
     chain_samples = samples[samples['chain'].isin(chains)]
-    
+
     for i, kind in enumerate(['cases', 'recover', 'deaths']):
         estimates[kind] = [chain_samples['lambda[%d,%d]' % (day-t0, i)].mean() for day in days_found]
         colors = 'bgr'
         cum = data["cum_%s" % kind]
         xticks, xlabels = zip(*[(i, x[:-3]) for i, x in enumerate(cum.index) if i%2==0])
-        
+
         xlabels = [x[:-3] for i, x in enumerate(cum.index) if i%2==0]
         ax[i, 0].set_title('Cumulative %s' % kind)
         ax[i, 0].plot(cum, 'bo', color=colors[i], label=kind)
@@ -240,7 +240,7 @@ def plot_data_and_fits(data_path, roi, samples, t0, tm, chains=None):
 
     plt.tight_layout()
     fig.suptitle(roi, y=1.02)
-    
+
 
 def make_histograms(samples, hist_params, cols=4, size=3):
     cols = min(len(hist_params), cols)
@@ -265,8 +265,8 @@ def make_histograms(samples, hist_params, cols=4, size=3):
             ax.set_title(param)
         plt.legend()
     plt.tight_layout()
-    
-    
+
+
 def make_lineplots(samples, time_params, rows=4, cols=4, size=4):
     cols = min(len(time_params), cols)
     rows = math.ceil(len(time_params)/cols)
@@ -286,14 +286,14 @@ def make_lineplots(samples, time_params, rows=4, cols=4, size=4):
         ax.set_title(param)
         ax.set_xlabel('Days')
     plt.tight_layout()
-    
-    
+
+
 def get_waic(samples):
     from numpy import log, exp, sum, mean, var, sqrt
     """Extract all the observation-wise log-likelihoods from the samples dataframe
     Only use if you don't have arviz"""
     # I named the Stan array 'llx'
-    ll = samples[[c for c in samples if 'llx' in c]] 
+    ll = samples[[c for c in samples if 'llx' in c]]
     n_samples, n_obs = ll.shape
     # Convert to likelihoods (pray for no numeric precision issues)
     l = exp(ll)
@@ -304,11 +304,11 @@ def get_waic(samples):
     # Variance (across samples) of the log-likelihood for each observation
     vll = var(ll, axis=0)
     # Sum (across observations) of the vll
-    pwaic = sum(vll)  
+    pwaic = sum(vll)
     elpdi = lml - vll
     waic = 2*(-lppd + pwaic)
     # Standar error of the measure
-    se = 2*sqrt(n_obs*var(elpdi))  
+    se = 2*sqrt(n_obs*var(elpdi))
     return {'waic': waic, 'se': se}
 
 
@@ -318,7 +318,7 @@ def get_loo(samples):
     from scipy.stats import hmean
     """https://arxiv.org/pdf/1507.04544.pdf"""
     # I named the Stan array 'llx'
-    ll = samples[[c for c in samples if 'llx' in c]] 
+    ll = samples[[c for c in samples if 'llx' in c]]
     n_samples, n_obs = ll.shape
     # Convert to likelihoods (pray for no numeric precision issues)
     l = exp(ll)
@@ -327,13 +327,13 @@ def get_loo(samples):
     loo = sum(log(hml))
     return {'loo': loo}
 
-            
+
 def get_waic_and_loo(fit):
     """Compute WAIC and LOO from a fit instance"""
     idata = az.from_pystan(fit, log_likelihood="llx")
     result = {}
-    result.update(dict(az.loo(idata)))
-    result.update(dict(az.waic(idata)))
+    result.update(dict(az.loo(idata,scale='deviance')))
+    result.update(dict(az.waic(idata,scale='deviance')))
     return result
 
 def getllxtensor_singleroi(roi,datapath,fits_path,models_path,model_name,fit_format):
