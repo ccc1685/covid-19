@@ -1,6 +1,6 @@
 # covid-19
 
-Code and data to model the Covid-19 progression and estimate the unobserved infected population from reported cases, case recoveries, and case deaths globablly.  Original code in Julia used a Metropolis-Hastings MCMC to fit various latent variable SIR models to the observable data.  Current updated models are implemented in PyStan and described below.  Models all end in .Stan.
+Code and data to model the Covid-19 progression and estimate the unobserved infected population from reported cases, case recoveries, and case deaths globablly.  Original code in Julia used a Metropolis-Hastings MCMC to fit various latent variable SIR models to the observable data.  Current updated models are implemented in PyStan and described below.  Several versions of latent variable SIR models are in files with suffix .Stan.
 
 
 
