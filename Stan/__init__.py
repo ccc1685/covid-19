@@ -204,7 +204,7 @@ def plot_data_and_fits(data_path, roi, samples, t0, tm, chains=None):
 
     fig, ax = plt.subplots(3, 2, figsize=(15, 10))
     days = range(data.shape[0])
-    days_found = [day for day in days if 'lambda[%d,0]' % (day-t0) in samples]
+    days_found = [day for day in days if 'lambda[%d,1]' % (day-t0) in samples]
     days_missing = set(days).difference(days_found)
     print("Empirical data for days %s is available but fit data for these days is missing" % days_missing)
     #day_labels = get_day_labels(data, days, t0)
@@ -212,7 +212,7 @@ def plot_data_and_fits(data_path, roi, samples, t0, tm, chains=None):
     chain_samples = samples[samples['chain'].isin(chains)]
 
     for i, kind in enumerate(['cases', 'recover', 'deaths']):
-        estimates[kind] = [chain_samples['lambda[%d,%d]' % (day-t0, i)].mean() for day in days_found]
+        estimates[kind] = [chain_samples['lambda[%d,%d]' % (day-t0, i+1)].mean() for day in days_found]
         colors = 'bgr'
         cum = data["cum_%s" % kind]
         xticks, xlabels = zip(*[(i, x[:-3]) for i, x in enumerate(cum.index) if i%2==0])
