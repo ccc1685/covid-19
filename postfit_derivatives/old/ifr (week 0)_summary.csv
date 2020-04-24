@@ -1,0 +1,171 @@
+Region,Model,Mean IFR (week 0),CI lower,CI upper,Mean WAIC
+US,reducedlinearmodelq0ctime,0.0957,0.0022,0.2703,2113.83
+US_AK,reducedlinearmodelNegBinom,0.0034,0.0009,0.0182,380.57
+US_AR,reducedlinearmodelNegBinom,0.0014,0.0004,0.0075,651.4
+US_AZ,reducedlinearmodelNegBinom,0.0036,0.0009,0.0225,702.4
+US_DC,reducedlinearmodelNegBinom,0.0016,0.0005,0.0094,674.54
+US_DE,reducedlinearmodelNegBinom,0.0031,0.0008,0.019,611.75
+US_GU,reducedlinearmodelq0ctime,0.0059,0.0012,0.027,320.9
+US_HI,reducedlinearmodelq0,0.0027,0.0007,0.0175,479.39
+US_IA,reducedlinearmodelq0,0.0023,0.0006,0.0153,680.52
+US_KY,reducedlinearmodelNegBinom,0.0039,0.0009,0.0263,645.72
+US_MD,reducedlinearmodelq0,0.0024,0.0006,0.0157,840.32
+US_ME,fulllinearmodel,0.0022,0.0006,0.0116,546.71
+US_MI,reducedlinearmodelq0,0.0043,0.001,0.0321,1182.76
+US_MN,reducedlinearmodelNegBinom,0.0022,0.0006,0.0106,776.14
+US_MT,reducedlinearmodelNegBinom,0.0039,0.0009,0.0261,427.87
+US_ND,reducedlinearmodelq0ctime,0.0035,0.0009,0.0155,428.63
+US_NH,reducedlinearmodelq0,0.0033,0.0008,0.0212,572.08
+US_NJ,reducedlinearmodelq0,0.0033,0.0008,0.0194,1150.61
+US_NM,reducedlinearmodelq0,0.003,0.0007,0.0188,579.31
+US_NY,nonlinearmodelq0ctime,0.0022,0.0006,0.0104,1563.98
+US_OK,reducedlinearmodelq0,0.0032,0.0008,0.0216,668.83
+US_RI,fulllinearmodel,0.005,0.0011,0.0501,645.83
+US_SD,fulllinearmodel,0.0022,0.0005,0.0169,542.27
+US_TN,reducedlinearmodelq0,0.0018,0.0005,0.0105,862.29
+US_TX,reducedlinearmodelNegBinom,0.0027,0.0007,0.0162,940.2
+US_UT,fulllinearmodel,0.005,0.001,0.0393,603.59
+US_VA,fulllinearmodel,0.0043,0.001,0.035,754.02
+US_VI,fulllinearmodel,0.0182,0.0023,0.2158,205.07
+US_VT,fulllinearmodel,0.0065,0.0013,0.0503,460.52
+US_WV,reducedlinearmodelq0ctime,0.0043,0.001,0.024,430.01
+US_WY,reducedlinearmodelNegBinom,0.0037,0.0009,0.0232,392.79
+Afghanistan,fulllinearmodel,0.0063,0.0013,0.0824,482.74
+Albania,fulllinearmodel,0.005,0.0013,0.0223,547.17
+Algeria,fulllinearmodel,0.0077,0.0015,0.0707,908.4
+Andorra,reducedlinearmodelq0,0.0042,0.001,0.0251,511.18
+Antigua and Barbuda,reducedlinearmodelq0,0.0245,0.0032,0.2771,108.72
+Argentina,reducedlinearmodelq0,0.0024,0.0006,0.0141,809.14
+Armenia,reducedlinearmodelq0,0.0034,0.0008,0.0143,622.58
+Austria,reducedlinearmodelq0,0.0015,0.0004,0.012,1279.79
+Azerbaijan,reducedlinearmodelq0,0.0033,0.0008,0.0267,648.5
+Bahamas,reducedlinearmodelNegBinom,0.0184,0.0029,0.1929,189.89
+Bahrain,reducedlinearmodelq0ctime,0.0028,0.0007,0.016,873.29
+Bangladesh,nonlinearmodelq0ctime,0.0053,0.0013,0.0462,486.79
+Barbados,reducedlinearmodelNegBinom,0.0164,0.0026,0.1206,234.71
+Belarus,reducedlinearmodelNegBinom,0.0043,0.001,0.0337,609.55
+Belgium,nonlinearmodelq0ctime,0.003,0.0009,0.0115,1394.64
+Benin,reducedlinearmodelNegBinom,0.0202,0.0028,0.2282,130.58
+Bolivia,fulllinearmodel,0.0096,0.0019,0.1005,412.32
+Bosnia and Herzegovina,reducedlinearmodelq0,0.0021,0.0006,0.0125,642.84
+Brazil,fulllinearmodel,0.0074,0.0015,0.0555,1107.31
+Brunei,reducedlinearmodelq0ctime,0.01,0.0017,0.0362,365.92
+Bulgaria,reducedlinearmodelNegBinom,0.0024,0.0006,0.0126,581.21
+Burkina Faso,reducedlinearmodelq0,0.004,0.001,0.0201,529.67
+Burma,nonlinearmodelq0ctime,0.0098,0.0017,0.0949,162.02
+Cabo Verde,reducedlinearmodelNegBinom,0.0165,0.0025,0.1809,107.68
+Cameroon,reducedlinearmodelq0,0.0068,0.0013,0.0395,425.33
+Chile,reducedlinearmodelNegBinom,0.0012,0.0003,0.0073,982.69
+China,fulllinearmodel,0.0007,0.0002,0.0017,3090.62
+Colombia,nonlinearmodelq0ctime,0.0045,0.0011,0.0164,717.07
+Congo (Brazzaville),nonlinearmodelq0ctime,0.013,0.0012,0.2155,146.92
+Congo (Kinshasa),reducedlinearmodelq0ctime,0.0106,0.0023,0.0581,330.62
+Costa Rica,reducedlinearmodelq0,0.0032,0.0007,0.0174,509.19
+Croatia,fulllinearmodel,0.0017,0.0003,0.0121,753.84
+Cuba,reducedlinearmodelNegBinom,0.0026,0.0006,0.019,484.75
+Cyprus,reducedlinearmodelq0,0.0052,0.0011,0.0241,519.34
+Czechia,nonlinearmodelq0ctime,0.0016,0.0004,0.0083,948.07
+Denmark,reducedlinearmodelq0,0.002,0.0006,0.0104,1099.74
+Diamond Princess,reducedlinearmodelq0,0.007,0.0012,0.0546,471.34
+Djibouti,reducedlinearmodelq0,0.0062,0.0013,0.0413,283.74
+Dominican Republic,reducedlinearmodelq0ctime,0.0028,0.0004,0.018,718.65
+Ecuador,reducedlinearmodelq0ctime,0.0029,0.0005,0.0212,920.13
+Egypt,fulllinearmodel,0.0057,0.0015,0.0435,860.21
+El Salvador,reducedlinearmodelq0,0.0059,0.0013,0.0313,266.17
+Estonia,reducedlinearmodelq0,0.0029,0.0007,0.0155,661.66
+Ethiopia,nonlinearmodelq0ctime,0.0095,0.0016,0.0966,237.25
+Finland,reducedlinearmodelNegBinom,0.0041,0.0009,0.0268,759.96
+France,reducedlinearmodelq0ctime,0.0561,0.001,0.8798,2029.96
+Gabon,nonlinearmodelq0ctime,0.011,0.0016,0.1414,173.62
+Gambia,reducedlinearmodelq0,,,,16.53
+Georgia,reducedlinearmodelNegBinom,0.0051,0.0012,0.0324,474.94
+Germany,reducedlinearmodelq0ctime,0.0079,0.0003,0.3828,2046.63
+Ghana,fulllinearmodel,0.0128,0.0021,0.1113,363.65
+Greece,reducedlinearmodelq0,0.0032,0.0008,0.0187,841.61
+Guatemala,nonlinearmodelq0ctime,0.0085,0.0016,0.0663,289.34
+Guinea,reducedlinearmodelNegBinom,0.0069,0.0013,0.0496,270.21
+Guyana,reducedlinearmodelNegBinom,0.0204,0.003,0.2253,169.55
+Haiti,reducedlinearmodelNegBinom,0.0206,0.003,0.2162,160.7
+Honduras,reducedlinearmodelNegBinom,0.0084,0.0016,0.0595,401.78
+Hungary,reducedlinearmodelNegBinom,0.0032,0.0008,0.0182,685.34
+Iceland,reducedlinearmodelq0ctime,0.0027,0.0006,0.0115,826.89
+India,fulllinearmodel,0.0049,0.0011,0.0283,980.94
+Indonesia,fulllinearmodel,0.0017,0.0003,0.0125,944.32
+Iran,reducedlinearmodelNegBinom,0.0017,0.0005,0.0078,2234.27
+Iraq,fulllinearmodel,0.0039,0.0009,0.0448,872.37
+Ireland,reducedlinearmodelq0,0.0046,0.001,0.0255,904.6
+Israel,reducedlinearmodelq0,0.0012,0.0003,0.0077,1061.67
+Italy,reducedlinearmodelq0ctime,0.0033,0.0005,0.3788,2483.54
+Jamaica,nonlinearmodelq0ctime,0.0092,0.0018,0.0896,270.61
+Japan,reducedlinearmodelNegBinom,0.0023,0.0006,0.0139,1409.02
+Jordan,reducedlinearmodelq0,0.0044,0.001,0.0195,476.76
+Kazakhstan,nonlinearmodelq0ctime,0.0037,0.0009,0.0165,573.44
+Kenya,reducedlinearmodelq0,0.0051,0.0011,0.0312,359.24
+"Korea, South",reducedlinearmodelq0ctime,0.0014,0.0003,0.0443,1764.69
+Kosovo,nonlinearmodelq0ctime,0.0069,0.0014,0.0668,288.8
+Kuwait,fulllinearmodel,0.0038,0.0009,0.0657,740.2
+Kyrgyzstan,reducedlinearmodelq0ctime,0.0077,0.0017,0.0361,370.32
+Latvia,reducedlinearmodelq0,0.0062,0.0013,0.0373,472.0
+Lebanon,fulllinearmodel,0.0043,0.0008,0.037,620.74
+Liberia,reducedlinearmodelNegBinom,0.0167,0.0024,0.1179,133.39
+Libya,reducedlinearmodelNegBinom,0.0153,0.0024,0.1466,150.37
+Liechtenstein,reducedlinearmodelq0,0.0233,0.003,0.2331,170.11
+Lithuania,reducedlinearmodelq0,0.0034,0.0008,0.0195,576.17
+Luxembourg,reducedlinearmodelq0,0.0034,0.0008,0.0177,727.12
+Malaysia,reducedlinearmodelq0ctime,0.0013,0.0005,0.0076,1270.14
+Mali,fulllinearmodel,0.0141,0.003,0.0848,252.01
+Malta,reducedlinearmodelq0,0.0068,0.0015,0.0396,427.07
+Mauritius,reducedlinearmodelq0,0.0073,0.0014,0.0367,360.36
+Mexico,fulllinearmodel,0.0037,0.0008,0.0293,864.65
+Moldova,reducedlinearmodelq0,0.0029,0.0007,0.0131,623.05
+Monaco,reducedlinearmodelNegBinom,0.0142,0.0027,0.099,241.94
+Montenegro,reducedlinearmodelq0,0.0083,0.0016,0.0403,349.62
+Morocco,fulllinearmodel,0.0027,0.0006,0.0143,635.2
+Netherlands,fulllinearmodel,0.0075,0.0014,0.0786,1269.55
+New Zealand,reducedlinearmodelq0ctime,0.0015,0.0003,0.0128,653.49
+Niger,reducedlinearmodelq0,0.0067,0.0013,0.0405,337.1
+Nigeria,reducedlinearmodelq0,0.0041,0.001,0.0188,427.28
+North Macedonia,reducedlinearmodelNegBinom,0.0035,0.0008,0.0228,570.53
+Norway,reducedlinearmodelq0,0.0041,0.0008,0.1567,961.57
+Oman,reducedlinearmodelNegBinom,0.0042,0.001,0.0307,603.71
+Pakistan,reducedlinearmodelq0ctime,0.0017,0.0003,0.011,942.62
+Panama,reducedlinearmodelq0,0.0041,0.001,0.0206,682.39
+Paraguay,reducedlinearmodelq0,0.007,0.0016,0.042,333.78
+Peru,reducedlinearmodelq0,0.0026,0.0007,0.015,924.1
+Philippines,nonlinearmodelq0ctime,0.0076,0.002,0.0237,870.97
+Poland,nonlinearmodelq0ctime,0.0035,0.0009,0.0151,911.43
+Portugal,reducedlinearmodelq0,0.002,0.0005,0.0104,1097.47
+Qatar,reducedlinearmodelNegBinom,0.0044,0.0009,0.0228,800.16
+Romania,reducedlinearmodelq0,0.0014,0.0004,0.007,970.94
+Russia,reducedlinearmodelq0ctime,0.0019,0.0004,0.048,1110.46
+San Marino,reducedlinearmodelq0ctime,0.0112,0.0024,0.0569,510.9
+Saudi Arabia,reducedlinearmodelq0,0.0014,0.0004,0.0075,908.04
+Senegal,reducedlinearmodelq0,0.0029,0.0007,0.0173,510.48
+Serbia,fulllinearmodel,0.0091,0.0019,0.0674,678.22
+Singapore,fulllinearmodel,0.002,0.0005,0.0162,1219.03
+Slovakia,fulllinearmodel,0.0109,0.0022,0.0686,528.2
+Slovenia,reducedlinearmodelq0,0.0036,0.0009,0.0172,690.18
+Somalia,nonlinearmodelq0ctime,0.0092,0.0013,0.0932,116.42
+South Africa,reducedlinearmodelq0,0.0037,0.0008,0.0214,660.21
+Spain,reducedlinearmodelq0ctime,0.0021,0.0005,0.0074,2003.88
+Sri Lanka,reducedlinearmodelq0ctime,0.0092,0.0026,0.0325,405.54
+Sudan,reducedlinearmodelNegBinom,0.0177,0.0026,0.1957,126.76
+Sweden,reducedlinearmodelq0,0.0043,0.001,0.0235,1116.42
+Switzerland,nonlinearmodelq0ctime,0.0021,0.0006,0.0116,1491.72
+Syria,reducedlinearmodelq0,0.0225,0.0032,0.2915,126.15
+Taiwan*,reducedlinearmodelq0ctime,0.0045,0.0011,0.0344,728.39
+Tanzania,nonlinearmodelq0ctime,0.0105,0.0018,0.1155,194.71
+Thailand,fulllinearmodel,0.0024,0.0007,0.0102,1122.5
+Togo,reducedlinearmodelNegBinom,0.0107,0.0022,0.0721,263.9
+Trinidad and Tobago,reducedlinearmodelq0,0.0154,0.0025,0.0769,288.34
+Tunisia,reducedlinearmodelNegBinom,0.0049,0.0011,0.0313,529.14
+Turkey,fulllinearmodel,0.0008,0.0001,0.0046,1084.46
+Ukraine,reducedlinearmodelNegBinom,0.0022,0.0006,0.0122,619.31
+United Arab Emirates,reducedlinearmodelq0,0.0039,0.0008,0.0521,958.26
+United Kingdom,reducedlinearmodelq0ctime,0.0058,0.0013,0.0766,1552.1
+Uruguay,reducedlinearmodelq0,0.0061,0.0012,0.0291,460.44
+Uzbekistan,fulllinearmodel,0.0056,0.0012,0.063,464.71
+Venezuela,reducedlinearmodelq0ctime,0.0166,0.0038,0.0534,378.83
+West Bank and Gaza,fulllinearmodel,0.0101,0.002,0.1089,429.4
+Zambia,reducedlinearmodelq0,0.022,0.003,0.2363,201.45
+Zimbabwe,reducedlinearmodelNegBinom,0.0211,0.003,0.2336,123.39
