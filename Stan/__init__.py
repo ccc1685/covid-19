@@ -423,13 +423,12 @@ def reweighted_stat(stat_vals, loo_vals, loo_se_vals = None):
     return np.sum(stat_vals * weights)
 
 
-def reweighted_stats(fits_path, model_names):
+def reweighted_stats(fits_path, model_names, save=True):
     tables_path = Path(fits_path) / 'tables'
     dfs = [pd.read_csv(tables_path/ ('%s_fit_table.csv' % model_name), index_col=['roi', 'quantile']) for model_name in model_names]
     params = set.intersection(*[set(df.columns) for df in dfs])
     rois = set.intersection(*[set(df.index.get_level_values('roi')) for df in dfs])
     result = pd.DataFrame(index=rois, columns=params)
-    print(params)
     for param in params:
         # Lists of series (one for each model) indexed by ROIs becomes models x ROIs dataframes
         stat_vals = pd.DataFrame([df[param].unstack('quantile')['0.5'] for df in dfs], index=model_names)
@@ -437,4 +436,8 @@ def reweighted_stats(fits_path, model_names):
         loo_se_vals = pd.DataFrame([df[param].unstack('quantile')['std'] for df in dfs], index=model_names)
         for roi in rois:
             result.loc[roi, param] = reweighted_stat(stat_vals[roi], loo_vals[roi], loo_se_vals[roi])
-    result.to_csv(tables_path / 'fit_table_reweighted.csv')
+    result = result.sort_index()
+    result = result[sorted(result.columns)]
+    if save:
+        result.to_csv(tables_path / 'fit_table_reweighted.csv')
+    return result

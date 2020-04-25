@@ -87,10 +87,15 @@ for model_name in args.model_names:
     df = df[median_locs].droplevel('quantile')
     dfs.append(df)
 
+# Raw table
 df = pd.concat(dfs).reset_index().set_index(['model', 'roi']).sort_index()
-out = tables_path / ('fit_table.csv')
+out = tables_path / ('fit_table_raw.csv')
 if args.append:
     df_old = pd.read_csv(out, index_col=[0, 1])
     df = pd.concat([df_old, df])
+    df = df[sorted(df.columns)]
 # Export the CSV file for the big table
 df.to_csv(out)
+
+# Reweighted table
+cs.reweighted_stats(args.fits_path, args.model_names, save=True)
