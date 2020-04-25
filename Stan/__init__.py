@@ -11,6 +11,7 @@ import pystan
 import re
 from scipy.stats import norm
 import sys
+import tqdm
 
 
 def get_fit_path(fits_path, model_name, roi):
@@ -175,6 +176,22 @@ def get_day_labels(data, days, t0):
     days, day_labels = zip(*enumerate(data.index[t0:]))
     day_labels = ['%s (%d)' % (day_labels[i][:-3], days[i]) for i in range(len(days))]
     return day_labels
+
+
+def get_ifrs(rois):
+    ifrs = []
+    for roi in tqdm(rois):    
+        fit_path = 'fits/fit1/reducedlinearmodelq0_%s.pkl' % roi
+        model_path = 'reducedlinearmodelq0'
+        try:
+            fit = load_fit(fit_path, model_path)
+            samples = fit.to_dataframe()
+            s = samples
+            x = (s['sigmac']/(s['sigmac']+s['sigmau'])) * (s['sigmad']/(s['sigmad']+s['sigmar']))
+            ifrs.append(x.median())
+        except:
+            pass
+    return ifrs
 
 
 def get_timing(roi, data_path):
