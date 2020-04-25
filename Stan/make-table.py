@@ -79,23 +79,24 @@ for model_name in args.model_names:
     tables = [df_ for model_name_, roi, df_ in result if model_name_==model_name]
     df = pd.concat(tables)
     out = tables_path / ('%s_fit_table.csv' % model_name)
+    df = df.sort_index()
     # Export the CSV file for this model
     df.to_csv(out)
     # Then prepare for the big table (across models)
     df['model'] = model_name
-    median_locs = df.index.get_level_values('quantile')==0.5
-    df = df[median_locs].droplevel('quantile')
+    #median_locs = df.index.get_level_values('quantile')==0.5
+    #df = df[median_locs].droplevel('quantile')
     dfs.append(df)
 
 # Raw table
-df = pd.concat(dfs).reset_index().set_index(['model', 'roi']).sort_index()
+df = pd.concat(dfs).reset_index().set_index(['model', 'roi', 'quantile']).sort_index()
 out = tables_path / ('fit_table_raw.csv')
 if args.append:
-    df_old = pd.read_csv(out, index_col=[0, 1])
+    df_old = pd.read_csv(out, index_col=['model', 'roi', 'quantile'])
     df = pd.concat([df_old, df])
     df = df[sorted(df.columns)]
 # Export the CSV file for the big table
 df.to_csv(out)
 
-# Reweighted table
-cs.reweighted_stats(args.fits_path, args.model_names, save=True)
+# Model-averaged table
+cs.reweighted_stats(out)

@@ -423,22 +423,21 @@ def reweighted_stat(stat_vals, loo_vals, loo_se_vals = None):
     return np.sum(stat_vals * weights)
 
 
-def reweighted_stats(fits_path, model_names, save=True):
-    tables_path = Path(fits_path) / 'tables'
-    tables_path.mkdir(exist_ok=True)
-    dfs = [pd.read_csv(tables_path/ ('%s_fit_table.csv' % model_name), index_col=['roi', 'quantile']) for model_name in model_names]
-    params = set.intersection(*[set(df.columns) for df in dfs])
-    rois = set.intersection(*[set(df.index.get_level_values('roi')) for df in dfs])
-    result = pd.DataFrame(index=rois, columns=params)
-    for param in params:
-        # Lists of series (one for each model) indexed by ROIs becomes models x ROIs dataframes
-        stat_vals = pd.DataFrame([df[param].unstack('quantile')['0.5'] for df in dfs], index=model_names)
-        loo_vals = pd.DataFrame([df[param].unstack('quantile')['mean'] for df in dfs], index=model_names)
-        loo_se_vals = pd.DataFrame([df[param].unstack('quantile')['std'] for df in dfs], index=model_names)
-        for roi in rois:
-            result.loc[roi, param] = reweighted_stat(stat_vals[roi], loo_vals[roi], loo_se_vals[roi])
-    result = result.sort_index()
-    result = result[sorted(result.columns)]
+def reweighted_stats(raw_table_path, save=True):
+    df = pd.read_csv(raw_table_path, index_col=['model', 'roi', 'quantile'])
+    df.columns.name = 'param'
+    df = df.stack('param').unstack(['roi', 'quantile', 'param']).T
+    rois = df.index.get_level_values('roi').unique()
+    quantiles = df.index.get_level_values('quantile').unique() # Also include mean and std
+    result = pd.Series(index=df.index)
+    for roi in rois:
+        loo = df.loc[(roi, 'mean', 'loo')]
+        loo_se = df.loc[(roi, 'std', 'loo')]
+        chunk = df.index.get_level_values('roi')==roi  # An indexer for this ROI
+        result[chunk] = df[chunk].apply(lambda x: reweighted_stat(x, loo, loo_se), axis=1)
+    result = result.unstack(['param'])
+    result = result[~result.index.get_level_values('quantile').isin(['min', 'max'])]  # Remove min and max
     if save:
-        result.to_csv(tables_path / 'fit_table_reweighted.csv')
+        path = Path(raw_table_path).parent / 'fit_table_reweighted.csv'
+        result.to_csv(path)
     return result
