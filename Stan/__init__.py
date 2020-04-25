@@ -178,7 +178,7 @@ def get_day_labels(data, days, t0):
     return day_labels
 
 
-def get_ifrs(fits_path, model_name, quantiles=[0.025, 0.25, 0.5, 0.75, 0.975]):
+def get_ifrs(fits_path, model_name, quantiles=[0.025, 0.25, 0.5, 0.75, 0.975], save=False):
     rois = list_rois(fits_path, model_name, 'pkl')
     ifrs = pd.DataFrame(index=rois, columns=quantiles)
     for roi in tqdm(rois):    
@@ -192,6 +192,8 @@ def get_ifrs(fits_path, model_name, quantiles=[0.025, 0.25, 0.5, 0.75, 0.975]):
             s = samples
             x = (s['sigmac']/(s['sigmac']+s['sigmau'])) * (s['sigmad']/(s['sigmad']+s['sigmar']))
             ifrs.loc[roi] = x.quantile(quantiles)
+    if save:
+        ifrs.to_csv(Path(fits_path) / 'ifrs.csv')
     return ifrs
 
 
