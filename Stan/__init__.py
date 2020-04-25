@@ -179,8 +179,8 @@ def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0
             s = stats['%s_se' % stat]
             for q in quantiles:
                 df.loc[(roi, q), stat] = norm.ppf(q, m, s)
-            df.loc[roi, 'mean'] = m
-            df.loc[roi, 'std'] = s
+            df.loc[(roi, 'mean'), stat] = m
+            df.loc[(roi, 'std'), stat] = s
     for param in params:
         if param not in df:
             df[param] = None
