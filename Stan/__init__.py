@@ -11,7 +11,7 @@ import pystan
 import re
 from scipy.stats import norm
 import sys
-import tqdm
+from tqdm import tqdm
 
 
 def get_fit_path(fits_path, model_name, roi):
@@ -178,19 +178,20 @@ def get_day_labels(data, days, t0):
     return day_labels
 
 
-def get_ifrs(rois):
-    ifrs = []
+def get_ifrs(fits_path, model_name, quantiles=[0.025, 0.25, 0.5, 0.75, 0.975]):
+    rois = list_rois(fits_path, model_name, 'pkl')
+    ifrs = pd.DataFrame(index=rois, columns=quantiles)
     for roi in tqdm(rois):    
-        fit_path = 'fits/fit1/reducedlinearmodelq0_%s.pkl' % roi
-        model_path = 'reducedlinearmodelq0'
+        fit_path = get_fit_path(fits_path, model_name, roi)
         try:
-            fit = load_fit(fit_path, model_path)
+            fit = load_fit(fit_path, model_name)
+        except Exception as e:
+            print(e)
+        else:
             samples = fit.to_dataframe()
             s = samples
             x = (s['sigmac']/(s['sigmac']+s['sigmau'])) * (s['sigmad']/(s['sigmad']+s['sigmar']))
-            ifrs.append(x.median())
-        except:
-            pass
+            ifrs.loc[roi] = x.quantile(quantiles)
     return ifrs
 
 
