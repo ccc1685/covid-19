@@ -151,11 +151,19 @@ def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0
         else:
             df = samples[cols]
             if by_week:
-                df = df.T.rolling(7).mean().T.iloc[:, 6::7]  # Column 6 will be the last day of the first week
-                                                             # It will contain the average of the first week
-                                                             # Do this every 7 days
+                if df.shape[1] >= 7: # At least one week worth of data
+                    df = df.T.rolling(7).mean().T.iloc[:, 6::7]  # Column 6 will be the last day of the first week
+                                                                 # It will contain the average of the first week
+                                                                 # Do this every 7 days
+                else:
+                    df = df.T.rolling(7).mean().T.iloc[:, -1:] # Just use the last value we have
+                    df[:] = None # And the null it because we don't want to trust < 1 week of data
                 df.columns = ['%s (week %d)' % (param, i) for i in range(len(df.columns))]
-            df = df.describe(percentiles=quantiles)
+            try:
+                df = df.describe(percentiles=quantiles)
+            except ValueError as e:
+                print(roi, param, df.shape)
+                raise e
             df.index = [float(x.replace('%',''))/100 if '%' in x else x for x in df.index]
             df = df.drop('count')
             if not by_week:
@@ -173,6 +181,9 @@ def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0
                 df.loc[(roi, q), stat] = norm.ppf(q, m, s)
             df.loc[roi, 'mean'] = m
             df.loc[roi, 'std'] = s
+    for param in params:
+        if param not in df:
+            df[param] = None
     df = df.sort_index()
     return df
 
