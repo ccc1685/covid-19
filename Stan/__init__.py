@@ -155,8 +155,11 @@ def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0
                                                              # It will contain the average of the first week
                                                              # Do this every 7 days
                 df.columns = ['%s (week %d)' % (param, i) for i in range(len(df.columns))]
-            df = df.quantile(quantiles)
+            df = df.describe(percentiles=quantiles)
+            df.index = [float(x.replace('%',''))/100 if '%' in x else x for x in df.index]
+            df = df.drop('count')
             if not by_week:
+                # Compute the median across all of the matching column names
                 df = df.median(axis=1).to_frame(name=param)
             df.columns = [x.split('[')[0] for x in df.columns]  # Drop the index
             df.index = pd.MultiIndex.from_product(([roi], df.index), names=['roi', 'quantile'])
@@ -164,10 +167,12 @@ def make_table(roi, samples, params, stats, quantiles=[0.025, 0.25, 0.5, 0.75, 0
     df = pd.concat(dfs, axis=1)
     for stat in ['waic', 'loo']:
         if stat in stats:
+            m = stats[stat]
+            s = stats['%s_se' % stat]
             for q in quantiles:
-                m = stats[stat]
-                s = stats['%s_se' % stat]
                 df.loc[(roi, q), stat] = norm.ppf(q, m, s)
+            df.loc[roi, 'mean'] = m
+            df.loc[roi, 'std'] = s
     df = df.sort_index()
     return df
 
