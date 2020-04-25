@@ -197,7 +197,7 @@ def get_day_labels(data, days, t0):
 def get_ifrs(fits_path, model_name, quantiles=[0.025, 0.25, 0.5, 0.75, 0.975], save=False):
     rois = list_rois(fits_path, model_name, 'pkl')
     ifrs = pd.DataFrame(index=rois, columns=quantiles)
-    for roi in tqdm(rois):    
+    for roi in tqdm(rois):
         fit_path = get_fit_path(fits_path, model_name, roi)
         try:
             fit = load_fit(fit_path, model_name)
@@ -424,7 +424,7 @@ def reweighted_stat(stat_vals, loo_vals, loo_se_vals = None):
 
 
 def reweighted_stats(fits_path, model_names):
-    tables_path = Path(fits_path) / 'tables'
+    tables_path = Path(fits_path)
     dfs = [pd.read_csv(tables_path/ ('%s_fit_table.csv' % model_name), index_col=['roi', 'quantile']) for model_name in model_names]
     params = set.intersection(*[set(df.columns) for df in dfs])
     rois = set.intersection(*[set(df.index.get_level_values('roi')) for df in dfs])
