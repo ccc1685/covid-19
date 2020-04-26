@@ -437,6 +437,18 @@ def reweighted_stats(raw_table_path, save=True):
         result[chunk] = df[chunk].apply(lambda x: reweighted_stat(x, loo, loo_se), axis=1)
     result = result.unstack(['param'])
     result = result[~result.index.get_level_values('quantile').isin(['min', 'max'])]  # Remove min and max
+    
+    # Compute global stats
+    means = result.unstack('roi').loc['mean'].unstack('param')
+    weights = (1/result.unstack('roi').loc['std']**2).fillna(0).unstack('param')
+    weights.loc['AA_Global'] = 0  # Don't include the global numbers yet
+    global_mean = (means*weights).sum() / weights.sum()
+    global_sd = ((weights*((means - global_mean)**2)).sum()/weights.sum())**(1/2)
+    result.loc[('AA_Global', 'mean'), :] = global_mean
+    result.loc[('AA_Global', 'std'), :] = global_sd
+    result.loc[('AA_Global', 'std'), :] = global_sd
+    result = result.sort_index()
+
     if save:
         path = Path(raw_table_path).parent / 'fit_table_reweighted.csv'
         result.to_csv(path)
