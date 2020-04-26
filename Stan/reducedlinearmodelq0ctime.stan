@@ -2,7 +2,12 @@
 // include time dependence in sigmac to model change in case criteria or differences in testing
 
 
-functions {// SIR model
+functions { // time transition functions for beta and sigmac
+                real transition(real base,real location,real t) {
+                   return base + (1-base)/(1 + exp(.2*(t - location)));
+                }
+
+            // SIR model
             real[] SIR(
             real t,             // time
             real[] u,           // system state {infected,cases,susceptible}
@@ -81,17 +86,21 @@ functions {// SIR model
             real lambda[n_obs,3];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
             real car[n_obs];          //total cases / total infected
             real ifr[n_obs];          //total dead / total infected
+            real Rt[n_obs];           // time dependent reproduction number
+
             real u_init[n_difeq];     // initial conditions for odes
             real sigmac = f2/(1+f1);
             real beta = f2 + sigmau;
             real sigma = sigmar + sigmad;
             real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
-            real Rlast =R0 * (mbase + (1-mbase)/(1 + exp(.2*(n_obs - mlocation))));  // R(t=last day)
+            //real Rlast =R0 * (mbase + (1-mbase)/(1 + exp(.2*(n_obs - mlocation))));  // R(t=last day)
             real phi = 1/(extra_std^2);  // likelihood over-dispersion of std
 
           {  // local
              real theta[10] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation};
              real u[n_obs, n_difeq];   // solution from the ODE solver
+             real sigmact;
+             real betat;
 
              real cinit = y[1,1]/n_scale;
 
@@ -108,6 +117,9 @@ functions {// SIR model
 
              car[1] = u[1,4]/u[1,3];
              ifr[1] = sigmad*u[1,5]/u[1,3];
+             betat = beta*transition(mbase,mlocation,1);
+             sigmact = sigmac*transition(cbase,clocation,1);
+             Rt[1] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
 
              lambda[1,1] = (u[1,4]-u_init[4])*n_scale; //C: cases per day
              lambda[1,2] = sigmar*(u[1,5]-u_init[5])*n_scale; //R: recovered per day
@@ -116,6 +128,9 @@ functions {// SIR model
              for (i in 2:n_obs){
                 car[i] = u[i,4]/u[i,3];
                 ifr[i] = sigmad*u[i,5]/u[i,3];
+                betat = beta*transition(mbase,mlocation,i);
+                sigmact = sigmac*transition(cbase,clocation,i);
+                Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
 
                 lambda[i,1] = (u[i,4]-u[i-1,4])*n_scale; //C: cases per day
                 lambda[i,2] = sigmar*(u[i,5]-u[i-1,5])*n_scale; //R: recovered rate per day
