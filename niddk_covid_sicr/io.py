@@ -27,7 +27,8 @@ def get_fit_path(fits_path: str, model_name: str, roi: str) -> str:
     return path
 
 
-def get_model_path(models_path: str, model_name: str) -> str:
+def get_model_path(models_path: str, model_name: str,
+                   compiled: bool = False, with_suffix: bool = False) -> str:
     """Get a full model path for one model file.
 
     Args:
@@ -37,10 +38,18 @@ def get_model_path(models_path: str, model_name: str) -> str:
     Returns:
         A full path to a Stan model file.
     """
-    file_path = Path(models_path) / ('%s.stan' % model_name)
-    assert file_path.is_file(), "No .stan file found at %s" % file_path
-    path = Path(models_path) / model_name
-    return path
+    models_path = Path(models_path)
+    if compiled:
+        file_path = models_path / ('%s_%s_%s.stanc' %
+                                   (model_name, platform.platform(),
+                                    platform.python_version()))
+    else:
+        file_path = Path(models_path) / ('%s.stan' % model_name)
+    assert file_path.is_file(), "No %s file found at %s" %\
+        (file_path, '.stanc' if compiled else '.stan')
+    if not with_suffix:
+        file_path = file_path.with_suffix('')
+    return file_path
 
 
 def get_data(roi: str, data_path: str = 'data') -> pd.DataFrame:
@@ -62,58 +71,59 @@ def get_data(roi: str, data_path: str = 'data') -> pd.DataFrame:
     return df
 
 
-def load_or_compile_stan_model(stan_name: str, force_recompile: bool = False,
+def load_or_compile_stan_model(model_name: str, models_path: str = './models',
+                               force_recompile: bool = False,
                                verbose: bool = False):
-    """[summary]
+    """Loads a compiled Stan model from disk or compiles it if does not exist.
 
     Args:
-        stan_name (str): [description]
+        model_name (str): [description]
         force_recompile (bool, optional): [description]. Defaults to False.
         verbose (bool, optional): [description]. Defaults to False.
 
     Returns:
         [type]: [description]
     """
-    stan_raw = '%s.stan' % stan_name
-    stan_compiled = '%s_%s_%s.stanc' % (stan_name, platform.platform(),
-                                        platform.python_version())
-    stan_raw_last_mod_t = os.path.getmtime(stan_raw)
+    uncompiled_path = get_model_path(models_path, model_name, with_suffix=True)
+    compiled_path = get_model_path(models_path, model_name,
+                                   compiled=True, with_suffix=True)
+    stan_raw_last_mod_t = os.path.getmtime(uncompiled_path)
     try:
-        stan_compiled_last_mod_t = os.path.getmtime(stan_compiled)
+        stan_compiled_last_mod_t = os.path.getmtime(compiled_path)
     except FileNotFoundError:
         stan_compiled_last_mod_t = 0
     if force_recompile or (stan_compiled_last_mod_t < stan_raw_last_mod_t):
-        sm = pystan.StanModel(file=stan_raw)
-        with open(stan_compiled, 'wb') as f:
+        sm = pystan.StanModel(file=uncompiled_path)
+        with open(compiled_path, 'wb') as f:
             pickle.dump(sm, f)
     else:
         if verbose:
-            print("Loading %s from cache..." % stan_name)
-        with open(stan_compiled, 'rb') as f:
+            print("Loading %s from cache..." % model_name)
+        with open(compiled_path, 'rb') as f:
             sm = pickle.load(f)
     return sm
 
 
 def get_data_prefix() -> str:
-    """[summary]
+    """A universal prefix for all data files.
 
     Returns:
-        str: [description]
+        str: The prefix (data files will start with this and an underscore).
     """
     return 'covidtimeseries'
 
 
 def get_ending(fit_format: int) -> str:
-    """[summary]
+    """Get the file extension for a given fit format.
 
     Args:
-        fit_format (int): [description]
+        fit_format (int): .csv (0) or .pkl (1).
 
     Raises:
-        Exception: [description]
+        Exception: If an invalid fit format is provided.
 
     Returns:
-        str: [description]
+        str: The extension for the provided fit format.
     """
     if fit_format in [0]:
         ending = '.csv'
@@ -132,12 +142,12 @@ def list_rois(path: str, prefix: str, extension: str) -> list:
     potential file name
 
     Args:
-        path (str): [description]
-        prefix (str): [description]
-        extension (str): [description]
+        path (str): A fit_path or data_path contaning one file for each region.
+        prefix (str): Restrict files to those starting with this string.
+        extension (str): Restrict files to those ending with this string.
 
     Returns:
-        list: [description]
+        list: All regions, e.g. ['US_MI', 'Greece', ...].
     """
     if isinstance(path, str):
         path = Path(path)
@@ -161,15 +171,18 @@ def load_fit(fit_path: str, model_full_path: str, new_module_name: str = None):
     instance. Then it will return samples.
 
     Args:
-        fit_path (str): [description]
-        model_full_path (str): [description]
-        new_module_name (str, optional): [description]. Defaults to None.
+        fit_path (str): Full path to the fit file.
+        model_full_path (str): Full path to one model file.
+        new_module_name (str, optional): Used only internally for recursion.
+            Defaults to None.
 
     Raises:
-        ModuleNotFoundError: [description]
+        ModuleNotFoundError: This exception will be caught if the compiled
+                             model is not already in memory, and will be
+                             handled by loading it into memory and repeating.
 
     Returns:
-        [type]: [description]
+        pystan.StanFit4model: A Stan fit instance.
     """
     try:
         with open(fit_path, "rb") as f:
@@ -197,14 +210,14 @@ def extract_samples(fits_path: str, models_path: str, model_name: str,
     """Extract samples from the fit into a dataframe.
 
     Args:
-        fits_path (str): [description]
-        models_path (str): [description]
-        model_name (str): [description]
-        roi (str): [description]
-        fit_format (int): [description]
+        fits_path (str): Full path to the fits directory.
+        models_path (str): Full path to the models directory.
+        model_name (str): Name of the model (without '.stan' extension).
+        roi (str): A single region, e.g. "US_MI" or "Greece".
+        fit_format (int): .csv (0) or .pkl (1).
 
     Returns:
-        pd.DataFrame: [description]
+        pd.DataFrame: Samples extracted from the fit instance.
     """
     if fit_format in [0]:
         # Load the format that is just samples in a .csv file
@@ -227,11 +240,11 @@ def last_sample_as_dict(fit_path: str, model_path: str) -> dict:
     sample of a previous one.
 
     Args:
-        fit_path (str): [description]
-        model_path (str): [description]
+        fit_path (str): Full path to the fit file.
+        model_path (str): Full path to the model.
 
     Returns:
-        dict: [description]
+        dict: Parameter:value pairs from the last sample of the given fit.
     """
     fit = load_fit(fit_path, model_path)
     last = {key: value[-1] for key, value in fit.extract().items()}

@@ -10,16 +10,15 @@ from .io import extract_samples
 
 
 def get_waic(samples: pd.DataFrame) -> dict:
-    """Extract all the observation-wise log-likelihoods from the samples
-    dataframe.
+    """Get the Widely-Used Information Criterion (WAIC) for a fit.
 
-    Only use if you don't have arviz.
+    Only use if you don't have arviz (`get_waic_and_loo` is preferred).
 
     Args:
-        samples (pd.DataFrame): [description]
+        samples (pd.DataFrame): Samples extracted from a fit.
 
     Returns:
-        dict: [description]
+        dict: WAIC and se of WAIC for these samples
     """
     from numpy import log, exp, sum, mean, var, sqrt
     # I named the Stan array 'llx'
@@ -43,13 +42,14 @@ def get_waic(samples: pd.DataFrame) -> dict:
 
 
 def get_waic_and_loo(fit) -> dict:
-    """Compute WAIC and LOO from a fit instance using Arviz.
+    """Compute Widely-Available Information Criterion (WAIC) and
+    Leave One Out (LOO) from a fit instance using Arviz.
 
     Args:
-        fit ([type]): [description]
+        fit: A PyStan4model instance (i.e. a PyStan fit).
 
     Returns:
-        dict: [description]
+        dict: WAIC and LOO statistics (and se's) for this fit.
     """
     idata = az.from_pystan(fit, log_likelihood="llx")
     result = {}
@@ -58,24 +58,24 @@ def get_waic_and_loo(fit) -> dict:
     return result
 
 
-def getllxtensor_singleroi(roi: str, datapath: str, fits_path: str,
+def getllxtensor_singleroi(roi: str, data_path: str, fits_path: str,
                            models_path: str, model_name: str,
                            fit_format: int) -> np.array:
-    """[summary]
+    """Recompute a single log-likelihood tensor (n_samples x n_datapoints).
 
     Args:
-        roi (str): [description]
-        datapath (str): [description]
-        fits_path (str): [description]
-        models_path (str): [description]
-        model_name (str): [description]
-        fit_format (int): [description]
+        roi (str): A single ROI, e.g. "US_MI" or "Greece".
+        data_path (str): Full path to the data directory.
+        fits_path (str): Full path to the fits directory.
+        models_path (str): Full path to the models directory.
+        model_name (str): The model name (without the '.stan' suffix).
+        fit_format (int): The .csv (0) or .pkl (1) fit format.
 
     Returns:
-        np.array: [description]
+        np.array: The log-likelihood tensor.
     """
-    csv = datapath + "covidtimeseries_%s_.csv" % roi
-    df = pd.read_csv(csv)
+    csv_path = Path(data_path) / ("covidtimeseries_%s_.csv" % roi)
+    df = pd.read_csv(csv_path)
     t0 = np.where(df["new_cases"].values > 1)[0][0]
     y = df[['new_cases', 'new_recover', 'new_deaths']].to_numpy()\
         .astype(int)[t0:, :]
@@ -118,12 +118,13 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
     where the weights are related to the LOO's of model/
 
     Args:
-        stat_vals (np.array): [description]
-        loo_vals (np.array): [description]
-        loo_se_vals (np.array, optional): [description]. Defaults to None.
+        stat_vals (np.array): Values (across models) of some statistic.
+        loo_vals (np.array): Values (across models) of LOO.
+        loo_se_vals (np.array, optional): Values (across models) of se of LOO.
+            Defaults to None.
 
     Returns:
-        float: [description]
+        float: A new average value for the statistic, weighted across models.
     """
     min_loo = min(loo_vals)
     weights = np.exp(-0.5*(loo_vals-min_loo))
@@ -134,14 +135,17 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
 
 
 def reweighted_stats(raw_table_path: str, save: bool = True) -> pd.DataFrame:
-    """[summary]
+    """Reweight all statistics (across models) according to the LOO
+    of each of the models.
 
     Args:
-        raw_table_path (str): [description]
-        save (bool, optional): [description]. Defaults to True.
+        raw_table_path (str): Path to the .csv file containing the statistics
+                              for each model.
+        save (bool, optional): Whether to save the results. Defaults to True.
 
     Returns:
-        pd.DataFrame: [description]
+        pd.DataFrame: The reweighted statistics
+                      (i.e. a weighted average across models).
     """
     df = pd.read_csv(raw_table_path, index_col=['model', 'roi', 'quantile'])
     df.columns.name = 'param'

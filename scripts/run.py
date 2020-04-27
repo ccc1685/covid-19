@@ -1,3 +1,6 @@
+"""Fit one model for a single region.  Typically used in a batch file
+to run multiple regions and models at a time."""
+
 import argparse
 import numpy as np
 from pathlib import Path
@@ -116,7 +119,7 @@ fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control,
                             thin=args.n_thin)
 
 # Uncomment to print fit summary
-print(fit)
+# print(fit)
 
 # Save fit
 save_dir = Path(args.fits_path)
@@ -131,4 +134,4 @@ else:
                      'model_code': stanrunmodel.model_code, 'fit': fit},
                     f, protocol=pickle.HIGHEST_PROTOCOL)
 
-print("Finished")
+print("Finished %s" % args.roi)

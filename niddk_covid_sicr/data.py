@@ -10,13 +10,16 @@ from urllib.error import HTTPError
 
 
 def get_jhu(data_path: str) -> None:
-    """[summary]
+    """Gets data from Johns Hopkins CSSEGIS (countries only).
+
+    https://coronavirus.jhu.edu/map.html
+    https://github.com/CSSEGISandData/COVID-19
 
     Args:
-        data_path (str): [description]
+        data_path (str): Full path to data directory.
 
     Returns:
-        [type]: [description]
+        None
     """
     # Where JHU stores their data
     url_template = ("https://raw.githubusercontent.com/CSSEGISandData/"
@@ -48,16 +51,6 @@ def get_jhu(data_path: str) -> None:
                     df = df.set_index('Province_State')
                 df = df[[x for x in df if '20' in x]]  # Use only data columns
                 dfs[region][kind] = df  # Add to dictionary of dataframes
-
-    # Generate list of countries or states currently in the repository
-    # (ours, not JHU's)
-    # countries_states = [x.name.split('.')[0].split('_')[-1]
-    #                    for x in data_dir.iterdir()
-    #                    if 'covidtimeseries_' in str(x)]
-    # Just the countries
-    # countries = [x for x in countries_states if len(x)>2]
-    # Just the states
-    # states = [x for x in countries_states if len(x)==2]
 
     # Generate a list of countries that have "good" data,
     # according to these criteria:
@@ -101,14 +94,16 @@ def get_jhu(data_path: str) -> None:
             print("No data for %s" % country)
 
 
-def get_covid_trends(data_path: str) -> None:
-    """[summary]
+def get_covid_tracking(data_path: str) -> None:
+    """Gets data from The COVID Tracking Project (US states only).
+
+    https://covidtracking.com
 
     Args:
-        data_path (str): [description]
+        data_path (str): Full path to data directory.
 
     Returns:
-        [type]: [description]
+        None
     """
     url = ("https://raw.githubusercontent.com/COVID19Tracking/"
            "covid-tracking-data/master/data/states_daily_4pm_et.csv")
@@ -182,32 +177,38 @@ def fix_negatives(data_path: str, plot: bool = False) -> None:
     numbers.  For example, the cumulative total of cases should not go from N
     to a value less than N on a subsequent day.  This script fixes this by
     nulling such data and applying a monotonic spline interpolation in between
-    valid days of data.  This only affects a small number of regions.
+    valid days of data.  This only affects a small number of regions.  It
+    overwrites the original .csv files produced by the functions above.
 
     Args:
-        data_path (str): [description]
+        data_path (str): Full path to data directory.
         plot (bool): Whether to plot the changes.
+
+    Returns:
+        None
     """
     csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
     for csv in csvs:
         roi = str(csv).split('.')[0].split('_')[-1]
         df = pd.read_csv(csv)
         df = df.iloc[:-1]
-        df = fix_neg(df, roi, verbose=False, plot=plot)
+        df = fix_neg(df, roi, plot=plot)
         df.to_csv(data_path / (csv.name.split('.')[0]+'.csv'))
 
 
 def fix_neg(df: pd.DataFrame, roi: str,
             columns: list = ['cases', 'deaths', 'recover'],
-            verbose: bool = False, plot: bool = False) -> pd.DataFrame:
-    """[summary]
+            plot: bool = False) -> pd.DataFrame:
+    """Used by `fix_negatives` to fix negatives values for a single region.
+
+    This function uses monotonic spline interpolation to make sure that
+    cumulative counts are non-decreasing.
 
     Args:
-        df (pd.DataFrame): [description]
-        roi (str): something
-        columns (list, optional): [description].
+        df (pd.DataFrame): DataFrame containing data for one region.
+        roi (str): One region, e.g 'US_MI' or 'Greece'.
+        columns (list, optional): Columns to make non-decreasing.
             Defaults to ['cases', 'deaths', 'recover'].
-        verbose (bool, optional): [description]. Defaults to False.
 
     Returns:
         pd.DataFrame: [description]
