@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 try:
     from pip.req import parse_requirements
@@ -12,15 +12,17 @@ except ImportError:
 
 from setuptools import setup, find_packages
 
+
 def read_requirements():
     '''parses requirements from requirements.txt'''
-    reqs_path = os.path.join('.', 'requirements.txt')
+    reqs_path = Path(__file__).parent / 'requirements.txt'
     install_reqs = parse_requirements(reqs_path, session=PipSession())
     reqs = [str(ir.req) for ir in install_reqs]
     return reqs
 
+
 setup(
-    name='covid',
+    name='niddk_covid_sicr',
     version=1.0,
     author='NIDDK',
     packages=find_packages(),

@@ -1,58 +1,45 @@
-# covid-19
+# NIDDK SICR Model for estimating SARS-CoV-2 infection in a population
 
-Code and data to model the Covid-19 progression and estimate the unobserved infected population from reported cases, case recoveries, and case deaths globablly.  Original code in Julia used a Metropolis-Hastings MCMC to fit various latent variable SIR models to the observable data.  Current updated models are implemented in PyStan and described below.  Several versions of latent variable SIR models are in files with suffix .Stan.
+Code and data used for Chow et al, "TITLE", to model the progression of the COVID-19 epidemic and estimate the unobserved SARS-CoV-2 infected population from reported cases, case recoveries, and case deaths globablly.  Models are implemented in Stan and fit using PyStan.  Several versions of latent variable SIR models are provided in the `models` directory.
 
+*PYPI and other badges here*
 
+*BASIC SUMMARY OF THE MODEL HERE*
 
-Stan models can be run with Python file run.py.
+Data sources include the Johns Hopkins 
 
-Run a single region with:
+### Requirements to run code here:
+- python 3.5+
+- Install the Python package:
+  - From pypi: `pip install niddk-sicr-covid19`
+  - Or from source:
+    - `git clone http://github.com/ccc1685/covid-19`
+    - `cd covid-19`
+    - `pip install -e .`
+  - Or place this directory in your `PYTHONPATH` and install the contents of `requirements.txt`. 
+- `pystan` may not be easily pip installable on some systems, so consider conda:
+  - `conda install -c conda-forge pystan`
 
-`python run.py MODEL_NAME --roi=REGION_NAME` e.g. `python run.py reducedlinearmodelR0 --roi=US_MI`
+### Important scripts:
+- Stan models can be run with Python file `scripts/run.py`:
+  - Run a single region with:
+    - `python scripts/run.py MODEL_NAME --roi=REGION_NAME`
+    - e.g. `python scripts/run.py reducedlinearmodelR0 --roi=US_MI`
+  - Other optional arguments for specifying paths and some fitting parameters can be examined with `python scripts/run.py --help`.
+  - A pickle file containing the resultant fit will be produced in your `fits_path` (see help).
 
+- Analyze finished fits for all regions with `scripts/visualize-master.py`:
+  - For all regions (with fits) with `python scripts/visualize_master.py --model_name=MODEL_NAME`
+  - e.g. `python visualize_master.py --model_name=reducedlinearmodelR0`
+  - As above, help is available with the `--help` flag.
+  - Jupyter notebooks containining all analyzed regions will be created in your `fits_path`.
 
-Other Optional arguments:
-```
-  -dp DATA_PATH, --data_path DATA_PATH
-                        Path to directory containing the data files
-  -fp FITS_PATH, --fits_path FITS_PATH
-                        Path to directory to save fit files
-  -ch N_CHAINS, --n_chains N_CHAINS
-                        Number of chains to run
-  -wm N_WARMUPS, --n_warmups N_WARMUPS
-                        Number of chains to run
-  -it N_ITER, --n_iter N_ITER
-                        Number of chains to run
-  -tn N_THIN, --n_thin N_THIN
-                        Number of chains to run
-  -th N_THREADS, --n_threads N_THREADS
-                        Number of threads to use the whole run
-  -ad ADAPT_DELTA, --adapt_delta ADAPT_DELTA
-                        Adapt delta control parameter
-  -f FIT_FORMAT, --fit_format FIT_FORMAT
-                        Version of fit format to save (0 for csv of samples, 1 for pickle of fit instance)
-```       
+- Tables summarizing fit parameters can be generated with `scripts/make-tables.py`:
+  - `python scripts/make-tables.py`
+  - e.g. `python scripts/make-tables.py --model-names reducedlinearmodelR0 fulllinearmodel`
+  - As above, help is available with the `--help` flag.
+  - `.csv` files of the resulting dataframes will be created in the `tables` directory (see help).
 
-Analyze finished fits for all regions with:
-
-`python visualize_master.py --model_name=MODEL_NAME` e.g. `python visualize_master.py --model_name=reducedlinearmodelR0`
-
-Other optional arguments:
-```
-  -dp DATA_PATH, --data_path DATA_PATH
-                        Path to directory containing the data files
-  -fp FITS_PATH, --fits_path FITS_PATH
-                        Path to directory containing pickled fit files
-  -pp PACKAGE_PATH, --package_path PACKAGE_PATH
-                        Path to our python package (that contains __init__.py)
-  -mp MODELS_PATH, --models_path MODELS_PATH
-                        Path to directory containing .stan files
-  -r ROIS [ROIS ...], --rois ROIS [ROIS ...]
-                        Space separated list of ROIs
-  -n N_THREADS [N_THREADS ...], --n_threads N_THREADS [N_THREADS ...]
-                        Number of threads to use for analysis
-  -f FIT_FORMAT, --fit_format FIT_FORMAT
-                        Version of fit format to load (0 for csv of samples, 1 for pickle of fit instance)
-  -v VERBOSE, --verbose VERBOSE
-                        Verbose error reporting
-```
+This code is open source under the MIT License.
+Correspondence on modeling should be directed to *CARSON and SHASHAANK*
+Correspondence on the python code should be directed to rgerkin at asu.edu.
