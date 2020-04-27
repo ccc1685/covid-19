@@ -1,4 +1,11 @@
 FROM jupyter/datascience-notebook
+
+### Python code
+RUN pip install -e .
+
+
+
+### Julia code - can be removed if using Python only
 RUN julia -e 'Pkg.init()' && \
     julia -e 'Pkg.update()' && \
     julia -e 'Pkg.add("Arpack", "CSV", "DataFrames", "DelimitedFiles", "DifferentialEquations", "Distributed", "Distributions", "NLsolve", "PyPlot", "StochasticDiffEq")' && \
