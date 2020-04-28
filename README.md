@@ -36,7 +36,7 @@ Several variants of this model are discussed in the Supplemental Material of the
 - Stan models can be run with Python file `scripts/run.py`:
   - Run a single region with:
     - `python scripts/run.py MODEL_NAME --roi=REGION_NAME`
-    - e.g. `python scripts/run.py reducedlinearmodelR0 --roi=US_MI`
+    - e.g. `python scripts/run.py nonlinearmodel --roi=US_MI`
   - Other optional arguments for specifying paths and some fitting parameters can be examined with `python scripts/run.py --help`.
   - A pickle file containing the resultant fit will be produced in your `fits_path` (see help).
   - A `scripts/run_all.py` file is provided for reference but much better performance will be obtained by running `scripts/run.py` on a cluster.
