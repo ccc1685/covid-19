@@ -22,8 +22,8 @@ def read_requirements():
 
 
 setup(
-    name='niddk_covid_sicr',
-    version=1.0,
+    name='covid_sicr',
+    version='1.0.1',
     author='NIDDK',
     packages=find_packages(),
     license='MIT',

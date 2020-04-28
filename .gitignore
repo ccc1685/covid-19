@@ -9,4 +9,6 @@ results/vis-notebooks/*.ipynb
 *.egg-info
 data/*.csv
 fits
+build
+dist
 
