@@ -53,7 +53,6 @@ functions { // time transition functions for beta and sigmac
           int<lower=1> n_difeq;       // number of differential equations for yhat
           int<lower=1> n_ostates;     // number of observed states
           real<lower=1> n_scale;      // scale variables for numerical stability
-          int y[n_obs,n_ostates];     // data, per-day-tally [cases,recovered,death]
           real t0;                    // initial time point
           real tm;                    // start day of mitigation
           real ts[n_obs];             // time points that were observed
@@ -107,7 +106,7 @@ functions { // time transition functions for beta and sigmac
              real sigmact;
              real betat;
 
-             real cinit = y[1,1]/n_scale;
+             real cinit = 1/n_scale;
 
              u_init[1] = f1*cinit;      // I set from f1 * C initial
              u_init[2] = cinit;         // C  from data
