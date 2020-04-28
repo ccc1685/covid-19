@@ -1,7 +1,8 @@
 # NIDDK SICR Model for estimating SARS-CoV-2 infection in a population
 
 Code and data used for Chow et al, ["TITLE"](http://some_url), to model the progression of the COVID-19 epidemic and estimate the unobserved SARS-CoV-2 infected population from reported cases, case recoveries, and case deaths globablly.  Models are implemented in Stan and fit using PyStan.  
-*PYPI and other badges here*
+
+'[![Travis](https://api.travis-ci.org/nih-niddk-mbs/covid-sicr.svg?branch=refactor)](https://travis-ci.org/nih-niddk-mbs/covid-sicr/)'
 
 The core model is a variation of the SIR model with a latent variable `I` for the number of *unobserved* infected which is distinguished from `C` the *observed* cases.  This model follows:
 
