@@ -8,5 +8,5 @@ Stan/stanrunmodel.pkl
 results/vis-notebooks/*.ipynb
 *.egg-info
 data/*.csv
-fits/*.pkl
+fits
 
