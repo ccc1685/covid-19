@@ -26,7 +26,7 @@ with open(readme_path, encoding='utf-8') as f:
 
 setup(
     name='covid_sicr',
-    version='1.0.1',
+    version='1.0.2',
     author='NIDDK',
     packages=find_packages(),
     license='MIT',
