@@ -5,6 +5,7 @@ matplotlib>=3.0
 numpy>=1.15
 pandas>=1.0
 papermill
+p_tqdm
 pystan>=2.19
 scipy
 tqdm
