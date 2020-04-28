@@ -20,6 +20,9 @@ def read_requirements():
     reqs = [str(ir.req) for ir in install_reqs]
     return reqs
 
+readme_path = Path(__file__).parent / 'README.md'
+with open(readme_path, encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='covid_sicr',
@@ -28,5 +31,7 @@ setup(
     packages=find_packages(),
     license='MIT',
     description='Global estimation of unobserved COVID-19 infection',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     install_requires=read_requirements(),
     )
