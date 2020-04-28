@@ -277,7 +277,53 @@ def plot_data_and_fits(data_path, roi, samples, t0, tm, chains=None):
     plt.tight_layout()
     fig.suptitle(roi, y=1.02)
 
+def plot_data_and_predictions(data_path, roi, samples, t0, tm, chains=None):
+    data = get_data(roi, data_path)
 
+    if chains is None:
+        chains = samples['chain'].unique()
+
+    fig, ax = plt.subplots(3, 2, figsize=(15, 10))
+    days = range(data.shape[0])
+    days_found = [day for day in days if 'lambda[%d,1]' % (day-t0) in samples]
+    days_missing = set(days).difference(days_found)
+    print("Empirical data for days %s is available but fit data for these days is missing" % days_missing)
+    #day_labels = get_day_labels(data, days, t0)
+    estimates = {}
+    chain_samples = samples[samples['chain'].isin(chains)]
+
+    for i, kind in enumerate(['cases', 'recover', 'deaths']):
+        estimates[kind] = [chain_samples['lambda[%d,%d]' % (day-t0, i+1)].mean() for day in days_found]
+        colors = 'bgr'
+        cum = data["cum_%s" % kind]
+        xticks, xlabels = zip(*[(i, x[:-3]) for i, x in enumerate(cum.index) if i%2==0])
+
+        xlabels = [x[:-3] for i, x in enumerate(cum.index) if i%2==0]
+        ax[i, 0].set_title('Cumulative %s' % kind)
+        ax[i, 0].plot(cum, 'bo', color=colors[i], label=kind)
+        ax[i, 0].axvline(t0, color='k', linestyle="dashed", label='t0')
+        ax[i, 0].axvline(tm, color='purple', linestyle="dashed", label='mitigate')
+        ax[i, 0].set_xticks(xticks)
+        #ax[i, 0].get_xticklabels()
+        ax[i, 0].set_xticklabels(xlabels, rotation=80, fontsize=8)
+        ax[i, 0].legend()
+
+        new = data["new_%s" % kind]
+        ax[i, 1].set_title('Daily %s' % kind)
+        ax[i, 1].plot(new, 'bo', color=colors[i], label=kind)
+        ax[i, 1].axvline(t0, color='k', linestyle="dashed", label='t0')
+        ax[i, 1].axvline(tm, color='purple', linestyle="dashed", label='mitigate')
+        ax[i, 1].set_xticks(xticks)
+        ax[i, 1].set_xticklabels(xlabels, rotation=80, fontsize=8)
+        if kind in estimates:
+            ax[i, 1].plot(days_found, estimates[kind], label=r'$\hat{%s}$'% kind, linewidth=2, alpha=0.5, color=colors[i])
+    ax[i, 1].legend()
+
+    plt.tight_layout()
+    fig.suptitle(roi, y=1.02)
+
+    
+    
 def make_histograms(samples, hist_params, cols=4, size=3):
     cols = min(len(hist_params), cols)
     rows = math.ceil(len(hist_params)/cols)
