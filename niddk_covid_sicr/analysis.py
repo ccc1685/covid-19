@@ -263,7 +263,8 @@ def make_histograms(samples: pd.DataFrame, hist_params: list, cols: int = 4,
             if options.get('log', False):
                 chain_samples = np.log(chain_samples)
             low, high = chain_samples.quantile([0.01, 0.99])
-            ax.hist(chain_samples, alpha=0.5, bins=np.linspace(low, high, 25),
+            ax.hist(chain_samples, alpha=0.5,
+                    bins=np.linspace(low, high, min(25, len(chain_samples))),
                     label='Chain %d' % chain)
             if options.get('log', False):
                 ax.set_xticks(np.linspace(chain_samples.min(),

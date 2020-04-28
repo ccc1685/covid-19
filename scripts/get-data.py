@@ -19,7 +19,7 @@ args = parser.parse_args()
 
 # Create the data path
 data_path = Path(args.data_path)
-data_path.mkdir(parents=True, exists_OK=True)
+data_path.mkdir(parents=True, exist_ok=True)
 assert data_path.exists(), "%s is not a valid data path" % data_path.resolve()
 
 
@@ -33,12 +33,13 @@ def get_scraper(name):
     return f
 
 
-for source in args.sources():
-    print("Getting data from %s" % source)
+for source in args.sources:
+    print("Getting data from %s..." % source)
     f = get_scraper(source)
     f(data_path)
 
 if args.fix_negatives:
+    print("Fixing negative values in daily data...")
     data.fix_negatives(data_path)
 
 print("Data now available at %s" % data_path.resolve())

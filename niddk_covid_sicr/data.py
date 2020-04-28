@@ -1,11 +1,12 @@
 """Functions for getting data needed to fit the models."""
 
 import bs4
-import datetime
+from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import requests
+from tqdm import tqdm
 from urllib.error import HTTPError
 
 
@@ -54,19 +55,18 @@ def get_jhu(data_path: str) -> None:
 
     # Generate a list of countries that have "good" data,
     # according to these criteria:
-    has_recoveries = dfs['global']['recovered'].max(axis=1) > 0
-    has_recoveries = dfs['global']['recovered'][has_recoveries].index
-    enough_cases = dfs['global']['confirmed'].diff(axis=1).max(axis=1) >= 5
-    enough_cases = dfs['global']['confirmed'][enough_cases].index
-    reports_deaths = dfs['global']['deaths'].max(axis=1) > 0
-    reports_deaths = dfs['global']['deaths'][reports_deaths].index
-    good_countries = list(set(*[has_recoveries, enough_cases, reports_deaths]))
-    print("There are %d countries with good data" % len(good_countries))
+    d = dfs['global']
+    has_recoveries = d['recovered'].index[d['recovered'].max(axis=1) > 0].tolist()
+    enough_cases = d['confirmed'].index[d['confirmed'].diff(axis=1).max(axis=1) >= 5].tolist()
+    reports_deaths = d['deaths'].index[d['deaths'].max(axis=1) > 0].to_list()
+    criteria = list(map(set, [has_recoveries, enough_cases, reports_deaths]))
+    good_countries = list(set.intersection(*criteria))
+    print("JHU has %d countries with good data" % len(good_countries))
 
     # For each "good" country,
     # reformat and save that data in its own .csv file.
     source = dfs['global']
-    for country in good_countries:  # For each country
+    for country in tqdm(good_countries, desc='Countries'):  # For each country
         # If we have data in the downloaded JHU files for that country
         if country in source['confirmed'].index:
             df = pd.DataFrame(columns=['dates2', 'cum_cases', 'cum_deaths',
@@ -115,7 +115,7 @@ def get_covid_tracking(data_path: str) -> None:
     michigan_url = ('https://www.michigan.gov/coronavirus/'
                     '0,9753,7-406-98163_98173_99207---,00.html')
     response = requests.get(michigan_url)
-    soup = bs4.BeautifulSoup(response.content)
+    soup = bs4.BeautifulSoup(response.content, features="lxml")
     three_five_index = [x.find_all('td')[0].text for x in soup.find('table')
                         .find_all('tr') if x.find_all('td')].index('5-Mar')
     daily_counts = [int(x.find_all('td')[-1].text) for x in soup.find('table')
@@ -132,7 +132,7 @@ def get_covid_tracking(data_path: str) -> None:
 
     good = []
     bad = []
-    for state in states:  # For each country
+    for state in tqdm(states, desc='US States'):  # For each country
         source = df_raw[df_raw['state'] == state]  # Only the given state
         # If we have data in the downloaded file for that state
         if source['recovered'].sum() > 0:
@@ -166,8 +166,8 @@ def get_covid_tracking(data_path: str) -> None:
         else:
             bad.append(state)
 
-    print("Recovery data for %s" % ','.join(good))
-    print("No recovery data for %s" % ','.join(bad))
+    print("COVID Tracking had recovery data for %s" % ','.join(good))
+    print("COVID Tracking did not have recovery data for %s" % ','.join(bad))
 
 
 def fix_negatives(data_path: str, plot: bool = False) -> None:
@@ -188,10 +188,10 @@ def fix_negatives(data_path: str, plot: bool = False) -> None:
         None
     """
     csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
-    for csv in csvs:
+    for csv in tqdm(csvs, desc="Regions"):
         roi = str(csv).split('.')[0].split('_')[-1]
         df = pd.read_csv(csv)
-        df = df.iloc[:-1]
+        df = df.iloc[:-1]  # Exclude final day because it is often a partial count.
         df = fix_neg(df, roi, plot=plot)
         df.to_csv(data_path / (csv.name.split('.')[0]+'.csv'))
 
@@ -221,6 +221,7 @@ def fix_neg(df: pd.DataFrame, roi: str,
         has_negs = before.diff().min() < 0
         if len(non_zeros) and has_negs:
             first_non_zero = non_zeros[0]
+            maxx = df.loc[first_non_zero, cum].max()
             # Find the bad entries and null the corresponding
             # cumulative column, which are:
             # 1) Cumulative columns which are zero after previously
@@ -230,6 +231,9 @@ def fix_neg(df: pd.DataFrame, roi: str,
             # 2) New daily columns which are negative
             bad = df.loc[first_non_zero:, new] < 0
             df.loc[bad[bad].index, cum] = None
+            # Protect against 0 null final value which screws up interpolator
+            if np.isnan(df.loc[df.index[-1], cum]):
+                df.loc[df.index[-1], cum] = maxx
             # Then run a loop which:
             while True:
                 # Interpolates the cumulative column nulls to have

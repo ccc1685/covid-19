@@ -10,31 +10,31 @@ import pandas as pd
 import niddk_covid_sicr as ncs
 
 # Parse all the command-line arguments
-parser = argparse.ArgumentParser(description='Runs all the Stan models')
+parser = argparse.ArgumentParser(description='Fits one Stan model for one region')
 
 parser.add_argument('model_name',
                     help='Name of the Stan model file (without extension)')
-parser.add_argument('-mp', '--models_path', default='.',
+parser.add_argument('-mp', '--models-path', default='./models',
                     help='Path to directory containing the .stan model files')
-parser.add_argument('-dp', '--data_path', default='../data',
+parser.add_argument('-dp', '--data-path', default='./data',
                     help='Path to directory containing the data files')
-parser.add_argument('-fp', '--fits_path', default='./fits',
+parser.add_argument('-fp', '--fits-path', default='./fits',
                     help='Path to directory to save fit files')
 parser.add_argument('-r', '--roi', default='US_NY',
                     help='ROI to use')
-parser.add_argument('-ch', '--n_chains', type=int, default=4,
+parser.add_argument('-ch', '--n-chains', type=int, default=4,
                     help='Number of chains to run')
-parser.add_argument('-wm', '--n_warmups', type=int, default=500,
+parser.add_argument('-wm', '--n-warmups', type=int, default=500,
                     help='Number of warmups')
-parser.add_argument('-it', '--n_iter', type=int, default=1000,
+parser.add_argument('-it', '--n-iter', type=int, default=1000,
                     help='Number of iterations')
-parser.add_argument('-tn', '--n_thin', type=int, default=1,
+parser.add_argument('-tn', '--n-thin', type=int, default=1,
                     help='thinning number')
-parser.add_argument('-th', '--n_threads', type=int, default=0,
+parser.add_argument('-th', '--n-threads', type=int, default=0,
                     help='Number of threads to use the whole run')
-parser.add_argument('-ad', '--adapt_delta', type=float, default=0.995,
+parser.add_argument('-ad', '--adapt-delta', type=float, default=0.995,
                     help='Adapt delta control parameter')
-parser.add_argument('-f', '--fit_format', type=int, default=1,
+parser.add_argument('-f', '--fit-format', type=int, default=1,
                     help='Version of fit format')
 parser.add_argument('-i', '--init',
                     help=('Fit file to use for initial conditions '
@@ -50,10 +50,10 @@ assert csv.exists(), "No such csv file: %s" % csv
 model_path = Path(args.models_path) / ('%s.stan' % args.model_name)
 model_path = model_path.resolve()
 assert model_path.is_file(), "No such .stan file: %s" % model_path
-model_path = Path(args.models_path) / args.model_name
 
 control = {'adapt_delta': args.adapt_delta}
-stanrunmodel = ncs.load_or_compile_stan_model(model_path,
+stanrunmodel = ncs.load_or_compile_stan_model(args.model_name,
+                                              args.models_path,
                                               force_recompile=False)
 df = pd.read_csv(csv)
 
@@ -86,6 +86,7 @@ def init_fun(force_fresh=False):
     if args.init and not force_fresh:
         try:
             init_path = Path(args.fits_path) / args.init
+            model_path = Path(args.models_path) / args.model_name
             result = ncs.last_sample_as_dict(init_path, model_path)
         except Exception:
             print("Couldn't use last sample from previous fit to initialize")

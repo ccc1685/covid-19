@@ -28,7 +28,8 @@ def get_fit_path(fits_path: str, model_name: str, roi: str) -> str:
 
 
 def get_model_path(models_path: str, model_name: str,
-                   compiled: bool = False, with_suffix: bool = False) -> str:
+                   compiled: bool = False, with_suffix: bool = False,
+                   check_exists: bool=True) -> str:
     """Get a full model path for one model file.
 
     Args:
@@ -45,11 +46,12 @@ def get_model_path(models_path: str, model_name: str,
                                     platform.python_version()))
     else:
         file_path = Path(models_path) / ('%s.stan' % model_name)
-    assert file_path.is_file(), "No %s file found at %s" %\
-        (file_path, '.stanc' if compiled else '.stan')
+    if check_exists:
+        assert file_path.is_file(), "No %s file found at %s" %\
+            ('.stanc' if compiled else '.stan', file_path)
     if not with_suffix:
         file_path = file_path.with_suffix('')
-    return file_path
+    return file_path.resolve()
 
 
 def get_data(roi: str, data_path: str = 'data') -> pd.DataFrame:
@@ -86,14 +88,14 @@ def load_or_compile_stan_model(model_name: str, models_path: str = './models',
     """
     uncompiled_path = get_model_path(models_path, model_name, with_suffix=True)
     compiled_path = get_model_path(models_path, model_name,
-                                   compiled=True, with_suffix=True)
+                                   compiled=True, with_suffix=True, check_exists=False)
     stan_raw_last_mod_t = os.path.getmtime(uncompiled_path)
     try:
         stan_compiled_last_mod_t = os.path.getmtime(compiled_path)
     except FileNotFoundError:
         stan_compiled_last_mod_t = 0
     if force_recompile or (stan_compiled_last_mod_t < stan_raw_last_mod_t):
-        sm = pystan.StanModel(file=uncompiled_path)
+        sm = pystan.StanModel(file=str(uncompiled_path))
         with open(compiled_path, 'wb') as f:
             pickle.dump(sm, f)
     else:
@@ -159,6 +161,22 @@ def list_rois(path: str, prefix: str, extension: str) -> list:
                            .strip('.').strip('_')
             rois.append(roi)
     return rois
+
+
+def list_models(models_path: str) -> list:
+    """Lists all available Stan models.
+
+    Args:
+        models_path (str): Full path to the models directory.
+    
+    Returns:
+        list: A list of Stan models (without '.stan' suffixes).
+    """
+    
+    models_path = Path(models_path)
+    model_paths = [file for file in models_path.iterdir() if file.suffix == '.stan']
+    models = [mp.with_suffix('').name for mp in model_paths]
+    return models
 
 
 def load_fit(fit_path: str, model_full_path: str, new_module_name: str = None):
