@@ -6,6 +6,7 @@ import blib2to3
 import logging
 from multiprocessing import Pool, TimeoutError
 import os
+import pandas as pd
 import papermill as pm
 from pathlib import Path
 import subprocess
@@ -68,6 +69,8 @@ if not args.rois:
     data_rois = list_rois(data_path, get_data_prefix(), '.csv')
     fit_rois = list_rois(fits_path, args.model_name, ending)
     args.rois = list(set(data_rois).intersection(fit_rois))
+    
+args.n_threads = min(args.n_threads, len(args.rois))
 
 print("Running visualization notebook for %d rois on model '%s'" %\
       (len(args.rois), args.model_name))
@@ -78,7 +81,8 @@ for roi in args.rois:
     assert file.is_file(), "No such %s file: %s" % (ending, file.resolve())
 
 # Function to be execute on each ROI
-def execute(model_name, roi, data_path, fits_path, model_path, fit_format, verbose=True):
+def execute(model_name, roi, data_path, fits_path, model_path, notebook_path, results_path, fit_format, verbose=False):
+    #print(model_name, roi, data_path, fits_path, model_path, notebook_path, results_path, fit_format)
     try:
         result = pm.execute_notebook(
             str(notebook_path / 'visualize.ipynb'),
@@ -90,15 +94,15 @@ def execute(model_name, roi, data_path, fits_path, model_path, fit_format, verbo
                         'models_path': str(models_path), 
                         'fit_format': fit_format},
             nest_asyncio=True)
+    except pm.PapermillExecutionError as e:
+        exception = '%s: %s' % (e.ename, e.evalue)
     except Exception as e:
-        if verbose:
-            print(roi, exception)
-        exception = e
+        exception = str(e.split('\n')[-1:])
     else:
         # Possible exception that was raised (or `None` if notebook completed successfully)
-        exception = result['metadata']['papermill']['exception']
-    if exception == 'None':
-        exception = None
+        exception = str(result['metadata']['papermill']['exception'])
+    if exception and verbose:
+        print(roi, exception)
     return exception
 
 # Top progress bar (how many ROIs have finished)
@@ -110,40 +114,16 @@ def update(*a):
 pool = Pool(processes=args.n_threads)
 jobs = {roi: pool.apply_async(execute,
                               [args.model_name, roi, data_path, fits_path,
-                               models_path, args.fit_format],
+                               models_path, notebook_path, results_path, args.fit_format],
                               {'verbose': args.verbose},
                               callback=update)
         for roi in args.rois}
 pool.close()
 
-# Check to see how many have finished.  
-def check_status(rois, verbose=False):
-    finished = []
-    unfinished = []
-    failed = []
-    for roi in rois:
-        try:
-            exception = jobs[roi].get(timeout=1)
-        except TimeoutError:
-            unfinished.append(roi)
-        else:
-            if exception is None:
-                finished.append(roi)
-            else:
-                failed.append('%s: %s' % (roi, exception))
-    #clear_output()
-    if verbose:
-        print("Finished: %s" % ','.join(finished))
-        print("=====")
-        print("Unfinished: %s" % ','.join(unfinished))
-        print("=====")
-        print("Failed: %s" % ','.join(failed))
-    return len(unfinished)
-
-#check_status(args.rois)
-# Wait for all jobs to finish
-#while True:
-#    if not check_status(args.rois, verbose=True):
-#        break
 pool.join()
-print('')
+print('\n')
+error_table = pd.Series({roi: job.get() for roi, job in jobs.items()})
+error_table = error_table[error_table != 'None']
+if len(error_table):
+    print("Errors:")
+    print(error_table)

@@ -1,4 +1,4 @@
-pip install -e .
+pip install --user -e .
 python scripts/get-data.py
 # This is a totally insufficient number of samples to draw 
 # It is only this slow here to support continuous integration,

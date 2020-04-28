@@ -48,6 +48,7 @@ for model_name in args.model_names:
     combos += [(model_name, roi) for roi in rois]
 # Organize into (model_name, roi) tuples
 combos = list(zip(*combos))
+print("There are %d combinations of models and ROIs" % len(combos))
 
 def roi_df(args, model_name, roi):
     model_path = ncs.get_model_path(args.models_path, model_name)
@@ -66,8 +67,6 @@ def roi_df(args, model_name, roi):
     df = ncs.make_table(roi, samples, args.params, stats, quantiles=args.quantiles)
     return model_name, roi, df
 
-#with Pool(2) as p:
-#    result = p.starmap(roi_df, zip(repeat(args), *combos))
 result = p_map(roi_df, repeat(args), *combos)
 tables_path = Path(args.fits_path) / 'tables'
 tables_path.mkdir(exist_ok=True)
@@ -75,6 +74,8 @@ tables_path.mkdir(exist_ok=True)
 dfs = []
 for model_name in args.model_names:
     tables = [df_ for model_name_, roi, df_ in result if model_name_==model_name]
+    if not len(tables):  # Probably no matching models
+        continue
     df = pd.concat(tables)
     out = tables_path / ('%s_fit_table.csv' % model_name)
     df = df.sort_index()
