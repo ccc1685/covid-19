@@ -458,29 +458,38 @@ def getllxtensor_singleroi(roi,datapath,fits_path,models_path,model_name,fit_for
     return llx
 
 
-def reweighted_stat(stat_vals, loo_vals, loo_se_vals = None):
-    """Get weighted means of a stat (across models),
-    where the weights are related to the LOO's of model"""
+def get_weights(mask, loo_vals, loo_se_vals = None):
+    """Gets model averaging weights related to the LOO's of model"""
     min_loo = min(loo_vals)
     weights = np.exp(-0.5*(loo_vals-min_loo))
     if loo_se_vals is not None:
         weights*=np.exp(-0.5*loo_se_vals)
+    weights[mask] = 0
+    #print(weights, mask)
     weights = weights/np.sum(weights)
-    return np.sum(stat_vals * weights)
+    return weights
 
 
 def reweighted_stats(raw_table_path, save=True):
     df = pd.read_csv(raw_table_path, index_col=['model', 'roi', 'quantile'])
     df.columns.name = 'param'
-    df = df.stack('param').unstack(['roi', 'quantile', 'param']).T
+    df = df.stack('param').unstack(['roi', 'param', 'quantile']).T
     rois = df.index.get_level_values('roi').unique()
+    params = df.index.get_level_values('param').unique()
     quantiles = df.index.get_level_values('quantile').unique() # Also include mean and std
-    result = pd.Series(index=df.index)
-    for roi in rois:
-        loo = df.loc[(roi, 'mean', 'loo')]
-        loo_se = df.loc[(roi, 'std', 'loo')]
-        chunk = df.index.get_level_values('roi')==roi  # An indexer for this ROI
-        result[chunk] = df[chunk].apply(lambda x: reweighted_stat(x, loo, loo_se), axis=1)
+    #rois = ['US_NY']
+    #params = ['q']
+    for roi in tqdm(rois):
+        df_roi = df.loc[roi]
+        loo = df_roi.loc[('loo', 'mean')]
+        loo_se = df_roi.loc[('loo', 'std')]
+        for param in params:
+            if param in df_roi.index:
+                df_roi_p = df_roi.loc[param]
+                mask = df_roi_p.isnull().sum() > 0
+                weights = get_weights(mask, loo, loo_se)
+                df.loc[(roi, param)] = (df_roi_p * weights).values
+    result = df.sum(axis=1)
     result = result.unstack(['param'])
     result = result[~result.index.get_level_values('quantile').isin(['min', 'max'])]  # Remove min and max
     
