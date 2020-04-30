@@ -42,11 +42,16 @@ def get_jhu(data_path: str) -> None:
                     has_no_province = df['Province/State'].isnull()
                     # Whole countries only; use country name as index
                     df1 = df[has_no_province].set_index('Country/Region')
-                    is_china = df['Country/Region'] == 'China'
-                    df2 = df[is_china].sum(axis=0, skipna=False).to_frame().T
-                    df2['Country/Region'] = 'China'
-                    df2 = df2.set_index('Country/Region')
-                    df = pd.concat([df1, df2])
+                    more_dfs = []
+                    for country in ['China', 'Canada', 'Australia']:
+                        if country=='Canada' and kind in 'recovered':
+                            continue
+                        is_c = df['Country/Region'] == country
+                        df2 = df[is_c].sum(axis=0, skipna=False).to_frame().T
+                        df2['Country/Region'] = country
+                        df2 = df2.set_index('Country/Region')
+                        more_dfs.append(df2)
+                    df = pd.concat([df1] + more_dfs)
                 elif region == 'US':
                     # Use state name as index
                     df = df.set_index('Province_State')
