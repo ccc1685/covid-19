@@ -1,4 +1,12 @@
-pystan
-arviz
+arviz>=0.5
+bs4
+lxml
+matplotlib>=3.0
+numexpr
+numpy>=1.15
+pandas>=1.0
 papermill
+p_tqdm
+pystan>=2.19
+scipy
 tqdm

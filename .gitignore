@@ -5,3 +5,12 @@ Stan/fits/*
 Results
 Stan/stanrunmodel.pkl
 .DS_store
+results/vis-notebooks/*.ipynb
+*.egg-info
+data/*.csv
+fits
+build
+dist
+*.png
+Untitled*.ipynb
+

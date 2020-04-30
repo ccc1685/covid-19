@@ -12,18 +12,16 @@ from tqdm import tqdm
 import warnings
 warnings.simplefilter("ignore")
 
-# Get Stan directory onto path
-path = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(path))
-
-import Stan as cs
+import niddk_covid_sicr as ncs
 
 # Parse all the command-line arguments
 parser = argparse.ArgumentParser(description='Generates an all-regions table for a model')
 
-parser.add_argument('-ms', '--model_names', default=['reducedlinearmodelq0', 'reducedlinearmodelq0ctime', 'reducedlinearmodelNegBinom', 'fulllinearmodel', 'nonlinearmodelq0ctime', 'nonlinearmodel'], nargs='+',
+parser.add_argument('-ms', '--model_names',
+                    default=['fulllinearmodel', 'nonlinearmodel', 'reducedlinearmodelq0',
+                             'reducedlinearmodelq0ctime', 'reducedlinearmodelNegBinom'], nargs='+',
                     help='Name of the Stan model files (without .stan extension)')
-parser.add_argument('-mp', '--models_path', default='.',
+parser.add_argument('-mp', '--models_path', default='./models',
                     help='Path to directory containing the .stan model files')
 parser.add_argument('-fp', '--fits_path', default='./fits',
                     help='Path to directory to save fit files')
@@ -42,34 +40,33 @@ args = parser.parse_args()
 # Get all model_names, roi combinations
 combos = []
 for model_name in args.model_names:
-    model_path = cs.get_model_path(args.models_path, model_name)
+    model_path = ncs.get_model_path(args.models_path, model_name)
     extension = ['csv', 'pkl'][args.fit_format]
-    rois = cs.list_rois(args.fits_path, model_name, extension)
+    rois = ncs.list_rois(args.fits_path, model_name, extension)
     if args.rois:
         rois = list(set(rois).intersection(args.rois))
     combos += [(model_name, roi) for roi in rois]
 # Organize into (model_name, roi) tuples
 combos = list(zip(*combos))
+print("There are %d combinations of models and ROIs" % len(combos))
 
 def roi_df(args, model_name, roi):
-    model_path = cs.get_model_path(args.models_path, model_name)
+    model_path = ncs.get_model_path(args.models_path, model_name)
     extension = ['csv', 'pkl'][args.fit_format]
-    rois = cs.list_rois(args.fits_path, model_name, extension)
+    rois = ncs.list_rois(args.fits_path, model_name, extension)
     if args.rois:
         rois = list(set(rois).intersection(args.rois))
-    fit_path = cs.get_fit_path(args.fits_path, model_name, roi)
+    fit_path = ncs.get_fit_path(args.fits_path, model_name, roi)
     if args.fit_format==1:
-        fit = cs.load_fit(fit_path, model_path)
-        stats = cs.get_waic_and_loo(fit)
+        fit = ncs.load_fit(fit_path, model_path)
+        stats = ncs.get_waic_and_loo(fit)
         samples = fit.to_dataframe()
     elif args.fit_format==0:
-        samples = cs.extract_samples(fits_path, models_path, model_name, roi, fit_format)
-        stats = cs.get_waic(samples)
-    df = cs.make_table(roi, samples, args.params, stats, quantiles=args.quantiles)
+        samples = ncs.extract_samples(fits_path, models_path, model_name, roi, fit_format)
+        stats = ncs.get_waic(samples)
+    df = ncs.make_table(roi, samples, args.params, stats, quantiles=args.quantiles)
     return model_name, roi, df
 
-#with Pool(2) as p:
-#    result = p.starmap(roi_df, zip(repeat(args), *combos))
 result = p_map(roi_df, repeat(args), *combos)
 tables_path = Path(args.fits_path) / 'tables'
 tables_path.mkdir(exist_ok=True)
@@ -77,6 +74,8 @@ tables_path.mkdir(exist_ok=True)
 dfs = []
 for model_name in args.model_names:
     tables = [df_ for model_name_, roi, df_ in result if model_name_==model_name]
+    if not len(tables):  # Probably no matching models
+        continue
     df = pd.concat(tables)
     out = tables_path / ('%s_fit_table.csv' % model_name)
     df = df.sort_index()
@@ -99,4 +98,4 @@ if args.append:
 df.to_csv(out)
 
 # Model-averaged table
-cs.reweighted_stats(out)
+ncs.reweighted_stats(out)
