@@ -97,7 +97,7 @@ functions { // time transition functions for beta and sigmac
             real sigma = sigmar + sigmad;
 
             real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);  // initial reproduction number
-            real phi = 1/(extra_std^2);  // likelihood over-dispersion of std
+            real phi = 1/(extra_std^2);  // likelihood over-dispersion of variance
 
           {  // local
              real theta[10] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation};
@@ -150,13 +150,13 @@ functions { // time transition functions for beta and sigmac
             sigmar ~ inv_gamma(4.,.2);             // sigmar
             sigmad ~ inv_gamma(2.78,.185);         // sigmad
             sigmau ~ inv_gamma(2.3,.15);           // sigmau
-            q ~ exponential(10.);                // q
-            mbase ~ exponential(4.);               // mbase
+            q ~ exponential(1.);                // q
+            mbase ~ exponential(1.);               // mbase
             mlocation ~ lognormal(log(tm+5),1.);   // mlocation
             extra_std ~ exponential(1.);           // likelihood over dispersion std
             cbase ~ exponential(.2);               // mbase
             clocation ~ lognormal(log(20.),2.);   // mlocation
-            n_pop ~ lognormal(log(1e5),2.); // population
+            n_pop ~ lognormal(log(1e5),4.); // population
 
             //likelihood
             //lambda[1,1] =  sigma_c * I for day
