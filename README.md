@@ -18,9 +18,9 @@ Several variants of this model are discussed in the Supplemental Material of the
 ### Requirements to run code here:
 - python 3.5+
 - Install the Python package:
-  - From pypi: `pip install niddk-sicr-covid19` *TODO: Add to PyPI*
+  - From pypi: `pip install niddk-sicr-covid19`
   - Or from source:
-    - `git clone http://github.com/ccc1685/covid-19`
+    - `git clone http://github.com/nih-niddk-mbs/covid-sicr`
     - `cd covid-19`
     - `pip install -e .  # This installs the niddk-sicr-covid19 package from source`
   - Or place this directory in your `PYTHONPATH` and install the contents of `requirements.txt`. 
