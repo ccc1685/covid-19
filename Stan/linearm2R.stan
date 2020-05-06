@@ -116,7 +116,7 @@ functions { // time transition functions for beta and sigmac
              u = integrate_ode_rk45(SIR, u_init, t0, ts, theta, x_r, x_i,1e-3,1e-3,2000);
 
              car[1] = u[1,4]/u[1,3];
-             ifr[1] = sigmad*u[1,5]/u[1,3];
+             ifr[1] = u[1,5]/u[1,3];
              betat = beta*transition(mbase,mlocation,1);
              Rt[1] = betat*(sigma+q*sigmac)/sigma/(sigmac+sigmau);
 
