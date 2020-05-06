@@ -72,7 +72,7 @@ except:
 stan_data = {}
 stan_data['n_scale'] = 1000 #use this instead of population
 # stan_data['n_theta'] = 8
-stan_data['n_difeq'] = 5
+# stan_data['n_difeq'] = 7
 stan_data['n_ostates'] = 3
 stan_data['t0'] = t0-1 #to for ODE is day one, index before start of series
 stan_data['tm'] = tm
@@ -85,7 +85,7 @@ def init_fun(force_fresh=False):
     if args.init and not force_fresh:
         try:
             init_path = Path(args.fits_path) / args.init
-            result = last_sample_as_dict(init_path, model_path) 
+            result = last_sample_as_dict(init_path, model_path)
         except:
             print("Couldn't use last sample from previous fit to initialize")
             return init_fun(force_fresh=True)
@@ -105,7 +105,8 @@ def init_fun(force_fresh=False):
                   'extra_std': exponential(1.),
                   'cbase': gamma(2.,1.),
                   'clocation': lognormal(np.log(20.),1.),
-                  'n_pop': lognormal(np.log(1e5),1.)
+                  'n_pop': lognormal(np.log(1e5),1.),
+                  'sigmar1': gamma(2.,.1/2.)
                  }
     return result
 
