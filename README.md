@@ -1,6 +1,6 @@
 # NIDDK SICR Model for estimating SARS-CoV-2 infection in a population
 
-Code and data used for Chow et al, ["TITLE"](http://some_url), to model the progression of the COVID-19 epidemic and estimate the unobserved SARS-CoV-2 infected population from reported cases, case recoveries, and case deaths globablly.  Models are implemented in Stan and fit using PyStan.  
+Code and data used for Chow et al, ["Global prediction of unreported SARS-CoV2 infection from observed COVID-19 cases"](https://www.medrxiv.org/content/10.1101/2020.04.29.20083485v1), to model the progression of the COVID-19 epidemic and estimate the unobserved SARS-CoV-2 infected population from reported cases, case recoveries, and case deaths globablly.  Models are implemented in Stan and fit using PyStan.  
 
 [![PyPI version](https://badge.fury.io/py/covid-sicr.svg)](https://badge.fury.io/py/covid-sicr)
 [![Build Status](https://travis-ci.org/nih-niddk-mbs/covid-sicr.svg?branch=refactor)](https://travis-ci.org/nih-niddk-mbs/covid-sicr)
