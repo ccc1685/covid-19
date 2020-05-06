@@ -18,11 +18,11 @@ Several variants of this model are discussed in the Supplemental Material of the
 ### Requirements to run code here:
 - python 3.5+
 - Install the Python package:
-  - From pypi: `pip install niddk-sicr-covid19`
+  - From pypi: `pip install covid-sicr`
   - Or from source:
     - `git clone http://github.com/nih-niddk-mbs/covid-sicr`
     - `cd covid-sicr`
-    - `pip install -e .  # This installs the niddk-sicr-covid19 package from source`
+    - `pip install -e .  # This installs the covid-sicr package from source`
   - Or place this directory in your `PYTHONPATH` and install the contents of `requirements.txt`. 
 - `pystan` may not be easily pip installable on some systems, so consider conda:
   - `conda install -c conda-forge pystan`
