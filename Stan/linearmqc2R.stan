@@ -32,7 +32,7 @@ functions { // time transition functions for beta and sigmac
 
             real I = u[1];  // infected, latent
             real C = u[2];  // cases, observed
-            real R1 = u[5]; // recovery compartment 1
+            real R1 = u[6]; // recovery compartment 1
 
             sigmac *= cbase + (1-cbase)/(1 + exp(.2*(t - clocation)));  // case detection change
             beta *= mbase + (1-mbase)/(1 + exp(.2*(t - mlocation)));  // mitigation
@@ -133,7 +133,7 @@ functions { // time transition functions for beta and sigmac
 
              for (i in 2:n_obs){
                 car[i] = u[i,4]/u[i,3];
-                ifr[i] = sigmad*u[i,5]/u[i,3];
+                ifr[i] = u[i,5]/u[i,3];
                 betat = beta*transition(mbase,mlocation,i);
                 sigmact = sigmac*transition(cbase,clocation,i);
                 Rt[i] = betat*(sigma+q*sigmac)/sigma/(sigmac+sigmau);
