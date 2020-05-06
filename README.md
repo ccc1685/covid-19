@@ -21,7 +21,7 @@ Several variants of this model are discussed in the Supplemental Material of the
   - From pypi: `pip install niddk-sicr-covid19`
   - Or from source:
     - `git clone http://github.com/nih-niddk-mbs/covid-sicr`
-    - `cd covid-19`
+    - `cd covid-sicr`
     - `pip install -e .  # This installs the niddk-sicr-covid19 package from source`
   - Or place this directory in your `PYTHONPATH` and install the contents of `requirements.txt`. 
 - `pystan` may not be easily pip installable on some systems, so consider conda:
