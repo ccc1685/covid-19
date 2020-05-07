@@ -12,7 +12,7 @@ parser.add_argument('-dp', '--data-path', default='./data',
                     help='Path for storing data')
 parser.add_argument('-s', '--sources', default=['jhu', 'covid-tracking'],
                     nargs='+', help='Data sources to use')
-parser.add_argument('-fn', '--fix-negatives', default=True, type=bool,
+parser.add_argument('-fn', '--fix-negatives', default=False, type=bool,
                     help=("Whether or not to fix negative values "
                           "in the daily data or not"))
 args = parser.parse_args()
