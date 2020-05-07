@@ -12,7 +12,9 @@ parser.add_argument('-dp', '--data-path', default='./data',
                     help='Path for storing data')
 parser.add_argument('-s', '--sources', default=['jhu', 'covid-tracking'],
                     nargs='+', help='Data sources to use')
-parser.add_argument('-fn', '--fix-negatives', default=False, type=bool,
+parser.add_argument('-fi', '--filter', default=1, type=int,
+                    help='Whether or not to filter based on data thresholds')
+parser.add_argument('-fn', '--fix-negatives', default=0, type=int,
                     help=("Whether or not to fix negative values "
                           "in the daily data or not"))
 args = parser.parse_args()
@@ -36,7 +38,7 @@ def get_scraper(name):
 for source in args.sources:
     print("Getting data from %s..." % source)
     f = get_scraper(source)
-    f(data_path)
+    f(data_path, filter=args.filter)
 
 if args.fix_negatives:
     print("Fixing negative values in daily data...")
