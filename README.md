@@ -54,7 +54,7 @@ Several variants of this model are discussed in the Supplemental Material of the
   - As above, help is available with the `--help` flag.
   - `.csv` files of the resulting dataframes will be created in the `--fit-path` directory in the `tables` subdirectory.
   
-Reproducbility of a particular version of the manuscript will require using a particular tag, e.g. "medrXiv-v1" (see tags and releases here).  Using the most recent version of any other branch (including master) may lead to different results as our research is on-going.
+Reproducbility of a particular version of the manuscript will require using a particular tag, e.g. ["medrXiv-v1"](https://github.com/nih-niddk-mbs/covid-sicr/tree/medRxiv-v1) (see tags and releases here).  Using the most recent version of any other branch (including master) may lead to different results as our research is on-going.
 
 This code is open source under the MIT License.
 Correspondence on modeling should be directed to carsonc at nih dot gov or vattikutis at mail dot nih dot gov.
