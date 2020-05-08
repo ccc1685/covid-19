@@ -2,6 +2,7 @@
 to run multiple regions and models at a time."""
 
 import argparse
+from datetime import datetime
 import numpy as np
 from pathlib import Path
 import pickle
@@ -10,7 +11,8 @@ import pandas as pd
 import niddk_covid_sicr as ncs
 
 # Parse all the command-line arguments
-parser = argparse.ArgumentParser(description='Fits one Stan model for one region')
+parser = argparse.ArgumentParser(
+    description='Fits one Stan model for one region')
 
 parser.add_argument('model_name',
                     help='Name of the Stan model file (without extension)')
@@ -39,9 +41,15 @@ parser.add_argument('-f', '--fit-format', type=int, default=1,
 parser.add_argument('-i', '--init',
                     help=('Fit file to use for initial conditions '
                           '(uses last sample)'))
+parser.add_argument('-ld', '--last-date',
+                    help=('Last date to use in the data; dates past this '
+                          'will be ignored'))
 args = parser.parse_args()
+
 if args.n_threads == 0:
     args.n_threads = args.n_chains
+if args.n_iter < args.n_warmups:
+    args.n_warmups = int(args.n_iter/2)
 
 csv = Path(args.data_path) / ("covidtimeseries_%s.csv" % args.roi)
 csv = csv.resolve()
@@ -56,6 +64,13 @@ stanrunmodel = ncs.load_or_compile_stan_model(args.model_name,
                                               args.models_path,
                                               force_recompile=False)
 df = pd.read_csv(csv)
+if args.last_date:
+    try:
+        datetime.datetime.strptime(args.last_date, '%m/%d/%y')
+    except ValueError:
+        raise ValueError("Incorrect --last-date format, should be MM/DD/YY")
+    else:
+        df = df[df['dates2'] <= args.last_date]
 
 # t0 := where to start time series, index space
 t0 = np.where(df["new_cases"].values > 1)[0][0]
