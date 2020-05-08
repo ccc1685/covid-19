@@ -70,7 +70,7 @@ except:
     tm = t0 + 10
 
 stan_data = {}
-stan_data['n_scale'] = 1000 #use this instead of population
+# stan_data['n_scale'] = 1000 #use this instead of population
 # stan_data['n_theta'] = 8
 # stan_data['n_difeq'] = 7
 stan_data['n_ostates'] = 3

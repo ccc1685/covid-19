@@ -1,7 +1,7 @@
 // nonlinearMQCR.stan
 // Latent variable SICR model with mitigation, q>0, sigmac time dependence, delayed recovery
 
-#include functions.stan
+#include functionsSICR2R.stan
 #include data.stan
 
 transformed data {
@@ -24,7 +24,7 @@ parameters {
     real<lower=0> cbase;          // case detection factor
     real<lower=0> clocation;      // day of case change
     real<lower=0> sigmar1;       // 1st compartment recovery rate
-    real<lower=1> n_scale;          // population size
+    real<lower=1> n_pop;          // population size
 }
 
 #include transformedparameters2R.stan

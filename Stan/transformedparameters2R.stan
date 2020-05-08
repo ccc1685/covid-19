@@ -19,7 +19,7 @@
        real sigmact;
        real betat;
 
-       real cinit = y[1,1]/n_scale;
+       real cinit = y[1,1]/n_pop;
        u_init[1] = f1*cinit;      // I set from f1 * C initial
        u_init[2] = cinit;         // C from data
        u_init[3] = u_init[1];     // N_I cumulative infected
@@ -38,14 +38,14 @@
           Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
           }
 
-       lambda[1,1] = (u[1,4]-u_init[4])*n_scale; //C: cases per day
-       lambda[1,2] = (u[1,7]-u_init[7])*n_scale; //R: recovered per day
-       lambda[1,3] = (u[1,5]-u_init[5])*n_scale; //D: dead per day
+       lambda[1,1] = (u[1,4]-u_init[4])*n_pop; //C: cases per day
+       lambda[1,2] = (u[1,7]-u_init[7])*n_pop; //R: recovered per day
+       lambda[1,3] = (u[1,5]-u_init[5])*n_pop; //D: dead per day
 
        for (i in 2:n_obs){
-          lambda[i,1] = (u[i,4]-u[i-1,4])*n_scale; //C: cases per day
-          lambda[i,2] = (u[i,7]-u[i-1,7])*n_scale; //R: recovered per day
-          lambda[i,3] = (u[i,5]-u[i-1,5])*n_scale; //D: dead per day
+          lambda[i,1] = (u[i,4]-u[i-1,4])*n_pop; //C: cases per day
+          lambda[i,2] = (u[i,7]-u[i-1,7])*n_pop; //R: recovered per day
+          lambda[i,3] = (u[i,5]-u[i-1,5])*n_pop; //D: dead per day
           }
       }
   }

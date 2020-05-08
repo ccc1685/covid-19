@@ -33,8 +33,8 @@ functions {
              real C = u[2];  // cases, observed
              real Z = u[3];  // total infected
 
-             sigmac *= cbase + (1-cbase)/(1 + exp(.2*(t - clocation)));  // case detection change
-             beta *= mbase + (1-mbase)/(1 + exp(.2*(t - mlocation)));  // mitigation
+             sigmac *= transition(cbase,clocation,t);  // case detection change
+             beta *= transition(mbase,mlocation,t);  // mitigation
 
              du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; //I
              du_dt[2] = sigmac*I - sigma*C;       //C

@@ -35,7 +35,7 @@ functions {
               real R1 = u[6]; // recovery compartment 1
 
               sigmac *= transition(cbase,clocation,t);  // case detection change
-              beta *= mbase + (1-mbase)/(1 + exp(.2*(t - mlocation)));  // mitigation
+              beta *= transition(mbase,mlocation,t);  // mitigation
 
               du_dt[1] = beta*(I+q*(C+R1)) - sigmac*I - sigmau*I; //I
               du_dt[2] = sigmac*I - sigma*C;                 //C
