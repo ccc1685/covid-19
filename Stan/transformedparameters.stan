@@ -13,7 +13,7 @@
     real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
     real phi = 1/(extra_std^2);  // likelihood over-dispersion of std
     {
-       real theta[10] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation,sigmar1};
+       real theta[10] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation};
 
        real u[n_obs, 5];   // solution from the ODE solver
        real sigmact;
