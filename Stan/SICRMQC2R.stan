@@ -1,4 +1,4 @@
-// nonlinearMQCR.stan
+// SICRMQCR.stan
 // Latent variable SICR model with mitigation, q>0, sigmac time dependence, delayed recovery
 
 #include functionsSICR2R.stan
