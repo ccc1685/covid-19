@@ -15,7 +15,7 @@
     {
        real theta[10] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation,sigmar1};
 
-       real u[n_obs, n_difeq];   // solution from the ODE solver
+       real u[n_obs, 5];   // solution from the ODE solver
        real sigmact;
        real betat;
 
@@ -35,7 +35,7 @@
           sigmact = sigmac*transition(cbase,clocation,i);
           Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
           }
-      
+
        lambda[1,1] = (u[1,4]-u_init[4])*n_pop; //C: cases per day
        lambda[1,2] = sigmar* (u[1,5]-u_init[5])*n_pop; //R: recovered per day
        lambda[1,3] = sigmad*(u[1,5]-u_init[5])*n_pop; //D: dead per day

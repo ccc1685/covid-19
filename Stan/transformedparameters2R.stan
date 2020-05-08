@@ -15,7 +15,7 @@
     {
        real theta[11] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation,sigmar1};
 
-       real u[n_obs, n_difeq];   // solution from the ODE solver
+       real u[n_obs, 7];   // solution from the ODE solver
        real sigmact;
        real betat;
 
@@ -28,7 +28,7 @@
        u_init[6] = 0;             // R1
        u_init[7] = 0;             // total R
 
-       u = integrate_ode_rk45(SIR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-3,2000);
+       u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-3,2000);
 
        for (i in 1:n_obs){
           car[i] = u[i,4]/u[i,3];
