@@ -66,7 +66,7 @@ stanrunmodel = ncs.load_or_compile_stan_model(args.model_name,
 df = pd.read_csv(csv)
 if args.last_date:
     try:
-        datetime.datetime.strptime(args.last_date, '%m/%d/%y')
+        datetime.strptime(args.last_date, '%m/%d/%y')
     except ValueError:
         raise ValueError("Incorrect --last-date format, should be MM/DD/YY")
     else:
