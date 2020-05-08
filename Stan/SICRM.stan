@@ -7,8 +7,8 @@
 transformed data {
     real x_r[0];
     int x_i[0];
-    real q = 0.;
     real n_pop = 1000;
+    real q = 0.;
     real cbase = 1.;
     clocation = 1.;
 }

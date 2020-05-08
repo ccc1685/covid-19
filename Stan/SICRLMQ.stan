@@ -1,5 +1,5 @@
-// SICRLMQC.stan
-// Latent variable linear SICR model with mitigation, q>0, sigmac time dependence
+// SICRLMQ.stan
+// Latent variable linear SICR model with mitigation, q>0
 
 #include functionsSICRL.stan
 #include data.stan
@@ -9,8 +9,8 @@ transformed data {
     int x_i[0];
     real n_pop = 1000;
     //real q = 0.;
-    //real cbase = 1.;
-    //clocation = 1.;
+    real cbase = 1.;
+    real clocation = 1.;
 }
 
 parameters {
@@ -23,13 +23,14 @@ parameters {
     real<lower=0> mbase;          // mitigation strength
     real<lower=0> mlocation;      // day of mitigation application
     real<lower=0> q;              // infection factor for cases
-    real<lower=0> cbase;          // case detection factor
-    real<lower=0> clocation;      // day of case change
+    
+    //real<lower=0> cbase;          // case detection factor
+    //real<lower=0> clocation;      // day of case change
     //real<lower=0> sigmar1;      // 1st compartment recovery rate
     //real<lower=1> n_pop;      // population size
 }
 
-#include transformedparameters2R.stan
+#include transformedparameters.stan
 
 model {
     //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
@@ -42,10 +43,10 @@ model {
     mbase ~ exponential(1.);               // mbase
     mlocation ~ lognormal(log(tm+5),1.);   // mlocation
     extra_std ~ exponential(1.);           // likelihood over dispersion std
-    cbase ~ exponential(.2);               // cbase
-    clocation ~ lognormal(log(20.),2.);    // clocation
-    //n_pop ~ lognormal(log(1e5),4.);        // population
+    //cbase ~ exponential(.2);               // cbase
+    //clocation ~ lognormal(log(20.),2.);    // clocation
     //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
+    //n_pop ~ lognormal(log(1e5),4.);        // population
 
     //likelihood
     #include likelihood.stan
