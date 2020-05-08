@@ -5,7 +5,7 @@
     real ifr[n_obs];          //total dead / total infected
     real Rt[n_obs];           // time dependent reproduction number
 
-    real u_init[n_difeq];     // initial conditions for fractions
+    real u_init[7];     // initial conditions for fractions
 
     real sigmac = f2/(1+f1);
     real beta = f2 + sigmau;
