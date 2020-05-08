@@ -23,7 +23,7 @@ parameters {
     real<lower=0> mbase;          // mitigation strength
     real<lower=0> mlocation;      // day of mitigation application
     real<lower=0> q;              // infection factor for cases
-    
+
     //real<lower=0> cbase;          // case detection factor
     //real<lower=0> clocation;      // day of case change
     //real<lower=0> sigmar1;      // 1st compartment recovery rate
@@ -49,7 +49,7 @@ model {
     //n_pop ~ lognormal(log(1e5),4.);        // population
 
     //likelihood
-    #include likelihood.stan
+    #include likelihood_nonmissing.stan
 }
 
 #include generatedquantities.stan

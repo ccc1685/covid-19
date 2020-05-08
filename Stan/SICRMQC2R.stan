@@ -45,7 +45,7 @@ model {
     n_pop ~ lognormal(log(1e5),4.);        // population
 
     //likelihood
-    #include likelihood.stan
+    #include likelihood_nonmissing.stan
 }
 
 #include generatedquantities.stan
