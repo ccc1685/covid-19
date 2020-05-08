@@ -15,7 +15,7 @@ for (i in 2:n_obs){
     if(y[i,2]>0){
     target += neg_binomial_2_lpmf(y[i,2]|max([lambda[i,2],1.0]),phi); //R
     }
-    if(y[i,2]>0){
+    if(y[i,3]>0){
     target += neg_binomial_2_lpmf(y[i,3]|max([lambda[i,3],1.0]),phi); //D
     }
 }
