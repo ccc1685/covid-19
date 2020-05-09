@@ -7,10 +7,10 @@
 transformed data {
     real x_r[0];
     int x_i[0];
-    real n_pop = 1000;
+    //real n_pop = 1000;
     real q = 0.;
     real cbase = 1.;
-    clocation = 1.;
+    real clocation = 10.;
 }
 
 parameters {
@@ -26,7 +26,7 @@ parameters {
     //real<lower=0> cbase;          // case detection factor
     //real<lower=0> clocation;      // day of case change
     //real<lower=0> sigmar1;      // 1st compartment recovery rate
-    //real<lower=1> n_pop;      // population size
+    real<lower=1> n_pop;      // population size
 }
 
 #include transformedparameters.stan
@@ -44,11 +44,11 @@ model {
     extra_std ~ exponential(1.);           // likelihood over dispersion std
     //cbase ~ exponential(.2);               // cbase
     //clocation ~ lognormal(log(20.),2.);    // clocation
-    //n_pop ~ lognormal(log(1e5),4.);        // population
+    n_pop ~ lognormal(log(1e5),4.);        // population
     //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
 
-    //likelihood
-    #include likelihood_nonmissing.stan
+//likelihood
+#include likelihood.stan
 }
 
 #include generatedquantities.stan

@@ -10,7 +10,7 @@ transformed data {
     real n_pop = 1000;
     //real q = 0.;
     real cbase = 1.;
-    real clocation = 1.;
+    real clocation = 10.;
 }
 
 parameters {
@@ -49,7 +49,7 @@ model {
     //n_pop ~ lognormal(log(1e5),4.);        // population
 
     //likelihood
-    #include likelihood_nonmissing.stan
+#include likelihood.stan
 }
 
 #include generatedquantities.stan

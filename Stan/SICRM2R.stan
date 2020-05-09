@@ -46,8 +46,8 @@ model {
     sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
     n_pop ~ lognormal(log(1e5),4.);        // population
 
-    //likelihood
-    #include likelihood_nonmissing.stan
+//likelihood
+#include likelihood.stan
 }
 
 #include generatedquantities.stan

@@ -47,7 +47,7 @@ model {
     //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
 
     //likelihood
-    #include likelihood_nonmissing.stan
+#include likelihood.stan
 }
 
 #include generatedquantities.stan

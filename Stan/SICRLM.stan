@@ -10,7 +10,7 @@ transformed data {
     real n_pop = 1000;
     real q = 0.;
     real cbase = 1.;
-    real clocation = 1.;
+    real clocation = 10.;
 }
 
 parameters {
@@ -39,16 +39,12 @@ model {
     sigmad ~ inv_gamma(2.78,.185);         // sigmad
     sigmau ~ inv_gamma(2.3,.15);           // sigmau
     extra_std ~ exponential(1.);           // likelihood over dispersion std
-    //q ~ exponential(1.);                   // q
     mbase ~ exponential(1.);               // mbase
     mlocation ~ lognormal(log(tm+5),1.);   // mlocation
-    //cbase ~ exponential(.2);               // cbase
-    //clocation ~ lognormal(log(20.),2.);    // clocation
-    //n_pop ~ lognormal(log(1e5),4.);        // population
-    //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
+
 
     //likelihood
-    #include likelihood_nonmissing.stan
+#include likelihood.stan
 }
 
 #include generatedquantities.stan
