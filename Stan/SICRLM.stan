@@ -30,7 +30,8 @@ parameters {
 }
 
 #include transformedparameters.stan
-
+#include model.stan
+/*
 model {
     //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
     f1 ~ gamma(2.,1./10.);                 // f1  initital infected to case ratio
@@ -46,5 +47,6 @@ model {
     //likelihood
 #include likelihood.stan
 }
+*/
 
 #include generatedquantities.stan
