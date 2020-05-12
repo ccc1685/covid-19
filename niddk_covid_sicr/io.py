@@ -211,7 +211,8 @@ def load_fit(fit_path: str, model_full_path: str, new_module_name: str = None):
         matches = re.findall("No module named '([a-z0-9_]+)'", str(e))
         if matches:
             # Load the saved, compiled model (or compile it)
-            load_or_compile_stan_model(model_full_path)
+            models_path = str(Path(model_full_path).parent)
+            load_or_compile_stan_model(model_full_path, models_path=models_path)
             # Get the name of the loaded model module in case we need it
             old_module_name = [x for x in sys.modules if 'stanfit4' in x][0]
             new_module_name = matches[0]
