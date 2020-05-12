@@ -95,7 +95,9 @@ def load_or_compile_stan_model(model_name: str, models_path: str = './models',
     except FileNotFoundError:
         stan_compiled_last_mod_t = 0
     if force_recompile or (stan_compiled_last_mod_t < stan_raw_last_mod_t):
-        sm = pystan.StanModel(file=str(uncompiled_path))
+        models_path = str(Path(models_path).resolve())
+        print(models_path)
+        sm = pystan.StanModel(file=str(uncompiled_path), include_paths=[models_path])
         with open(compiled_path, 'wb') as f:
             pickle.dump(sm, f)
     else:
