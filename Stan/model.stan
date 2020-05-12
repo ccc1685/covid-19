@@ -12,8 +12,8 @@ model {
     mlocation ~ lognormal(log(tm+5),1.);   // mlocation
     cbase ~ exponential(.2);               // cbase
     clocation ~ lognormal(log(20.),2.);    // clocation
-    sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
     n_pop ~ lognormal(log(1e5),4.);        // population
+    sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
 
     // Likelihood function
 
