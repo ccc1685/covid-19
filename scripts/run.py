@@ -36,6 +36,8 @@ parser.add_argument('-th', '--n-threads', type=int, default=0,
                     help='Number of threads to use the whole run')
 parser.add_argument('-ad', '--adapt-delta', type=float, default=0.995,
                     help='Adapt delta control parameter')
+parser.add_argument('-fc', '--force-recompile', type=int, default=0,
+                    help='Force recompilation of model (no cache)')
 parser.add_argument('-f', '--fit-format', type=int, default=1,
                     help='Version of fit format')
 parser.add_argument('-i', '--init',
@@ -62,7 +64,7 @@ assert model_path.is_file(), "No such .stan file: %s" % model_path
 control = {'adapt_delta': args.adapt_delta}
 stanrunmodel = ncs.load_or_compile_stan_model(args.model_name,
                                               args.models_path,
-                                              force_recompile=False)
+                                              force_recompile=args.force_recompile)
 df = pd.read_csv(csv)
 if args.last_date:
     try:
