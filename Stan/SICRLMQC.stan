@@ -7,6 +7,7 @@
 transformed data {
     real x_r[0];
     int x_i[0];
+    real sigmar1 = 0.
     int n_difeq = 5;     // number of differential equations for yhat
     // real q = 0.;
     real n_pop = 1000;

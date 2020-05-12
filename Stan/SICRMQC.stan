@@ -7,6 +7,7 @@
 transformed data {
     real x_r[0];
     int x_i[0];
+    real sigmar1 = 0.
     // real q = 0.;
 }
 
