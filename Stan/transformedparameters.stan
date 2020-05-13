@@ -10,8 +10,7 @@ transformed parameters{
   real beta = f2 + sigmau;
   real sigma = sigmar + sigmad;
   real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
-
-  real phi = 1/(extra_std^2);  // likelihood over-dispersion of std
+  real phi = max([1/(extra_std^2),1e-10]); // likelihood over-dispersion of std
 
   {
      real theta[10] = {f1, f2, sigmar, sigmad, sigmau, q, mbase, mlocation, cbase, clocation};
