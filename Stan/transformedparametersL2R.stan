@@ -47,5 +47,6 @@ transformed parameters{
         lambda[i,2] = max([(u[i,7]-u[i-1,7])*n_pop,1.0]); //R: recovered per day
         lambda[i,3] = max([(u[i,5]-u[i-1,5])*n_pop,1.0]); //D: dead per day
         }
+
     }
 }

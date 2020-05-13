@@ -27,11 +27,7 @@ transformed parameters{
      u_init[4] = cinit;         // N_C total cumulative cases
      u_init[5] = cinit;         // integral of active C
 
-    //print(theta)
-    //print(u_init)
-
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-2,1e-2,2000);
-     //u = stepper(u_init,theta,n_obs);
 
      for (i in 1:n_obs){
         car[i] = u[i,4]/u[i,3];
@@ -50,18 +46,6 @@ transformed parameters{
         lambda[i,2] = max([sigmar*(u[i,5]-u[i-1,5])*n_pop,1.0]); //R: recovered rate per day
         lambda[i,3] = max([sigmad*(u[i,5]-u[i-1,5])*n_pop,1.0]); //D: dead rate per day
         }
-
-/*
-     lambda[1,1] = (u[1,4]-u_init[4])*n_pop; //C: cases per day
-     lambda[1,2] = sigmar* (u[1,5]-u_init[5])*n_pop; //R: recovered per day
-     lambda[1,3] = sigmad*(u[1,5]-u_init[5])*n_pop; //D: dead per day
-
-      for (i in 2:n_obs){
-           lambda[i,1] = (u[i,4]-u[i-1,4])*n_pop; //C: cases per day
-           lambda[i,2] = sigmar*(u[i,5]-u[i-1,5])*n_pop; //R: recovered rate per day
-           lambda[i,3] = sigmad*(u[i,5]-u[i-1,5])*n_pop; //D: dead rate per day
-           }
-*/
 
     }
 }
