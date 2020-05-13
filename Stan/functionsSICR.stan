@@ -37,7 +37,7 @@ functions {
 
              du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; //I
              du_dt[2] = sigmac*I - sigma*C;       //C
-             du_dt[3] = beta*(I+q*C)*(1-Z);                       //N_I
+             du_dt[3] = beta*(I+q*C)*(1-Z);                       //Z = N_I
              du_dt[4] = sigmac*I; // N_C case appearance rate
              du_dt[5] = C; // integrated C
 

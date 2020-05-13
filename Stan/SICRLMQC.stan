@@ -28,7 +28,7 @@ parameters {
     //real<lower=1> n_pop;      // population size
 }
 
-#include transformedparameters.stan
+#include transformedparametersL.stan
 // model block for all SICR models
 model {
     //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)

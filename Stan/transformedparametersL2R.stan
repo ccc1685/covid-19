@@ -33,7 +33,7 @@ transformed parameters{
      for (i in 1:n_obs){
         car[i] = u[i,4]/u[i,3];
         ifr[i] = u[i,5]/u[i,3];
-        betat = beta*transition(mbase,mlocation,i)*(1-u[i,3]);
+        betat = beta*transition(mbase,mlocation,i);
         sigmact = sigmac*transition(cbase,clocation,i);
         Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
         }
