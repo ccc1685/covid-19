@@ -27,11 +27,7 @@ transformed parameters{
      u_init[4] = cinit;         // N_C total cumulative cases
      u_init[5] = cinit;         // integral of active C
 
-    //print(theta)
-    //print(u_init)
-
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-2,1e-2,2000);
-     //u = stepper(u_init,theta,n_obs);
 
      for (i in 1:n_obs){
         car[i] = u[i,4]/u[i,3];
