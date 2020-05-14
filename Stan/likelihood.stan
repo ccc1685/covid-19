@@ -6,3 +6,5 @@ for (i in 1:n_obs){
       target += neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi);
     }
 }
+
+target += gamma_lpdf(R0 | 2. , .5);

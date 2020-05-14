@@ -45,15 +45,10 @@ model {
     //cbase ~ exponential(.2);               // cbase
     //clocation ~ lognormal(log(20.),2.);    // clocation
     //n_pop ~ lognormal(log(1e5),4.);        // population
+//
+//likelihood
+#include likelihood.stan
 
-    // Likelihood function
-
-    for (i in 1:n_obs){
-      for (j in 1:3) {
-        if (y[i,j] > 0.)
-          target += neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi);
-        }
-    }
 }
 
 #include generatedquantities.stan
