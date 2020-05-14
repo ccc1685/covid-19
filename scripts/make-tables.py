@@ -25,6 +25,8 @@ parser.add_argument('-mp', '--models_path', default='./models',
                     help='Path to directory containing the .stan model files')
 parser.add_argument('-fp', '--fits_path', default='./fits',
                     help='Path to directory to save fit files')
+parser.add_argument('-tp', '--tables_path', default='./tables/',
+                    help='Path to directory to save tables')
 parser.add_argument('-f', '--fit_format', type=int, default=1,
                     help='Version of fit format')
 parser.add_argument('-p', '--params', default=['R0', 'car', 'ifr'], nargs='+',
@@ -68,7 +70,7 @@ def roi_df(args, model_name, roi):
     return model_name, roi, df
 
 result = p_map(roi_df, repeat(args), *combos)
-tables_path = Path(args.fits_path) / 'tables'
+tables_path = Path(args.tables_path) 
 tables_path.mkdir(exist_ok=True)
 
 dfs = []
