@@ -7,5 +7,5 @@ python scripts/get-data.py
 # iterations (e.g. 10000)
 REFERENCE_MODEL=SICRLMQC2R
 python scripts/run.py $REFERENCE_MODEL --n-warm=5 --n-iter=50
-python scripts/visualize.py $REFERENCE_MODEL
+#python scripts/visualize.py $REFERENCE_MODEL
 python scripts/make-tables.py
