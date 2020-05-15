@@ -29,7 +29,7 @@ def get_fit_path(fits_path: str, model_name: str, roi: str) -> str:
 
 def get_model_path(models_path: str, model_name: str,
                    compiled: bool = False, with_suffix: bool = False,
-                   check_exists: bool=True) -> str:
+                   check_exists: bool = True) -> str:
     """Get a full model path for one model file.
 
     Args:
@@ -88,7 +88,8 @@ def load_or_compile_stan_model(model_name: str, models_path: str = './models',
     """
     uncompiled_path = get_model_path(models_path, model_name, with_suffix=True)
     compiled_path = get_model_path(models_path, model_name,
-                                   compiled=True, with_suffix=True, check_exists=False)
+                                   compiled=True, with_suffix=True,
+                                   check_exists=False)
     stan_raw_last_mod_t = os.path.getmtime(uncompiled_path)
     try:
         stan_compiled_last_mod_t = os.path.getmtime(compiled_path)
@@ -97,7 +98,8 @@ def load_or_compile_stan_model(model_name: str, models_path: str = './models',
     if force_recompile or (stan_compiled_last_mod_t < stan_raw_last_mod_t):
         models_path = str(Path(models_path).resolve())
         print(models_path)
-        sm = pystan.StanModel(file=str(uncompiled_path), include_paths=[models_path])
+        sm = pystan.StanModel(file=str(uncompiled_path),
+                              include_paths=[models_path])
         with open(compiled_path, 'wb') as f:
             pickle.dump(sm, f)
     else:
@@ -170,13 +172,14 @@ def list_models(models_path: str) -> list:
 
     Args:
         models_path (str): Full path to the models directory.
-    
+
     Returns:
         list: A list of Stan models (without '.stan' suffixes).
     """
-    
+
     models_path = Path(models_path)
-    model_paths = [file for file in models_path.iterdir() if file.suffix == '.stan']
+    model_paths = [file for file in models_path.iterdir()
+                   if file.name.startswith('SICR') and file.suffix == '.stan']
     models = [mp.with_suffix('').name for mp in model_paths]
     return models
 
@@ -212,7 +215,8 @@ def load_fit(fit_path: str, model_full_path: str, new_module_name: str = None):
         if matches:
             # Load the saved, compiled model (or compile it)
             models_path = str(Path(model_full_path).parent)
-            load_or_compile_stan_model(model_full_path, models_path=models_path)
+            load_or_compile_stan_model(model_full_path,
+                                       models_path=models_path)
             # Get the name of the loaded model module in case we need it
             old_module_name = [x for x in sys.modules if 'stanfit4' in x][0]
             new_module_name = matches[0]
