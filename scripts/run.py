@@ -88,9 +88,9 @@ except Exception:
 stan_data = {}
 stan_data['n_scale'] = 1000  # use this instead of population
 # stan_data['n_theta'] = 8
-stan_data['n_difeq'] = 5
+# stan_data['n_difeq'] = 5
 stan_data['n_ostates'] = 3
-stan_data['t0'] = t0-1  # to for ODE is day one, index before start of series
+# stan_data['t0'] = t0-1  # to for ODE is day one, index before start of series
 stan_data['tm'] = tm
 stan_data['ts'] = np.arange(t0, len(df['dates2']))
 stan_data['y'] = df[['new_cases', 'new_recover', 'new_deaths']].to_numpy()\
