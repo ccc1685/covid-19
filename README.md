@@ -7,11 +7,11 @@ Code and data used for Chow et al, ["Global prediction of unreported SARS-CoV2 i
 
 The core model is a variation of the SIR model with a latent variable `I` for the number of *unobserved* infected which is distinguished from `C` the *observed* cases.  This model follows:
 
-![formula](https://render.githubusercontent.com/render/math?math=%24%5Cfrac%7BdS%7D%7Bdt%7D%20%3D%20-%20%5Cfrac%7B%5Cbeta%7D%7BN%7D%20S%28I%20%2BqC%29%5Clabel%7BS%7D%24)
+![formula](https://render.githubusercontent.com/render/math?math=\frac{dS}{dt}=-\frac{\beta}{N}S(I+qC))
 
-![formula](https://render.githubusercontent.com/render/math?math=%24%5Cfrac%7BdI%7D%7Bdt%7D%20%3D%20%5Cfrac%7B%5Cbeta%7D%7BN%7DS%28I%2BqC%29%20-%20%5Csigma_C%20I%20-%20%5Csigma_U%20I%20%20%5Clabel%7BI%7D%24)
+![formula](https://render.githubusercontent.com/render/math?math=\frac{dI}{dt}=\frac{\beta}{N}S(I+qC)-\sigma_CI-\sigma_UI)
 
-![formula](https://render.githubusercontent.com/render/math?math=%24%5Cfrac%7BdC%7D%7Bdt%7D%20%3D%20%5Csigma_C%20I%20-%20%5Csigma_R%20C%20-%20%5Csigma_D%20%20C%20%5Clabel%7BC%7D%24)
+![formula](https://render.githubusercontent.com/render/math?math=\frac{dC}{dt}=\sigma_CI-\sigma_RC-\sigma_DC)
 
 Several variants of this model are discussed in the Supplemental Material of the preprint.  The code required to fit these models to data is provided in the `models` directory. Data sources include The Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE) and The COVID Tracking Project.
 
