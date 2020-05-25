@@ -39,7 +39,7 @@ functions {
               du_dt[2] = sigmac*I - sigma*C;                 //C
               du_dt[3] = beta*(I+q*(C+R1));                       //N_I
               du_dt[4] = sigmac*I;                // N_C case appearance rate
-              du_dt[5] = sigmad*C;                //  total case deaths
+              du_dt[5] = sigmad*C;                // total case deaths
               du_dt[6] = sigmar*C - sigmar1*R1;   // recovery compartment 1
               du_dt[7] = sigmar1*R1;              // total case recoveries
 

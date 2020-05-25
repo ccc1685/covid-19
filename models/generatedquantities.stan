@@ -8,7 +8,7 @@ generated quantities {
     for (i in 1:n_obs) {
         for (j in 1:3) {
            if (y[i,j] > 0.)
-               llx[i, j] = neg_binomial_2_lpmf(max(y[i,j],0)|max([lambda[i,j],1.0]),phi);
+               llx[i, j] = neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi);
            else
                llx[i,j] = 0.;
             ll_ += llx[i, j];

@@ -24,8 +24,8 @@ transformed parameters{
      u_init[2] = cinit;         // C from data
      u_init[3] = u_init[1];     // N_I cumulative infected
      u_init[4] = cinit;         // N_C total cumulative cases
-     u_init[5] = cinit;         // total D
-     u_init[6] = 0;             // R1
+     u_init[5] = sigmad*cinit;  // total D
+     u_init[6] = sigmar*cinit;  // R1
      u_init[7] = 0;             // total R
 
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-3,2000);
