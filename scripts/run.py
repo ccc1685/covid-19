@@ -124,7 +124,8 @@ def init_fun(force_fresh=False):
                   'extra_std': exponential(1.),
                   'cbase': gamma(2., 1.),
                   'clocation': lognormal(np.log(20.), 1.),
-                  'n_pop': lognormal(np.log(1e5), 1.)
+                  'n_pop': lognormal(np.log(1e5), 1.),
+                  'sigmar1': gamma(2.,.1/2.)
                   }
     return result
 
