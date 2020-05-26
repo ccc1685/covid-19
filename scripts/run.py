@@ -138,7 +138,7 @@ fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control,
                             thin=args.n_thin)
 
 # Uncomment to print fit summary
-# print(fit)
+print(fit)
 
 # Save fit
 save_dir = Path(args.fits_path)
