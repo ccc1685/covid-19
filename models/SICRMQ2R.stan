@@ -7,8 +7,8 @@
 transformed data {
     real x_r[0];
     int x_i[0];
-    real<lower=0> cbase;          // case detection factor
-    real<lower=0> clocation;      // day of case change
+    real cbase = 1;          // case detection factor
+    real clocation = 10;      // day of case change
 }
 
 parameters {

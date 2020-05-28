@@ -11,7 +11,7 @@ transformed data {
     // real q = 0.;
     real n_pop = 1000;
     real cbase = 1.;
-    clocation = 1.;
+    real clocation = 10.;
 }
 
 parameters {
