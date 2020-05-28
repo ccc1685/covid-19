@@ -39,14 +39,14 @@ Several variants of this model are discussed in the Supplemental Material of the
     - `python scripts/run.py MODEL_NAME --roi=REGION_NAME`
     - e.g. `python scripts/run.py SICRLMQ --roi=US_MI`
   - Other optional arguments for specifying paths and some fitting parameters can be examined with `python scripts/run.py --help`.
-  - A pickle file containing the resultant fit will be produced in your `fits_path` (see help).
-  - A `scripts/run_all.py` file is provided for reference but much better performance will be obtained by running `scripts/run.py` on a cluster.
+  - A pickle file containing the resultant fit will be produced in your `fits-path` (see help).
+  - A `scripts/run-many.py` file is provided for reference but much better performance will be obtained by running `scripts/run.py` on a cluster.
 
 - Analyze finished fits for all regions with `scripts/visualize.py`:
   - For all regions (with fits) with `python scripts/visualize.py MODEL_NAME`
-  - e.g. `python visualize_master.py --nonlinearmodel`
+  - e.g. `python visualize-master.py --nonlinearmodel`
   - As above, help is available with the `--help` flag.
-  - Jupyter notebooks containining all analyzed regions will be created in your `--fits_path`.
+  - Jupyter notebooks containining all analyzed regions will be created in your `--fits-path`.
 
 - Tables summarizing fit parameters can be generated with `scripts/make-tables.py`:
   - `python scripts/make-tables.py`
