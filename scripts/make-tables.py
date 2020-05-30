@@ -103,10 +103,16 @@ for model_name in args.model_names:
 df = pd.concat(dfs).reset_index().\
         set_index(['model', 'roi', 'quantile']).sort_index()
 out = tables_path / ('fit_table_raw.csv')
+
+# Possibly append
 if args.append and out.is_file():
     df_old = pd.read_csv(out, index_col=['model', 'roi', 'quantile'])
     df = pd.concat([df_old, df])
     df = df[sorted(df.columns)]
+    
+# Remove duplicate model/region combinations (keep most recent)
+df = df[~df.index.duplicated(keep='last')]
+
 # Export the CSV file for the big table
 df.to_csv(out)
 
