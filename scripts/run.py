@@ -122,7 +122,7 @@ def init_fun(force_fresh=False):
                   'mbase': gamma(2., .1/2.),
                   'mlocation': lognormal(np.log(stan_data['tm']), 1.),
                   'extra_std': exponential(1.),
-                  'cbase': gamma(2., 1.),
+                  'cbase': gamma(2., 2.),
                   'clocation': lognormal(np.log(20.), 1.),
                   'n_pop': lognormal(np.log(1e5), 1.),
                   'sigmar1': gamma(2.,.1/2.)
