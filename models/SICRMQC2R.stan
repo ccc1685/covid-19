@@ -35,7 +35,7 @@ model {
     sigmad ~ inv_gamma(2.78,.185);         // sigmad
     sigmau ~ inv_gamma(2.3,.15);           // sigmau
     extra_std ~ exponential(1.);           // likelihood over dispersion std
-    q ~ exponential(1.);                   // q
+    q ~ exponential(2.);                   // q
     mbase ~ exponential(1.);               // mbase
     mlocation ~ lognormal(log(tm+5),1.);   // mlocation
     cbase ~ gamma(2.,2.);                  // cbase
