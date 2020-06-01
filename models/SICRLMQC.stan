@@ -41,7 +41,7 @@ model {
     q ~ exponential(1.);                   // q
     mbase ~ exponential(1.);               // mbase
     mlocation ~ lognormal(log(tm+5),1.);   // mlocation
-    cbase ~ exponential(.2);               // cbase
+    cbase ~ gamma(2.,2.);                  // cbase
     clocation ~ lognormal(log(20.),2.);    // clocation
     //n_pop ~ lognormal(log(1e5),4.);        // population
     //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
