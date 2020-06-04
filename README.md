@@ -7,9 +7,9 @@ Code and data used for Chow et al, ["Global prediction of unreported SARS-CoV2 i
 
 The core model is a variation of the SIR model with a latent variable `I` for the number of *unobserved* infected which is distinguished from `C` the *observed* cases.  This model follows:
 
-![formula](https://render.githubusercontent.com/render/math?math=\frac{dS}{dt}=-\frac{\beta}{N}S(I+qC))
+![formula](https://render.githubusercontent.com/render/math?math=\frac{dS}{dt}=-\frac{\beta}{N}S(I%2BqC))
 
-![formula](https://render.githubusercontent.com/render/math?math=\frac{dI}{dt}=\frac{\beta}{N}S(I+qC)-\sigma_CI-\sigma_UI)
+![formula](https://render.githubusercontent.com/render/math?math=\frac{dI}{dt}=\frac{\beta}{N}S(I%2BqC)-\sigma_CI-\sigma_UI)
 
 ![formula](https://render.githubusercontent.com/render/math?math=\frac{dC}{dt}=\sigma_CI-\sigma_RC-\sigma_DC)
 
