@@ -8,7 +8,7 @@ function linearu!(du,u,p,t)
     du[1] = dI = beta*(I+q*C) - sigmac*I - f*sigma*I
 	du[2] = dC = sigmac*I - sigma*C
 end
-function linearu!(du,u,p,t)
+function nonlinearu!(du,u,p,t)
 	I,C,S = u
 	beta,sigmac,sigma,q,f,mbase,mlocation,mrate,cmax,c50 = p
     beta *= mbase + (1-mbase)/(1 + exp(mrate*(t - mlocation)))
