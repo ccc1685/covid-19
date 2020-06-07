@@ -63,6 +63,30 @@ function mcmc(data::DataFrame,cols::Array,p::Array,pfit::Array,N::Float64,total:
 	return chiout, pout, accept/total, chiml, pml
 end
 
+"""
+    function simulate(p)
+
+"""
+
+function simulate(sicrfn!,p,firstday,lastday)
+
+    tspan = (firstday,lastday)
+    sim = Array{Int,2}(undef,lastday-firstday+1,3)
+    uin = uinitial(data,cols,firstday,N)
+    prediction,days = model(p[1:end-1],cols,uin,float.(tspan),N,sicrfn!)
+    phi = p[end]
+    for set in eachindex(cols)
+        for i in eachindex(days)
+            mu = max(prediction[i,set],eps(Float64))
+            p = mu/(mu+phi)
+            d = Distributions.NegativeBinomial(phi,p)
+            sim[i,set] = rand(d)
+        end
+    end
+    return sim
+
+end
+
 # generate MCMC step guess from current parameter value r using logNormal distirbution for all
 # parameters except start day with scale parameter manually adjusted so approximately a third of guesses are accepted
 function sampleparams!(pt,p,pfit,sigmaguess)
