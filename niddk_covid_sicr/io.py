@@ -215,7 +215,8 @@ def load_fit(fit_path: str, model_full_path: str, new_module_name: str = None):
         if matches:
             # Load the saved, compiled model (or compile it)
             models_path = str(Path(model_full_path).parent)
-            load_or_compile_stan_model(model_full_path,
+            model_name = Path(model_full_path).name
+            load_or_compile_stan_model(model_name,
                                        models_path=models_path)
             # Get the name of the loaded model module in case we need it
             old_module_name = [x for x in sys.modules if 'stanfit4' in x][0]
