@@ -14,3 +14,5 @@ dist
 *.png
 Untitled*.ipynb
 
+covid-sicr.code-workspace
+.vscode/settings.json

@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from scipy.stats import nbinom
+from tqdm.auto import tqdm
 
 from .io import extract_samples
 
@@ -134,7 +135,7 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
     return np.sum(stat_vals * weights)
 
 
-def reweighted_stats(raw_table_path: str, save: bool = True) -> pd.DataFrame:
+def reweighted_stats(raw_table_path: str, save: bool = True, roi_weight='var') -> pd.DataFrame:
     """Reweight all statistics (across models) according to the LOO
     of each of the models.
 
@@ -152,7 +153,7 @@ def reweighted_stats(raw_table_path: str, save: bool = True) -> pd.DataFrame:
     df = df.stack('param').unstack(['roi', 'quantile', 'param']).T
     rois = df.index.get_level_values('roi').unique()
     result = pd.Series(index=df.index)
-    for roi in rois:
+    for roi in tqdm(rois):
         loo = df.loc[(roi, 'mean', 'loo')]
         loo_se = df.loc[(roi, 'std', 'loo')]
         # An indexer for this ROI
@@ -166,8 +167,13 @@ def reweighted_stats(raw_table_path: str, save: bool = True) -> pd.DataFrame:
 
     # Compute global stats
     means = result.unstack('roi').loc['mean'].unstack('param')
-    inv_var = 1/result.unstack('roi').loc['std']**2
-    weights = inv_var.fillna(0).unstack('param')
+    if roi_weight == 'var':    
+        inv_var = 1/result.unstack('roi').loc['std']**2
+        weights = inv_var.fillna(0).unstack('param')
+    elif roi_weight == 'waic':
+        waic = result.unstack('roi').loc['waic']
+        n_data = result.unstack('roi').loc['n_data']
+        weights = np.exp(-waic/n_data)
     weights.loc['AA_Global'] = 0  # Don't include the global numbers yet
     global_mean = (means*weights).sum() / weights.sum()
     global_var = ((weights*((means - global_mean)**2)).sum()/weights.sum())

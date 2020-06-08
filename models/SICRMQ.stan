@@ -1,5 +1,5 @@
-// SICRLMQC.stan
-// Latent variable linear SICR model with mitigation, q>0, sigmac time dependence
+// SICRMQ.stan
+// Latent variable nonlinear SICR model with mitigation, q>0
 
 #include functionsSICR.stan
 #include data.stan

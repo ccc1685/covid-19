@@ -106,9 +106,14 @@ out = tables_path / ('fit_table_raw.csv')
 
 # Possibly append
 if args.append and out.is_file():
-    df_old = pd.read_csv(out, index_col=['model', 'roi', 'quantile'])
-    df = pd.concat([df_old, df])
-    df = df[sorted(df.columns)]
+    try:
+        df_old = pd.read_csv(out, index_col=['model', 'roi', 'quantile'])
+    except:
+        print("Cound not read old fit_table_raw file; overwriting it.")
+    else:
+        df = pd.concat([df_old, df])
+
+df = df[sorted(df.columns)]
     
 # Remove duplicate model/region combinations (keep most recent)
 df = df[~df.index.duplicated(keep='last')]
