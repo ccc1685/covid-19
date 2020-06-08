@@ -71,7 +71,7 @@ run_flags = [('--%s' % key.replace('_', '-'), value) for key, value in args.__di
 # Parallel implementations are possible with multiprocessing or the library of your choice
 # Best performance comes from parallelizing run.py on a cluster.
 i = 0
-for model_name in tqdm(args.model_names, desc='Model)':
+for model_name in tqdm(args.model_names, desc='Model'):
     for roi in tdqm(args.rois, desc='Region'):
         cmd = ['python', str(run_script_path.resolve()), model_name,
                 '--roi', roi]

@@ -97,7 +97,6 @@ def load_or_compile_stan_model(model_name: str, models_path: str = './models',
         stan_compiled_last_mod_t = 0
     if force_recompile or (stan_compiled_last_mod_t < stan_raw_last_mod_t):
         models_path = str(Path(models_path).resolve())
-        print(models_path)
         sm = pystan.StanModel(file=str(uncompiled_path),
                               include_paths=[models_path])
         with open(compiled_path, 'wb') as f:
@@ -179,7 +178,7 @@ def list_models(models_path: str) -> list:
 
     models_path = Path(models_path)
     model_paths = [file for file in models_path.iterdir()
-                   if file.name.startswith('SICR') and file.suffix == '.stan']
+                   if file.name[0] == file.name.upper()[0] and file.suffix == '.stan']
     models = [mp.with_suffix('').name for mp in model_paths]
     return models
 
@@ -215,7 +214,7 @@ def load_fit(fit_path: str, model_full_path: str, new_module_name: str = None):
         if matches:
             # Load the saved, compiled model (or compile it)
             models_path = str(Path(model_full_path).parent)
-            model_name = Path(model_full_path).name
+            model_name = Path(model_full_path).name.strip('.stan')
             load_or_compile_stan_model(model_name,
                                        models_path=models_path)
             # Get the name of the loaded model module in case we need it
