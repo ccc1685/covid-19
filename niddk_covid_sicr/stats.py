@@ -135,7 +135,8 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
     return np.sum(stat_vals * weights)
 
 
-def reweighted_stats(raw_table_path: str, save: bool = True, roi_weight='var') -> pd.DataFrame:
+def reweighted_stats(raw_table_path: str, save: bool = True,
+                     roi_weight='var', extra=None) -> pd.DataFrame:
     """Reweight all statistics (across models) according to the LOO
     of each of the models.
 
@@ -151,6 +152,8 @@ def reweighted_stats(raw_table_path: str, save: bool = True, roi_weight='var') -
     df = pd.read_csv(raw_table_path, index_col=['model', 'roi', 'quantile'])
     df.columns.name = 'param'
     df = df.stack('param').unstack(['roi', 'quantile', 'param']).T
+    if extra is not None:
+        df = df.join(extra)
     rois = df.index.get_level_values('roi').unique()
     result = pd.Series(index=df.index)
     for roi in tqdm(rois):
@@ -167,19 +170,18 @@ def reweighted_stats(raw_table_path: str, save: bool = True, roi_weight='var') -
 
     # Compute global stats
     means = result.unstack('roi').loc['mean'].unstack('param')
-    if roi_weight == 'var':    
+    if roi_weight == 'var':
         inv_var = 1/result.unstack('roi').loc['std']**2
         weights = inv_var.fillna(0).unstack('param')
     elif roi_weight == 'waic':
         waic = result.unstack('roi').loc['waic']
-        n_data = result.unstack('roi').loc['n_data']
-        weights = np.exp(-waic/n_data)
+        n_data = result.unstack('roi').loc['n_data_pts']
+        weights = np.exp(-0.5*waic/n_data)
     weights.loc['AA_Global'] = 0  # Don't include the global numbers yet
     global_mean = (means*weights).sum() / weights.sum()
     global_var = ((weights*((means - global_mean)**2)).sum()/weights.sum())
     global_sd = global_var**(1/2)
     result.loc[('AA_Global', 'mean'), :] = global_mean
-    result.loc[('AA_Global', 'std'), :] = global_sd
     result.loc[('AA_Global', 'std'), :] = global_sd
     result = result.sort_index()
 

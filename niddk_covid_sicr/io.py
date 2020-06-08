@@ -178,7 +178,8 @@ def list_models(models_path: str) -> list:
 
     models_path = Path(models_path)
     model_paths = [file for file in models_path.iterdir()
-                   if file.name[0] == file.name.upper()[0] and file.suffix == '.stan']
+                   if file.name[0] == file.name.upper()[0]
+                   and file.suffix == '.stan']
     models = [mp.with_suffix('').name for mp in model_paths]
     return models
 
