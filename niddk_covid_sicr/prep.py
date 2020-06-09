@@ -55,7 +55,7 @@ def get_n_data(stan_data):
     
 
 # functions used to initialize parameters
-def init_fun(args, stan_data, force_fresh=False):
+def get_init_fun(args, stan_data, force_fresh=False):
     if args.init and not force_fresh:
         try:
             init_path = Path(args.fits_path) / args.init
@@ -82,4 +82,7 @@ def init_fun(args, stan_data, force_fresh=False):
                   'n_pop': lognormal(np.log(1e5), 1.),
                   'sigmar1': gamma(2., .1/2.)
                   }
-    return result
+    
+    def init_fun():
+        return result
+    return init_fun
