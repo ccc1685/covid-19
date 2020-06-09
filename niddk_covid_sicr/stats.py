@@ -1,6 +1,7 @@
 """Compute stats on the results."""
 
 import arviz as az
+from datetime import datetime
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -127,6 +128,8 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
     Returns:
         float: A new average value for the statistic, weighted across models.
     """
+    
+    # Assume that loo is on a deviance scale (lower is better)
     min_loo = min(loo_vals)
     weights = np.exp(-0.5*(loo_vals-min_loo))
     if loo_se_vals is not None:
@@ -136,7 +139,7 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
 
 
 def reweighted_stats(raw_table_path: str, save: bool = True,
-                     roi_weight='var', extra=None) -> pd.DataFrame:
+                     roi_weight='n_data_pts', extra=None, first=None, date=None) -> pd.DataFrame:
     """Reweight all statistics (across models) according to the LOO
     of each of the models.
 
@@ -150,12 +153,13 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
                       (i.e. a weighted average across models).
     """
     df = pd.read_csv(raw_table_path, index_col=['model', 'roi', 'quantile'])
+    df = df[~df.index.duplicated(keep='last')]
     df.columns.name = 'param'
     df = df.stack('param').unstack(['roi', 'quantile', 'param']).T
-    if extra is not None:
-        df = df.join(extra)
     rois = df.index.get_level_values('roi').unique()
     result = pd.Series(index=df.index)
+    if first is not None:
+        rois = rois[:first]
     for roi in tqdm(rois):
         loo = df.loc[(roi, 'mean', 'loo')]
         loo_se = df.loc[(roi, 'std', 'loo')]
@@ -167,19 +171,35 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
     result = result.unstack(['param'])
     result = result[~result.index.get_level_values('quantile')
                            .isin(['min', 'max'])]  # Remove min and max
-
+    if extra is not None:
+        extra.columns.name = 'param'
+        result = result.join(extra)
+        
     # Compute global stats
     means = result.unstack('roi').loc['mean'].unstack('param')
+    means = means.drop('AA_Global', errors='ignore')
+    if date:
+        means = add_fixed_date(means, date, ['Rt', 'car', 'ifr'])
+    means = means[sorted(means.columns)]
+    
     if roi_weight == 'var':
         inv_var = 1/result.unstack('roi').loc['std']**2
         weights = inv_var.fillna(0).unstack('param')
+        global_mean = (means*weights).sum() / weights.sum()
+        global_var = ((weights*((means - global_mean)**2)).sum()/weights.sum())
     elif roi_weight == 'waic':
-        waic = result.unstack('roi').loc['waic']
-        n_data = result.unstack('roi').loc['n_data_pts']
+        waic = means['waic']
+        n_data = means['n_data_pts']
+        # Assume that waic is on a deviance scale (lower is better)
         weights = np.exp(-0.5*waic/n_data)
-    weights.loc['AA_Global'] = 0  # Don't include the global numbers yet
-    global_mean = (means*weights).sum() / weights.sum()
-    global_var = ((weights*((means - global_mean)**2)).sum()/weights.sum())
+        global_mean = means.mul(weights, axis=0).sum() / weights.sum()
+        global_var = (((means - global_mean)**2).mul(weights, axis=0)).sum()/weights.sum()
+    elif roi_weight == 'n_data_pts':
+        n_data = means['n_data_pts']
+        # Assume that waic is on a deviance scale (lower is better)
+        weights = n_data
+        global_mean = means.mul(weights, axis=0).sum() / weights.sum()
+        global_var = (((means - global_mean)**2).mul(weights, axis=0)).sum()/weights.sum()
     global_sd = global_var**(1/2)
     result.loc[('AA_Global', 'mean'), :] = global_mean
     result.loc[('AA_Global', 'std'), :] = global_sd
@@ -189,3 +209,30 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
         path = Path(raw_table_path).parent / 'fit_table_reweighted.csv'
         result.to_csv(path)
     return result
+
+
+def days_into_2020(date_str):
+    date = datetime.strptime(date_str, '%Y-%m-%d')
+    one_one = datetime.strptime('2020-01-01', '%Y-%m-%d')
+    return (date - one_one).days
+
+
+def get_roi_week(date_str, roi_day_one):
+    days = days_into_2020(date_str)
+    roi_days = days - roi_day_one
+    roi_week = int(roi_days/7)
+    return roi_week
+
+
+def add_fixed_date(df, date_str, stats):
+    for roi in df.index:
+        week = get_roi_week(date_str, df.loc[roi, 't0'])
+        print(week)
+        for stat in stats:
+            col = '%s (week %d)' % (stat, week)
+            if col in df:
+                new_col = '%s (%s)' % (stat, date_str)
+                df.loc[roi, new_col] = df.loc[roi, col]
+            else:
+                df.loc[roi, new_col] = None
+        return df

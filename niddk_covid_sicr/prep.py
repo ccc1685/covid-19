@@ -19,7 +19,10 @@ def get_stan_data(full_data_path, args):
             df = df[df['dates2'] <= args.last_date]
 
     # t0 := where to start time series, index space
-    t0 = np.where(df["new_cases"].values > 1)[0][0]
+    try:
+        t0 = np.where(df["new_cases"].values >= 1)[0][0]
+    except IndexError:
+        return [None, None]
     # tm := start of mitigation, index space
 
     try:
@@ -41,12 +44,15 @@ def get_stan_data(full_data_path, args):
     stan_data['y'] = df[['new_cases', 'new_recover', 'new_deaths']].to_numpy()\
         .astype(int)[t0:, :]
     stan_data['n_obs'] = len(df['dates2']) - t0
-    return stan_data
+    return stan_data, df['dates2'][t0]
 
 
 def get_n_data(stan_data):
-    return (stan_data['y'] > 0).ravel().sum()
-
+    if stan_data:
+        return (stan_data['y'] > 0).ravel().sum()
+    else:
+        return 0
+    
 
 # functions used to initialize parameters
 def init_fun(args, stan_data, force_fresh=False):

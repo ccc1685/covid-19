@@ -59,7 +59,10 @@ csv = Path(args.data_path) / ("covidtimeseries_%s.csv" % args.roi)
 csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
-stan_data = ncs.get_stan_data(csv, args)
+stan_data, t0 = ncs.get_stan_data(csv, args)
+if stan_data is None:
+    print("No data for %s; skipping fit." % args.roi)
+    sys.exit(0)
 if args.n_data_only:
     print(ncs.get_n_data(stan_data))
     sys.exit(0)
