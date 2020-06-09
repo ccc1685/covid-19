@@ -28,7 +28,7 @@ transformed parameters{
      u_init[6] = sigmar*cinit;  // R1
      u_init[7] = 0;             // total R
 
-     u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-3,2000);
+     u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,2000);
 
      for (i in 1:n_obs){
         car[i] = u[i,4]/u[i,3];
