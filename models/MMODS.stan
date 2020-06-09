@@ -150,45 +150,38 @@ model {
 
 //likelihood
 for (i in 1:n_obs){
-  for (j in 1:3) {
-    if (y[i,j] > 0.)
-      target += neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi);
+      target += neg_binomial_2_lpmf(y[i,1]|lambda[i,1],phi);
+      target += neg_binomial_2_lpmf(y[i,3]|lambda[i,3],phi);
     }
 }
 
-}
 
 generated quantities {
-    real llx[n_obs, 3];
+    real llx[n_obs, 2];
     real ll_; // log-likelihood for model
     int n_data_pts;
-    int n_proj;
-    real y_proj[n_ostates];
-    real u[1,5];
-
-    real times[1] = {184.};
-    real theta[7] = {f1, f2, sigmar, sigmad, sigmau, q, mbase};
-    n_proj = 184; // project out six months May 15 - Nov 15
+    real y_proj[3];
 
     ll_ = 0.;
     n_data_pts = 0;
     for (i in 1:n_obs) {
-        for (j in 1:3) {
-           if (y[i,j] > 0.){
-                llx[i, j] = neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi);
+        for (j in 1:2) {
+                llx[i, j] = neg_binomial_2_lpmf(y[i,1]|lambda[i,1],phi);
+                llx[i, j] = neg_binomial_2_lpmf(y[i,3]|lambda[i,3],phi);
                 n_data_pts += 1;
                 ll_ += llx[i, j];
-               }
-           else {
-                llx[i,j] = 0.;
-                }
-        }
+       }
     }
 
+    {
+    real times[1] = {184.};  // project out six months May 15 - Nov 15
+    real theta[7] = {f1, f2, sigmar, sigmad, sigmau, q, mbase};
+    real u[1,5];
 
     u = integrate_ode_rk45(SICR, u_end, 0.,times, theta, x_r, x_i,1e-2,1e-2,2000);
 
-    y_proj[1] = u[1,3]*n_pop;                   //cumulative projected mean infected
-    y_proj[2] = sigmad*u[1,5]*n_pop;           // cumulative projected mean dead
-
+    y_proj[1] = u[1,3]*n_pop;                   // projected mean cumulative infected
+    y_proj[2] = u[1,4]*n_pop;                   // projected mean cumulative cases
+    y_proj[3] = sigmad*u[1,5]*n_pop;            // projected mean cumulative dead
+    }
 }

@@ -66,7 +66,7 @@ if stan_data is None:
 if args.n_data_only:
     print(ncs.get_n_data(stan_data))
     sys.exit(0)
-init_fun = ncs.get_init_fun(args, stan_data)
+init_fun = ncs.init_fun(args, stan_data)
 
 model_path = Path(args.models_path) / ('%s.stan' % args.model_name)
 model_path = model_path.resolve()
