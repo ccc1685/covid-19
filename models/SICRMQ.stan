@@ -9,7 +9,7 @@ transformed data {
     int x_i[0];
     int n_difeq = 5;     // number of differential equations for yhat
     // real q = 0.;
-    real n_pop = 1000;
+    //real n_pop = 1000;
     real cbase = 1.;
     real clocation = 10.;
 }
@@ -27,7 +27,7 @@ parameters {
     //real<lower=0> cbase;          // case detection factor
     //real<lower=0> clocation;      // day of case change
     //real<lower=0> sigmar1;      // 1st compartment recovery rate
-    //real<lower=1> n_pop;      // population size
+    real<lower=1> n_pop;      // population size
 }
 
 #include transformedparameters.stan
@@ -45,7 +45,7 @@ model {
     extra_std ~ exponential(1.);           // likelihood over dispersion std
     //cbase ~ exponential(.2);               // cbase
     //clocation ~ lognormal(log(20.),2.);    // clocation
-    //n_pop ~ lognormal(log(1e5),4.);        // population
+    n_pop ~ lognormal(log(1e5),4.);        // population
     //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
 
 //likelihood
