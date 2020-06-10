@@ -119,7 +119,7 @@ def get_countries(d: pd.DataFrame, filter: bool = True):
 
 
 def get_covid_tracking(data_path: str, filter: bool = True,
-                       fixes: bool = True) -> None:
+                       fixes: bool = False) -> None:
     """Gets data from The COVID Tracking Project (US states only).
 
     https://covidtracking.com
