@@ -7,6 +7,7 @@ functions {
          // mobility data starts on 2/15/2020 = day 34
          // shift mobility by 34 days
          // May 15 = day 56
+         // Nov 15 = day 56 + 184
 
          //
          real mitigation(real base,real t) {
@@ -25,6 +26,7 @@ functions {
          real relax(real base, real t) {
              return base*(1 + 0.42924175/(1 + exp(-0.2154182*(t - 20.29067964);
          }
+
 */
 
 
@@ -59,8 +61,8 @@ functions {
 
              du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; // I
              du_dt[2] = sigmac*I - sigma*C;                       // C
-             du_dt[3] = beta*(I+q*C)*(1-Z);                       // Z = N_I
-             du_dt[4] = sigmac*I;                                 // N_C case appearance rate
+             du_dt[3] = beta*(I+q*C)*(1-Z);                       // Z = N_I cumulative infected
+             du_dt[4] = sigmac*I;                                 // N_C cumulative cases
              du_dt[5] = C;                                        // integrated C
 
              return du_dt;
@@ -69,10 +71,10 @@ functions {
 
 data {
   int<lower=1> n_obs;       // number of days observed
+  int<lower=1> n_total;      // total number of days until Nov 15
   int<lower=1> n_ostates;   // number of observed states
   int y[n_obs,n_ostates];     // data, per-day-tally [cases,recovered,death]
-  real tm;                    // start day of mitigation
-  real ts[n_obs];             // time points that were observed
+  real ts[n_total];             // time points for ode solver
   }
 
 
@@ -80,7 +82,6 @@ transformed data {
     real x_r[0];
     int x_i[0];
     int n_difeq = 5;     // number of differential equations for yhat
-    // real q = 0.;
     real n_pop = 100000;
 }
 
@@ -91,19 +92,17 @@ parameters {
     real<lower=0> sigmad;         // death rate
     real<lower=0> sigmau;         // I disappearance rate
     real<lower=0> mbase;          // mitigation strength
-    //real<lower=0> mlocation;      // day of mitigation application
     real<lower=0> extra_std;      // phi = 1/extra_std^2 in neg_binomial_2(mu,phi)
     real<lower=0> q;              // infection factor for cases
+
 }
 
 transformed parameters{
-  real<lower=.01> lambda[n_obs,3]; //neg_binomial_2 rate [new cases, new recovered, new deaths]
-  real car[n_obs];      //total cases / total infected
-  real ifr[n_obs];      //total dead / total infected
-  real Rt[n_obs];           // time dependent reproduction number
-
+  real<lower=0.> lambda[n_total,5]; //neg_binomial_2 rate [new cases, new recovered, new deaths, new infected]
+  real car[n_total];      //total cases / total infected
+  real ifr[n_total];      //total dead / total infected
+  real Rt[n_total];           // time dependent reproduction number
   real u_init[5];     // initial conditions for fractions
-  real u_end[5];       // last point
 
   real sigmac = f2/(1+f1);
   real beta = f2 + sigmau;
@@ -113,9 +112,8 @@ transformed parameters{
 
   {
      real theta[7] = {f1, f2, sigmar, sigmad, sigmau, q, mbase};
-     real u[n_obs, 5];   // solution from the ODE solver
+     real u[n_total, 5];   // solution from the ODE solver
      real betat;
-     real sigmact;
 
      real cinit = y[1,1]/n_pop;
 
@@ -127,28 +125,26 @@ transformed parameters{
 
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,10000);
 
-     for (j in 1:5){
-      u_end[j] = u[n_obs,j];
-     }
-
-     for (i in 1:n_obs){
+     for (i in 1:n_total){
         car[i] = u[i,4]/u[i,3];
         ifr[i] = sigmad*u[i,5]/u[i,3];
         betat = beta*mitigation(mbase,i)*(1-u[i,3]);
-        sigmact = sigmac;
-        Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
+        Rt[i] = betat*(sigma+q*sigmac)/sigma/(sigmac+sigmau);
         }
 
-     lambda[1,1] = max([(u[1,4]-u_init[4])*n_pop,1.0]); //C: cases per day
-     lambda[1,2] = max([sigmar*(u[1,5]-u_init[5])*n_pop,1.0]); //R: recovered per day
-     lambda[1,3] = max([sigmad*(u[1,5]-u_init[5])*n_pop,1.0]); //D: dead per day
+     lambda[1,1] = max([(u[1,4]-u_init[4])*n_pop,0.01]);         // new cases per day
+     lambda[1,2] = max([sigmar*(u[1,5]-u_init[5])*n_pop,0.01]); // new recovered per day
+     lambda[1,3] = max([sigmad*(u[1,5]-u_init[5])*n_pop,0.01]);  // new deaths per day
+     lambda[1,4] = max([(u[1,3]-u_init[3])*n_pop,0.01]);  // new infected per day
+     lambda[1,5] = max([u[1,2]*n_pop,0.01]); // mean active cases
 
-     for (i in 2:n_obs){
-        lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,1.0]); //C: cases per day
-        lambda[i,2] = max([sigmar*(u[i,5]-u[i-1,5])*n_pop,1.0]); //R: recovered rate per day
-        lambda[i,3] = max([sigmad*(u[i,5]-u[i-1,5])*n_pop,1.0]); //D: dead rate per day
+     for (i in 2:n_total){
+        lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,0.01]);         // new cases per day
+        lambda[i,2] = max([sigmar*(u[i,5]-u[i-1,5])*n_pop,0.01]);  // new recovered rate per day
+        lambda[i,3] = max([sigmad*(u[i,5]-u[i-1,5])*n_pop,0.01]);  // new deaths per day
+        lambda[i,4] = max([(u[i,4]-u[i-1,4])*n_pop,0.01]);         // new infected per day
+        lambda[i,5] = max([u[i,2]*n_pop,0.01]);    // mean active cases
         }
-
     }
 }
 
@@ -156,64 +152,71 @@ transformed parameters{
 model {
     //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
 
-    f1 ~ gamma(2.4,.1);                 // f1  initital infected to case ratio
-    f2 ~ gamma(175.,420.);
-    sigmar ~ gamma(16.,120.);             // sigmar
-    sigmad ~ gamma(19.,1200.);         // sigmad
-    sigmau ~ gamma(2.,23.);           // sigmau
-    q ~ gamma(.9,2.3);                   // q
-    mbase ~ gamma(10.,30.);               // mbase
-    extra_std ~ gamma(394.,656.);           // likelihood over dispersion std
+    f1 ~ gamma(2.4,.1);                 // f1  initial infected to case ratio
+    f2 ~ gamma(175.,420.);              // f2
+    sigmar ~ gamma(16.,120.);           // sigmar
+    sigmad ~ gamma(19.,1200.);          // sigmad
+    sigmau ~ gamma(2.,23.);             // sigmau
+    q ~ gamma(.9,2.3);                  // q
+    mbase ~ gamma(10.,30.);             // mbase
+    extra_std ~ gamma(394.,656.);       // likelihood over dispersion std
 
-/*
-    f1 ~ normal(21.,5.);                 // f1  initital infected to case ratio
-    f2 ~ normal(.5,.04);                    // f2  beta - sigmau
-    sigmar ~ normal(.08,.004);             // sigmar
-    sigmad ~ normal(.02,.002);         // sigmad
-    sigmau ~ normal(.09,.005);           // sigmau
-    q ~ normal(.5,.1);                   // q
-    mbase ~ normal(.25,.02);               // mbase
-    //mlocation ~ lognormal(log(tm+5),1.);   // mlocation
-    extra_std ~ normal(.5,.2);           // likelihood over dispersion std
-*/
-    //print(f1," ",f2," ",sigmar," ",sigmad," ",sigmau," ",q," ",mbase," ",extra_std)
-
-//likelihood
-for (i in 1:n_obs){
-      target += neg_binomial_2_lpmf(y[i,1]|lambda[i,1],phi);
-      target += neg_binomial_2_lpmf(y[i,3]|lambda[i,3],phi);
-      target += gamma_lpdf(ifr[i] | 2.,400.);   // regularization
-      target += gamma_lpdf(car[i] | 4.,20.);
+    //likelihood
+    for (i in 1:n_obs){
+        target += neg_binomial_2_lpmf(y[i,1]|lambda[i,1],phi);
+        target += neg_binomial_2_lpmf(y[i,2]|lambda[i,3],phi);
+        target += gamma_lpdf(ifr[i] | 2.,200.);   // regularization
+        target += gamma_lpdf(car[i] | 4.,20.);
     }
 }
 
-
 generated quantities {
-    //real llx[n_obs, 2];
-    //real ll_; // log-likelihood for model
-    //int n_data_pts;
-    real y_proj[3];
+
+real<lower=0> cum_deaths[n_total];
+real<lower=0> cum_infected[n_total];
+real active_cases[n_total];
+
+ {
+    int ct;
+    int rt;
+    int dt;
+    int it;
 /*
-    ll_ = 0.;
-    n_data_pts = 0;
-    for (i in 1:n_obs) {
-        for (j in 1:2) {
-                llx[i, j] = neg_binomial_2_lpmf(y[i,1]|lambda[i,1],phi);
-                llx[i, j] = neg_binomial_2_lpmf(y[i,3]|lambda[i,3],phi);
-                n_data_pts += 1;
-                ll_ += llx[i, j];
-       }
-    }
+
+      dt = neg_binomial_2_rng(lambda[1,3],phi);
+      it = neg_binomial_2_rng(lambda[1,4],phi);
+
+      active_cases[1] = neg_binomial_2_rng(lambda[1,5],phi);
+      cum_deaths[1] = dt;
+      cum_infected[1] = it;
+
+      for (i in 2:n_total) {
+
+        dt = neg_binomial_2_rng(lambda[i,3],phi);
+        it = neg_binomial_2_rng(lambda[i,4],phi);
+
+        active_cases[i] = neg_binomial_2_rng(lambda[i,5],phi);
+        cum_deaths[i] =   cum_deaths[i-1] + dt;
+        cum_infected[i] = cum_infected[i-1] + it;
+        }
 */
-    {
-    real times[1] = {184.};  // project out six months May 15 - Nov 15
-    real theta[7] = {f1, f2, sigmar, sigmad, sigmau, q, mbase};
-    real u[1,5];
 
-    u = integrate_ode_rk45(SICR, u_end, 0.,times, theta, x_r, x_i,1e-3,1e-5,10000);
+        dt = poisson_rng(lambda[1,3]);
+        it = poisson_rng(lambda[1,4]);
 
-    y_proj[1] = u[1,3]*n_pop;                   // projected mean cumulative infected
-    y_proj[2] = .17*u[1,4]*n_pop;               // projected mean cumulative cases
-    y_proj[3] = sigmad*u[1,5]*n_pop;            // projected mean cumulative dead
-    }
+        active_cases[1] = poisson_rng(lambda[1,5]);
+        cum_deaths[1] = dt;
+        cum_infected[1] = it;
+
+        for (i in 2:n_total) {
+          dt = poisson_rng(lambda[i,3]);
+          it = poisson_rng(lambda[i,4]);
+
+          active_cases[i] = poisson_rng(lambda[i,5]);
+          cum_deaths[i] =   cum_deaths[i-1] + dt;
+          cum_infected[i] = cum_infected[i-1] + it;
+          }
+
+  }
+
 }
