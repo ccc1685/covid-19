@@ -3,13 +3,30 @@
 
 functions {
          // time transition functions for beta and sigmac
-         real mobility(real base,real t) {
-                 real scale;
-                    scale = base + (1 - base) / (1 + exp(0.47 * (t - 32))/(1 + exp(.52*(t-40.))));
-                    //scale = 0.55 + (1 - 0.55) / (1 + exp(0.47 * (t - 32))/(1 + exp(.52*(t-40.))));
+         // day 0 = 3/20/2020
+         // mobility data starts on 2/15/2020 = day 34
+         // shift mobility by 34 days
+         // May 15 = day 56
 
+         //
+         real mitigation(real base,real t) {
+                 real scale;
+                 if (t < 56){
+                    scale = base + (1 - base) / (1 + exp(0.47 * (t + 2))/(1 + exp(.52*(t - 8.))));
+                    //scale = 0.55 + (1 - 0.55) / (1 + exp(0.47 * (t - 32))/(1 + exp(.52*(t-42.))));
+                    }
+                 else {
+                    scale = base + (1 - base) /10.974;
+                 }
                  return scale;
          }
+/*
+         // Relaxation function
+         real relax(real base, real t) {
+             return base*(1 + 0.42924175/(1 + exp(-0.2154182*(t - 20.29067964);
+         }
+*/
+
 
          // nonlinear SICR model ODE function
            real[] SICR(
@@ -38,7 +55,7 @@ functions {
              real Z = u[3];  // total infected
 
              //sigmac *= transition(cbase,clocation,t);  // case detection change
-             beta *= mobility(mbase,t);  // mitigation
+             beta *= mitigation(mbase,t);  // mitigation
 
              du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; // I
              du_dt[2] = sigmac*I - sigma*C;                       // C
@@ -108,7 +125,7 @@ transformed parameters{
      u_init[4] = cinit;         // N_C total cumulative cases
      u_init[5] = cinit;         // integral of active C
 
-     u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-2,1e-2,2000);
+     u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,10000);
 
      for (j in 1:5){
       u_end[j] = u[n_obs,j];
@@ -117,7 +134,7 @@ transformed parameters{
      for (i in 1:n_obs){
         car[i] = u[i,4]/u[i,3];
         ifr[i] = sigmad*u[i,5]/u[i,3];
-        betat = beta*mobility(mbase,i)*(1-u[i,3]);
+        betat = beta*mitigation(mbase,i)*(1-u[i,3]);
         sigmact = sigmac;
         Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
         }
@@ -138,30 +155,45 @@ transformed parameters{
 
 model {
     //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
-    f1 ~ gamma(2.,1./10.);                 // f1  initital infected to case ratio
-    f2 ~ gamma(1.5,1.);                    // f2  beta - sigmau
-    sigmar ~ inv_gamma(4.,.2);             // sigmar
-    sigmad ~ inv_gamma(2.78,.185);         // sigmad
-    sigmau ~ inv_gamma(2.3,.15);           // sigmau
-    q ~ exponential(2.);                   // q
-    mbase ~ exponential(1.);               // mbase
+
+    f1 ~ gamma(2.4,.1);                 // f1  initital infected to case ratio
+    f2 ~ gamma(175.,420.);
+    sigmar ~ gamma(16.,120.);             // sigmar
+    sigmad ~ gamma(19.,1200.);         // sigmad
+    sigmau ~ gamma(2.,23.);           // sigmau
+    q ~ gamma(.9,2.3);                   // q
+    mbase ~ gamma(10.,30.);               // mbase
+    extra_std ~ gamma(394.,656.);           // likelihood over dispersion std
+
+/*
+    f1 ~ normal(21.,5.);                 // f1  initital infected to case ratio
+    f2 ~ normal(.5,.04);                    // f2  beta - sigmau
+    sigmar ~ normal(.08,.004);             // sigmar
+    sigmad ~ normal(.02,.002);         // sigmad
+    sigmau ~ normal(.09,.005);           // sigmau
+    q ~ normal(.5,.1);                   // q
+    mbase ~ normal(.25,.02);               // mbase
     //mlocation ~ lognormal(log(tm+5),1.);   // mlocation
-    extra_std ~ exponential(1.);           // likelihood over dispersion std
+    extra_std ~ normal(.5,.2);           // likelihood over dispersion std
+*/
+    //print(f1," ",f2," ",sigmar," ",sigmad," ",sigmau," ",q," ",mbase," ",extra_std)
 
 //likelihood
 for (i in 1:n_obs){
       target += neg_binomial_2_lpmf(y[i,1]|lambda[i,1],phi);
       target += neg_binomial_2_lpmf(y[i,3]|lambda[i,3],phi);
+      target += gamma_lpdf(ifr[i] | 2.,400.);   // regularization
+      target += gamma_lpdf(car[i] | 4.,20.);
     }
 }
 
 
 generated quantities {
-    real llx[n_obs, 2];
-    real ll_; // log-likelihood for model
-    int n_data_pts;
+    //real llx[n_obs, 2];
+    //real ll_; // log-likelihood for model
+    //int n_data_pts;
     real y_proj[3];
-
+/*
     ll_ = 0.;
     n_data_pts = 0;
     for (i in 1:n_obs) {
@@ -172,16 +204,16 @@ generated quantities {
                 ll_ += llx[i, j];
        }
     }
-
+*/
     {
     real times[1] = {184.};  // project out six months May 15 - Nov 15
     real theta[7] = {f1, f2, sigmar, sigmad, sigmau, q, mbase};
     real u[1,5];
 
-    u = integrate_ode_rk45(SICR, u_end, 0.,times, theta, x_r, x_i,1e-2,1e-2,2000);
+    u = integrate_ode_rk45(SICR, u_end, 0.,times, theta, x_r, x_i,1e-3,1e-5,10000);
 
     y_proj[1] = u[1,3]*n_pop;                   // projected mean cumulative infected
-    y_proj[2] = u[1,4]*n_pop;                   // projected mean cumulative cases
+    y_proj[2] = .17*u[1,4]*n_pop;               // projected mean cumulative cases
     y_proj[3] = sigmad*u[1,5]*n_pop;            // projected mean cumulative dead
     }
 }
