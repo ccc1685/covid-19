@@ -8,4 +8,5 @@ python scripts/get-data.py
 REFERENCE_MODEL=SICRLMQC2R
 python scripts/run.py $REFERENCE_MODEL --n-warm=5 --n-iter=50
 #python scripts/visualize.py $REFERENCE_MODEL
+python scripts/get-n-data.py
 python scripts/make-tables.py
