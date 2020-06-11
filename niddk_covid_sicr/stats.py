@@ -8,6 +8,7 @@ from pathlib import Path
 from pystan.misc import _summary
 from scipy.stats import nbinom
 from tqdm.auto import tqdm
+from warnings import warn
 
 from .io import extract_samples
 
@@ -56,6 +57,12 @@ def get_waic(samples: pd.DataFrame) -> dict:
 
 
 def get_waic_and_loo(fit) -> dict:
+    warn("`get_waic_and_loo` is deprecated, use `get_fit_quality` instead.",
+         DeprecationWarning)
+    return get_fit_quality(fit)
+
+
+def get_fit_quality(fit) -> dict:
     """Compute Widely-Available Information Criterion (WAIC) and
     Leave One Out (LOO) from a fit instance using Arviz.
 
@@ -65,10 +72,17 @@ def get_waic_and_loo(fit) -> dict:
     Returns:
         dict: WAIC and LOO statistics (and se's) for this fit.
     """
-    idata = az.from_pystan(fit, log_likelihood="llx")
     result = {}
-    result.update(dict(az.loo(idata, scale='deviance')))
-    result.update(dict(az.waic(idata, scale='deviance')))
+    try:
+        idata = az.from_pystan(fit, log_likelihood="llx")
+    except KeyError as e:
+        warn("'%s' not found; waic and loo will not be computed" % str(e),
+             stacklevel=2)
+        result.update({'waic': 0, 'loo': 0})
+    else:
+        result.update(dict(az.loo(idata, scale='deviance')))
+        result.update(dict(az.waic(idata, scale='deviance')))
+    result.update({'lp__rhat': get_rhat(fit)})
     return result
 
 
@@ -151,7 +165,7 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
 
 
 def reweighted_stats(raw_table_path: str, save: bool = True,
-                     roi_weight='n_data_pts', extra=None, first=None, date=None) -> pd.DataFrame:
+                     roi_weight='n_data_pts', extra=None, first=None, dates=None) -> pd.DataFrame:
     """Reweight all statistics (across models) according to the LOO
     of each of the models.
 
@@ -187,11 +201,17 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
         extra.columns.name = 'param'
         result = result.join(extra)
         
+    # Add stats for a fixed date
+    if dates:
+        if isinstance(dates, str):
+            dates = [dates]
+        for date in dates:
+            result = add_fixed_date(result, date, ['Rt', 'car', 'ifr'])
+        
     # Compute global stats
     means = result.unstack('roi').loc['mean'].unstack('param')
     means = means.drop('AA_Global', errors='ignore')
-    if date:
-        means = add_fixed_date(means, date, ['Rt', 'car', 'ifr'])
+    
     means = means[sorted(means.columns)]
     
     if roi_weight == 'var':
@@ -232,19 +252,21 @@ def days_into_2020(date_str):
 def get_roi_week(date_str, roi_day_one):
     days = days_into_2020(date_str)
     roi_days = days - roi_day_one
-    roi_week = int(roi_days/7)
+    try:
+        roi_week = int(roi_days/7)
+    except:
+        roi_week = 9999
     return roi_week
 
 
 def add_fixed_date(df, date_str, stats):
     for roi in df.index:
         week = get_roi_week(date_str, df.loc[roi, 't0'])
-        print(week)
         for stat in stats:
             col = '%s (week %d)' % (stat, week)
+            new_col = '%s (%s)' % (stat, date_str)
             if col in df:
-                new_col = '%s (%s)' % (stat, date_str)
                 df.loc[roi, new_col] = df.loc[roi, col]
             else:
                 df.loc[roi, new_col] = None
-        return df
+    return df

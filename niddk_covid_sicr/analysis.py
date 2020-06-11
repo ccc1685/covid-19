@@ -77,10 +77,14 @@ def make_table(roi: str, samples: pd.DataFrame, params: list, stats: dict,
                                                   names=['roi', 'quantile'])
             dfs.append(df)
     df = pd.concat(dfs, axis=1)
-    for stat in ['waic', 'loo']:
+    for stat in ['waic', 'loo', 'lp__rhat']:
         if stat in stats:
             m = stats[stat]
-            s = stats['%s_se' % stat]
+            if m is None:
+                m = 0
+                s = 0
+            else:
+                s = stats.get('%s_se' % stat, 0)
             for q in quantiles:
                 df.loc[(roi, q), stat] = norm.ppf(q, m, s)
             df.loc[(roi, 'mean'), stat] = m

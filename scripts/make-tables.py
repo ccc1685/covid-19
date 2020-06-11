@@ -29,6 +29,8 @@ parser.add_argument('-f', '--fit_format', type=int, default=1,
                     help='Version of fit format')
 parser.add_argument('-p', '--params', default=['R0', 'car', 'ifr'], nargs='+',
                     help='Which params to include in the table')
+parser.add_argument('-d', '--dates', default=None, nargs='+',
+                    help='Which dates to include in the table')
 parser.add_argument('-ql', '--quantiles',
                     default=[0.025, 0.25, 0.5, 0.75, 0.975], nargs='+',
                     help='Which quantiles to include in the table ([0-1])')
@@ -121,5 +123,9 @@ df = df[~df.index.duplicated(keep='last')]
 # Export the CSV file for the big table
 df.to_csv(out)
 
+# Get n_data_pts and t0 obtained from `scripts/get-n-data.py`
+extra = pd.read_csv('n_data.csv').set_index('roi')
+extra['t0'] = extra['t0'].astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
+
 # Model-averaged table
-ncs.reweighted_stats(out)
+ncs.reweighted_stats(out, extra=extra, dates=args.dates)
