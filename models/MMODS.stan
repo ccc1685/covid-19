@@ -76,7 +76,6 @@ functions {
 
        }
 
-
 data {
   int<lower=1> n_obs;       // number of days observed
   int<lower=1> n_total;      // total number of days until Nov 15
@@ -84,7 +83,6 @@ data {
   int y[n_obs,n_ostates];     // data, per-day-tally [cases,recovered,death]
   real ts[n_total];             // time points for ode solver
   }
-
 
 transformed data {
     real x_r[0];
@@ -106,7 +104,7 @@ parameters {
 }
 
 transformed parameters{
-  real<lower=0.> lambda[n_total,5]; //neg_binomial_2 rate [new cases, new recovered, new deaths, new infected]
+  real<lower=0.> lambda[n_total,3]; //mean rate [new cases, new recovered, new deaths]
   real car[n_total];      //total cases / total infected
   real ifr[n_total];      //total dead / total infected
   real Rt[n_total];           // time dependent reproduction number
@@ -119,7 +117,7 @@ transformed parameters{
   real phi = max([1/(extra_std^2),1e-10]); // likelihood over-dispersion of std
 
   {
-     real theta[8] = {f1, f2, sigmar, sigmad, sigmau, q, mbase, 365.};
+     real theta[8] = {f1, f2, sigmar, sigmad, sigmau, q, mbase, 242.};
      real u[n_total, 5];   // solution from the ODE solver
      real betat;
 
@@ -143,15 +141,15 @@ transformed parameters{
      lambda[1,1] = max([(u[1,4]-u_init[4])*n_pop,0.01]);         // new cases per day
      lambda[1,2] = max([sigmar*(u[1,5]-u_init[5])*n_pop,0.01]); // new recovered per day
      lambda[1,3] = max([sigmad*(u[1,5]-u_init[5])*n_pop,0.01]);  // new deaths per day
-     lambda[1,4] = max([(u[1,3]-u_init[3])*n_pop,0.01]);  // new infected per day
-     lambda[1,5] = max([u[1,2]*n_pop,0.01]); // mean active cases
+     //lambda[1,4] = max([(u[1,3]-u_init[3])*n_pop,0.01]);  // new infected per day
+     //lambda[1,5] = max([u[1,2]*n_pop,0.01]); // mean active cases
 
      for (i in 2:n_total){
         lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,0.01]);         // new cases per day
         lambda[i,2] = max([sigmar*(u[i,5]-u[i-1,5])*n_pop,0.01]);  // new recovered rate per day
         lambda[i,3] = max([sigmad*(u[i,5]-u[i-1,5])*n_pop,0.01]);  // new deaths per day
-        lambda[i,4] = max([(u[i,4]-u[i-1,4])*n_pop,0.01]);         // new infected per day
-        lambda[i,5] = max([u[i,2]*n_pop,0.01]);    // mean active cases
+      //  lambda[i,4] = max([(u[i,3]-u[i-1,3])*n_pop,0.01]);         // new infected per day
+      //  lambda[i,5] = max([u[i,2]*n_pop,0.01]);    // mean active cases
         }
     }
 }
@@ -196,7 +194,7 @@ real tpeak1pc;
         cum_deaths[i,1] =   cum_deaths[i-1,1] + neg_binomial_2_rng(lambda[i,3],phi);
         cum_infected[i,1] = cum_infected[i-1,1] + neg_binomial_2_rng(lambda[i,4],phi);
         }
-*/
+
        // Poisson noise model, active cases should use a Skellam distribution but no implementation in Stan
         active_cases[1,1] = poisson_rng(lambda[1,5]);
         cum_deaths[1,1] = poisson_rng(lambda[1,3]);
@@ -206,10 +204,11 @@ real tpeak1pc;
           cum_deaths[i,1] =   cum_deaths[i-1,1] + poisson_rng(lambda[i,3]);
           cum_infected[i,1] = cum_infected[i-1,1] + poisson_rng(lambda[i,4]);
           }
+*/
   {
     real u[n_total, 5];
     real trelax[4];
-    real theta[8] = {f1, f2, sigmar, sigmad, sigmau, q, mbase,365.};
+    real theta[8] = {f1, f2, sigmar, sigmad, sigmau, q, mbase, 242.};
 
     int day;
     real lambdapeak;
@@ -223,11 +222,11 @@ real tpeak1pc;
 
     while (lambda[day,1] > 0.01*lambdapeak  && day < n_total)
         { day += 1;}
-    tpeak1pc = day;
+    tpeak1pc = day + 1.;
 
-    trelax = {365.,tpeak,tpeak1pc,56.};
+    trelax = {242.,tpeak,tpeak1pc,56.};
 
-    for (j in 2:4) {
+    for (j in 1:4) {
 
         theta[8] = trelax[j];
 
@@ -237,9 +236,9 @@ real tpeak1pc;
          cum_deaths[1,j] = poisson_rng(max([sigmad*(u[1,5]-u_init[5])*n_pop,0.01]));
          cum_infected[1,j] = poisson_rng(max([(u[1,3]-u_init[3])*n_pop,0.01]));
          for (i in 2:n_total) {
-           active_cases[i,j] = poisson_rng(max([u[i,2]*n_pop,0.01]));
-           cum_deaths[i,j] =   cum_deaths[i-1,j] + poisson_rng(max([sigmad*(u[i,5]-u[i-1,5])*n_pop,0.01]));
-           cum_infected[i,j] = cum_infected[i-1,j] + poisson_rng(max([(u[i,3]-u[i-1,3])*n_pop,0.01]));
+              active_cases[i,j] = poisson_rng(max([u[i,2]*n_pop,0.01]));
+              cum_deaths[i,j] =   cum_deaths[i-1,j] + poisson_rng(max([sigmad*(u[i,5]-u[i-1,5])*n_pop,0.01]));
+              cum_infected[i,j] = cum_infected[i-1,j] + poisson_rng(max([(u[i,3]-u[i-1,3])*n_pop,0.01]));
            }
     }
 
