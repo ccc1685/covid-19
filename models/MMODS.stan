@@ -12,7 +12,7 @@ functions {
          //
          real mitigation(real base,real t) {
                  real scale;
-                 if (t < 56){
+                 if (t < 56.){
                     scale = base + (1 - base) / (1 + exp(0.47 * (t + 2))/(1 + exp(.52*(t - 8.))));
                     //scale = 0.55 + (1 - 0.55) / (1 + exp(0.47 * (t - 32))/(1 + exp(.52*(t-42.))));
                     }
@@ -21,14 +21,13 @@ functions {
                  }
                  return scale;
          }
-/*
+
          // Relaxation function
          real relax(real base, real t) {
-             return base*(1 + 0.42924175/(1 + exp(-0.2154182*(t - 20.29067964);
+              real scale;
+              scale = base + (1 - base) /10.974;
+              return scale*(1 + 0.42924175/(1 + exp(-0.2154182*(t - 20.29067964))));
          }
-
-*/
-
 
          // nonlinear SICR model ODE function
            real[] SICR(
@@ -47,6 +46,7 @@ functions {
              real sigmau = theta[5];
              real q = theta[6];
              real mbase = theta[7];
+             real trelax = theta[8];
 
              real sigma = sigmar + sigmad;
              real sigmac = f2/(1+f1);
@@ -57,7 +57,13 @@ functions {
              real Z = u[3];  // total infected
 
              //sigmac *= transition(cbase,clocation,t);  // case detection change
-             beta *= mitigation(mbase,t);  // mitigation
+             if (t < trelax) {
+                beta *= mitigation(mbase,t);  // mitigation
+             }
+             else {
+                beta *= relax(mbase,t-trelax);   // relaxation from lockdown
+             }
+
 
              du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; // I
              du_dt[2] = sigmac*I - sigma*C;                       // C
@@ -67,7 +73,9 @@ functions {
 
              return du_dt;
             }
-        }
+
+       }
+
 
 data {
   int<lower=1> n_obs;       // number of days observed
@@ -111,7 +119,7 @@ transformed parameters{
   real phi = max([1/(extra_std^2),1e-10]); // likelihood over-dispersion of std
 
   {
-     real theta[7] = {f1, f2, sigmar, sigmad, sigmau, q, mbase};
+     real theta[8] = {f1, f2, sigmar, sigmad, sigmau, q, mbase, 365.};
      real u[n_total, 5];   // solution from the ODE solver
      real betat;
 
@@ -172,50 +180,68 @@ model {
 
 generated quantities {
 
-real<lower=0> cum_deaths[n_total];
-real<lower=0> cum_infected[n_total];
-real active_cases[n_total];
+real cum_deaths[n_total,4];
+real cum_infected[n_total,4];
+real active_cases[n_total,4];
+real tpeak;
+real tpeak1pc;
 
- {
-    int ct;
-    int rt;
-    int dt;
-    int it;
-/*
 
-      dt = neg_binomial_2_rng(lambda[1,3],phi);
-      it = neg_binomial_2_rng(lambda[1,4],phi);
-
-      active_cases[1] = neg_binomial_2_rng(lambda[1,5],phi);
-      cum_deaths[1] = dt;
-      cum_infected[1] = it;
-
+/*    // Noise model with over dispersion
+      active_cases[1,1] = neg_binomial_2_rng(lambda[1,5],phi);
+      cum_deaths[1,1] = neg_binomial_2_rng(lambda[1,3],phi);
+      cum_infected[1,1] = neg_binomial_2_rng(lambda[1,4],phi);
       for (i in 2:n_total) {
-
-        dt = neg_binomial_2_rng(lambda[i,3],phi);
-        it = neg_binomial_2_rng(lambda[i,4],phi);
-
-        active_cases[i] = neg_binomial_2_rng(lambda[i,5],phi);
-        cum_deaths[i] =   cum_deaths[i-1] + dt;
-        cum_infected[i] = cum_infected[i-1] + it;
+        active_cases[i,1] = neg_binomial_2_rng(lambda[i,5],phi);
+        cum_deaths[i,1] =   cum_deaths[i-1,1] + neg_binomial_2_rng(lambda[i,3],phi);
+        cum_infected[i,1] = cum_infected[i-1,1] + neg_binomial_2_rng(lambda[i,4],phi);
         }
 */
-
-        dt = poisson_rng(lambda[1,3]);
-        it = poisson_rng(lambda[1,4]);
-
-        active_cases[1] = poisson_rng(lambda[1,5]);
-        cum_deaths[1] = dt;
-        cum_infected[1] = it;
-
+       // Poisson noise model, active cases should use a Skellam distribution but no implementation in Stan
+        active_cases[1,1] = poisson_rng(lambda[1,5]);
+        cum_deaths[1,1] = poisson_rng(lambda[1,3]);
+        cum_infected[1,1] = poisson_rng(lambda[1,4]);
         for (i in 2:n_total) {
-          dt = poisson_rng(lambda[i,3]);
-          it = poisson_rng(lambda[i,4]);
-
-          active_cases[i] = poisson_rng(lambda[i,5]);
-          cum_deaths[i] =   cum_deaths[i-1] + dt;
-          cum_infected[i] = cum_infected[i-1] + it;
+          active_cases[i,1] = poisson_rng(lambda[i,5]);
+          cum_deaths[i,1] =   cum_deaths[i-1,1] + poisson_rng(lambda[i,3]);
+          cum_infected[i,1] = cum_infected[i-1,1] + poisson_rng(lambda[i,4]);
           }
+  {
+    real u[n_total, 5];
+    real trelax[4];
+    real theta[8] = {f1, f2, sigmar, sigmad, sigmau, q, mbase,365.};
+
+    int day;
+    real lambdapeak;
+
+    day = 2;
+    while ((lambda[day,1] - lambda[day-1,1]) > 0.)
+        { day += 1;}
+
+    lambdapeak = lambda[day,1];
+    tpeak = day + 13.;
+
+    while (lambda[day,1] > 0.01*lambdapeak  && day < n_total)
+        { day += 1;}
+    tpeak1pc = day;
+
+    trelax = {365.,tpeak,tpeak1pc,56.};
+
+    for (j in 2:4) {
+
+        theta[8] = trelax[j];
+
+        u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,10000);
+
+         active_cases[1,j] = poisson_rng(max([u[1,2]*n_pop,0.01]));
+         cum_deaths[1,j] = poisson_rng(max([sigmad*(u[1,5]-u_init[5])*n_pop,0.01]));
+         cum_infected[1,j] = poisson_rng(max([(u[1,3]-u_init[3])*n_pop,0.01]));
+         for (i in 2:n_total) {
+           active_cases[i,j] = poisson_rng(max([u[i,2]*n_pop,0.01]));
+           cum_deaths[i,j] =   cum_deaths[i-1,j] + poisson_rng(max([sigmad*(u[i,5]-u[i-1,5])*n_pop,0.01]));
+           cum_infected[i,j] = cum_infected[i-1,j] + poisson_rng(max([(u[i,3]-u[i-1,3])*n_pop,0.01]));
+           }
+    }
 
   }
 
