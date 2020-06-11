@@ -5,11 +5,23 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from pystan.misc import _summary
 from scipy.stats import nbinom
 from tqdm.auto import tqdm
 
 from .io import extract_samples
 
+
+def get_rhat(fit) -> float:
+    """Get `rhat` for the log-probability of a fit.
+    
+    This is a measure of the convergence across sampling chains.
+    Good convergence is indicated by a value near 1.0.
+    """
+    x = _summary(fit, ['lp__'], [])
+    summary = pd.DataFrame(x['summary'], columns=x['summary_colnames'], index=x['summary_rownames'])
+    return summary.loc['lp__', 'Rhat']
+    
 
 def get_waic(samples: pd.DataFrame) -> dict:
     """Get the Widely-Used Information Criterion (WAIC) for a fit.
