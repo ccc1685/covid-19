@@ -158,6 +158,7 @@ transformed parameters{
 model {
     //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
 
+    // fit10: US_NY posteriors
     f1 ~ gamma(2.4,.1);                 // f1  initial infected to case ratio
     f2 ~ gamma(175.,420.);              // f2
     sigmar ~ gamma(16.,120.);           // sigmar
@@ -167,12 +168,24 @@ model {
     mbase ~ gamma(10.,30.);             // mbase
     extra_std ~ gamma(394.,656.);       // likelihood over dispersion std
 
+/*
+    //fit10: US_MD posteriors
+    f1 ~ gamma(1.7,.1);                 // f1  initial infected to case ratio
+    f2 ~ gamma(99.,341.);              // f2
+    sigmar ~ gamma(41.,3600.);           // sigmar
+    sigmad ~ gamma(56.,8600.);          // sigmad
+    sigmau ~ gamma(2.,20.);             // sigmau
+    q ~ gamma(1.1,2.);                  // q
+    mbase ~ gamma(9.,30.);             // mbase
+    extra_std ~ gamma(300.,400.);       // likelihood over dispersion std
+*/
+
     //likelihood
     for (i in 1:n_obs){
         target += neg_binomial_2_lpmf(y[i,1]|lambda[i,1],phi);
         target += neg_binomial_2_lpmf(y[i,2]|lambda[i,3],phi);
-        target += gamma_lpdf(ifr[i] | 2.,200.);   // regularization
-        target += gamma_lpdf(car[i] | 4.,20.);
+        target += gamma_lpdf(ifr[i] | 2.,100.);   // regularization
+        target += gamma_lpdf(car[i] | 2.,10.);
     }
 }
 
@@ -181,6 +194,7 @@ generated quantities {
 real cum_deaths[n_total,4];
 real cum_infected[n_total,4];
 real active_cases[n_total,4];
+real new_cases[n_total,4];
 real tpeak;
 real tpeak1pc;
 
@@ -235,10 +249,12 @@ real tpeak1pc;
          active_cases[1,j] = poisson_rng(max([u[1,2]*n_pop,0.01]));
          cum_deaths[1,j] = poisson_rng(max([sigmad*(u[1,5]-u_init[5])*n_pop,0.01]));
          cum_infected[1,j] = poisson_rng(max([(u[1,3]-u_init[3])*n_pop,0.01]));
+         new_cases[1,j] = poisson_rng(max([(u[1,4]-u_init[4])*n_pop,0.01]));
          for (i in 2:n_total) {
               active_cases[i,j] = poisson_rng(max([u[i,2]*n_pop,0.01]));
               cum_deaths[i,j] =   cum_deaths[i-1,j] + poisson_rng(max([sigmad*(u[i,5]-u[i-1,5])*n_pop,0.01]));
               cum_infected[i,j] = cum_infected[i-1,j] + poisson_rng(max([(u[i,3]-u[i-1,3])*n_pop,0.01]));
+              new_cases[i,j] = poisson_rng(max([(u[i,4]-u[i-1,4])*n_pop,0.01]));
            }
     }
 
