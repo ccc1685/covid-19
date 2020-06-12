@@ -116,7 +116,7 @@ if args.append and out.is_file():
         df = pd.concat([df_old, df])
 
 df = df[sorted(df.columns)]
-    
+
 # Remove duplicate model/region combinations (keep most recent)
 df = df[~df.index.duplicated(keep='last')]
 
@@ -124,8 +124,11 @@ df = df[~df.index.duplicated(keep='last')]
 df.to_csv(out)
 
 # Get n_data_pts and t0 obtained from `scripts/get-n-data.py`
-extra = pd.read_csv('n_data.csv').set_index('roi')
-extra['t0'] = extra['t0'].astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
+path = Path(args.fits_path) / ('n_data.csv')
+print(path)
+if path.is_file():
+    extra = pd.read_csv('n_data.csv').set_index('roi')
+    extra['t0'] = extra['t0'].astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
 
-# Model-averaged table
-ncs.reweighted_stats(out, extra=extra, dates=args.dates)
+    # Model-averaged table
+    ncs.reweighted_stats(out, extra=extra, dates=args.dates)
