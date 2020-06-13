@@ -32,6 +32,7 @@ def get_stan_data(full_data_path, args):
     except Exception:
         tm = t0 + 10
 
+    n_proj = 90
     stan_data = {}
     # stan_data['n_scale'] = 1000  # use this instead of population
     # stan_data['n_theta'] = 8
@@ -39,11 +40,13 @@ def get_stan_data(full_data_path, args):
     stan_data['n_ostates'] = 3
     # stan_data['t0'] = t0-1  # to for ODE is day one,
     #                         # index before start of series
+
     stan_data['tm'] = tm
-    stan_data['ts'] = np.arange(t0, len(df['dates2']))
+    stan_data['ts'] = np.arange(t0, len(df['dates2']) + n_proj)
     stan_data['y'] = df[['new_cases', 'new_recover', 'new_deaths']].to_numpy()\
         .astype(int)[t0:, :]
     stan_data['n_obs'] = len(df['dates2']) - t0
+    stan_data['n_total'] = len(df['dates2']) - t0 + n_proj
     return stan_data, df['dates2'][t0]
 
 
@@ -52,7 +55,7 @@ def get_n_data(stan_data):
         return (stan_data['y'] > 0).ravel().sum()
     else:
         return 0
-    
+
 
 # functions used to initialize parameters
 def get_init_fun(args, stan_data, force_fresh=False):
@@ -82,7 +85,7 @@ def get_init_fun(args, stan_data, force_fresh=False):
                   'n_pop': lognormal(np.log(1e5), 1.),
                   'sigmar1': gamma(2., .1/2.)
                   }
-    
+
     def init_fun():
         return result
     return init_fun

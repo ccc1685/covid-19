@@ -1,8 +1,8 @@
 transformed parameters{
-  real lambda[n_obs,3];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
-  real car[n_obs];          //total cases / total infected
-  real ifr[n_obs];          //total dead / total infected
-  real Rt[n_obs];           // time dependent reproduction number
+  real lambda[n_total,3];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
+  real car[n_total];          //total cases / total infected
+  real ifr[n_total];          //total dead / total infected
+  real Rt[n_total];           // time dependent reproduction number
 
   real u_init[7];     // initial conditions for fractions
 
@@ -15,7 +15,7 @@ transformed parameters{
   {
      real theta[11] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,cbase,clocation,sigmar1};
 
-     real u[n_obs, 7];   // solution from the ODE solver
+     real u[n_total, 7];   // solution from the ODE solver
      real sigmact;
      real betat;
 
@@ -30,7 +30,7 @@ transformed parameters{
 
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,2000);
 
-     for (i in 1:n_obs){
+     for (i in 1:n_total){
         car[i] = u[i,4]/u[i,3];
         ifr[i] = u[i,5]/u[i,3];
         betat = beta*transition(mbase,mlocation,i)*(1-u[i,3]);
@@ -42,7 +42,7 @@ transformed parameters{
      lambda[1,2] = max([(u[1,7]-u_init[7])*n_pop,1.0]); //R: recovered per day
      lambda[1,3] = max([(u[1,5]-u_init[5])*n_pop,1.0]); //D: dead per day
 
-     for (i in 2:n_obs){
+     for (i in 2:n_obs+proj){
         lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,1.0]); //C: cases per day
         lambda[i,2] = max([(u[i,7]-u[i-1,7])*n_pop,1.0]); //R: recovered per day
         lambda[i,3] = max([(u[i,5]-u[i-1,5])*n_pop,1.0]); //D: dead per day
