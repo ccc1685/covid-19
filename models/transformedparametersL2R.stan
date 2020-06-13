@@ -38,14 +38,14 @@ transformed parameters{
         Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
         }
 
-     lambda[1,1] = max([(u[1,4]-u_init[4])*n_pop,1.0]); //C: cases per day
-     lambda[1,2] = max([(u[1,7]-u_init[7])*n_pop,1.0]); //R: recovered per day
-     lambda[1,3] = max([(u[1,5]-u_init[5])*n_pop,1.0]); //D: dead per day
+     lambda[1,1] = max([(u[1,4]-u_init[4])*n_pop,0.01]); //C: cases per day
+     lambda[1,2] = max([(u[1,7]-u_init[7])*n_pop,0.01]); //R: recovered per day
+     lambda[1,3] = max([(u[1,5]-u_init[5])*n_pop,0.01]); //D: dead per day
 
      for (i in 2:n_total){
-        lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,1.0]); //C: cases per day
-        lambda[i,2] = max([(u[i,7]-u[i-1,7])*n_pop,1.0]); //R: recovered per day
-        lambda[i,3] = max([(u[i,5]-u[i-1,5])*n_pop,1.0]); //D: dead per day
+        lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,0.01]); //C: cases per day
+        lambda[i,2] = max([(u[i,7]-u[i-1,7])*n_pop,0.01]); //R: recovered per day
+        lambda[i,3] = max([(u[i,5]-u[i-1,5])*n_pop,0.01]); //D: dead per day
         }
 
     }
