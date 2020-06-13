@@ -1,5 +1,5 @@
 transformed parameters{
-  real lambda[n_obs+n+proj,3]; //neg_binomial_2 rate [new cases, new recovered, new deaths]
+  real lambda[n_total,3]; //neg_binomial_2 rate [new cases, new recovered, new deaths]
   real car[n_total];      //total cases / total infected
   real ifr[n_total];      //total dead / total infected
   real Rt[n_total];           // time dependent reproduction number
