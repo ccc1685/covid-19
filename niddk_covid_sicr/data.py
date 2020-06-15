@@ -163,7 +163,7 @@ def get_covid_tracking(data_path: str, filter: bool = True,
     for state in tqdm(states, desc='US States'):  # For each country
         source = df_raw[df_raw['state'] == state]  # Only the given state
         # If we have data in the downloaded file for that state
-        if source['recovered'].sum() > 0 or not filter:
+        if True:
             df = pd.DataFrame(columns=['dates2', 'cum_cases', 'cum_deaths',
                                        'cum_recover', 'new_cases',
                                        'new_deaths', 'new_recover',
@@ -319,4 +319,5 @@ def negify_missing(data_path: str) -> None:
             if df['cum_%s' % kind].sum() == 0:
                 print("Negifying 'new_%s' for %s" % (kind, roi))
                 df['new_%s' % kind] = -1
-        df.to_csv(data_path / (csv.name.split('.')[0]+'.csv'))
+        out = data_path / (csv.name.split('.')[0]+'.csv')
+        df.to_csv(out)
