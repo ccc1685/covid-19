@@ -292,3 +292,31 @@ def fix_neg(df: pd.DataFrame, roi: str,
         # Replace the values
         df[new] = df[cum].diff().fillna(0).astype(int).values
     return df
+
+
+def negify_missing(data_path: str) -> None:
+    """Fix negative values in daily data.
+
+    The purpose of this script is to fix spurious negative values in new daily
+    numbers.  For example, the cumulative total of cases should not go from N
+    to a value less than N on a subsequent day.  This script fixes this by
+    nulling such data and applying a monotonic spline interpolation in between
+    valid days of data.  This only affects a small number of regions.  It
+    overwrites the original .csv files produced by the functions above.
+
+    Args:
+        data_path (str): Full path to data directory.
+        plot (bool): Whether to plot the changes.
+
+    Returns:
+        None
+    """
+    csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
+    for csv in tqdm(csvs, desc="Regions"):
+        roi = str(csv).split('.')[0].split('_')[-1]
+        df = pd.read_csv(csv)
+        for kind in ['cases', 'deaths', 'recover']:
+            if df['cum_%s' % kind].sum() == 0:
+                print("Negifying 'new_%s' for %s" % (kind, roi))
+                df['new_%s' % kind] = -1
+        df.to_csv(data_path / (csv.name.split('.')[0]+'.csv'))

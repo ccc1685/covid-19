@@ -17,6 +17,12 @@ parser.add_argument('-fi', '--filter', default=1, type=int,
 parser.add_argument('-fn', '--fix-negatives', default=0, type=int,
                     help=("Whether or not to fix negative values "
                           "in the daily data or not"))
+parser.add_argument('-nm', '--negify-missing', default=1, type=int,
+                    help=("Whether or not to set putative missing values, i.e."
+                          "where that value is 0 for all days, to -1 in the "
+                          "daily change (i.e. a column of all 0's for cumulative "
+                          "recovered becomes a column of all -1's for new "
+                          "recovered"))
 args = parser.parse_args()
 
 # Create the data path
@@ -43,5 +49,9 @@ for source in args.sources:
 if args.fix_negatives:
     print("Fixing negative values in daily data...")
     data.fix_negatives(data_path)
+    
+if args.negify_missing:
+    print("Replacing missing columns with -1 in daily data...")
+    data.negify_missing(data_path)
 
 print("Data now available at %s" % data_path.resolve())
