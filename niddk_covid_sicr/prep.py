@@ -32,7 +32,7 @@ def get_stan_data(full_data_path, args):
     except Exception:
         tm = t0 + 10
 
-    n_proj = 90
+    n_proj = 0
     stan_data = {}
     # stan_data['n_scale'] = 1000  # use this instead of population
     # stan_data['n_theta'] = 8
