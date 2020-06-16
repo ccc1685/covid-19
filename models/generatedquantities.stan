@@ -23,7 +23,10 @@ generated quantities {
 
     for (i in 1:n_total) {
         for (j in 1:3) {
+          if (lambda[i,j] < 1e8)
             y_proj[i,j] = poisson_rng(lambda[i,j]);
+          else
+            y_proj[i,j] = poisson_rng(1e8);
         }
     }
 }
