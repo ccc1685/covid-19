@@ -10,7 +10,7 @@ import niddk_covid_sicr as ncs
 
 def get_stan_data(full_data_path, args):
     df = pd.read_csv(full_data_path)
-    if args.last_date:
+    if getattr(args, 'last_date', None):
         try:
             datetime.strptime(args.last_date, '%m/%d/%y')
         except ValueError:

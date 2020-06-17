@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import argparse
+from datetime import datetime
 from itertools import repeat
 import pandas as pd
 from pathlib import Path
@@ -21,6 +22,8 @@ parser.add_argument('-ms', '--model_names',
                           '(without .stan extension)'))
 parser.add_argument('-mp', '--models_path', default='./models',
                     help='Path to directory containing the .stan model files')
+parser.add_argument('-dp', '--data-path', default='./data',
+                    help='Path to directory containing the data files')
 parser.add_argument('-fp', '--fits_path', default='./fits',
                     help='Path to directory to save fit files')
 parser.add_argument('-tp', '--tables_path', default='./tables/',
@@ -39,6 +42,10 @@ parser.add_argument('-r', '--rois', default=[], nargs='+',
                           '(default is all of them)'))
 parser.add_argument('-a', '--append', type=int, default=0,
                     help='Append to old tables instead of overwriting them')
+parser.add_argument('-ft', '--fixed-t', type=int, default=0,
+                    help=('Use a fixed time base (where 1/22/20 is t=0)'
+                          'rather than a time base that is relative to the '
+                          'beginning of the data for each region'))
 args = parser.parse_args()
 
 # If no model_names are provided, use all of them
@@ -63,6 +70,17 @@ print("There are %d combinations of models and ROIs" % len(combos))
 
 
 def roi_df(args, model_name, roi):
+    if args.fixed_t:
+        args.roi = roi  # Temporary
+        csv = Path(args.data_path) / ("covidtimeseries_%s.csv" % args.roi)
+        csv = csv.resolve()
+        assert csv.exists(), "No such csv file: %s" % csv
+        stan_data, t0 = ncs.get_stan_data(csv, args)
+        global_start = datetime.strptime('01/22/20', '%m/%d/%y')
+        frame_start = datetime.strptime(t0, '%m/%d/%y')
+        day_offset = (frame_start - global_start).days
+    else:
+        day_offset = 0
     model_path = ncs.get_model_path(args.models_path, model_name)
     extension = ['csv', 'pkl'][args.fit_format]
     rois = ncs.list_rois(args.fits_path, model_name, extension)
@@ -78,7 +96,8 @@ def roi_df(args, model_name, roi):
                                       model_name, roi, args.fit_format)
         stats = ncs.get_waic(samples)
     df = ncs.make_table(roi, samples, args.params,
-                        stats, quantiles=args.quantiles)
+                        stats, quantiles=args.quantiles,
+                        day_offset=day_offset)
     return model_name, roi, df
 
 

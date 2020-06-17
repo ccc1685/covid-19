@@ -13,7 +13,7 @@ from .io import get_data, get_fit_path, list_rois, load_fit
 
 def make_table(roi: str, samples: pd.DataFrame, params: list, stats: dict,
                quantiles: list = [0.025, 0.25, 0.5, 0.75, 0.975],
-               chain: [int, None] = None) -> pd.DataFrame:
+               chain: [int, None] = None, day_offset=0) -> pd.DataFrame:
     """Make a table summarizing the fit.
 
     Args:
@@ -25,6 +25,8 @@ def make_table(roi: str, samples: pd.DataFrame, params: list, stats: dict,
         quantiles (list, optional): Quantiles to repport.
             Defaults to [0.025, 0.25, 0.5, 0.75, 0.975].
         chain ([type], optional): Optional chain to use. Defaults to None.
+        day_offset (int): Number of days after t=0 that the first entry in
+                          the array corresponds to.
 
     Returns:
         pd.DataFrame: A table of fit parameter summary statistics.
@@ -47,14 +49,20 @@ def make_table(roi: str, samples: pd.DataFrame, params: list, stats: dict,
         else:
             df = samples[cols]
             if by_week:
+                if day_offset:
+                    padding = pd.DataFrame(None, index=df.index, columns=['padding_%d' % i for i in range(day_offset)])
+                    df = padding.join(df)
+                    min_periods = 4
+                else:
+                    min_periods = 7
                 if df.shape[1] >= 7:  # At least one week worth of data
                     # Column 6 will be the last day of the first week
                     # It will contain the average of the first week
                     # Do this every 7 days
-                    df = df.T.rolling(7).mean().T.iloc[:, 6::7]
+                    df = df.T.rolling(7, min_periods=min_periods).mean().T.iloc[:, 6::7]
                 else:
                     # Just use the last value we have
-                    df = df.T.rolling(7).mean().T.iloc[:, -1:]
+                    df = df.T.rolling(7, min_periods=min_periods).mean().T.iloc[:, -1:]
                     # And then null it because we don't want to trust < 1 week
                     # of data
                     df[:] = None
