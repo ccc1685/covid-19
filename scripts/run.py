@@ -48,6 +48,10 @@ parser.add_argument('-ld', '--last-date',
 parser.add_argument('-nd', '--n-data-only',
                     help=('Only calculate number of data points used for each'
                           'region, write to a table, and stop before fitting'))
+parser.add_argument('-ft', '--fixed-t', type=int, default=0,
+                    help=('Use a fixed time base (where 1/22/20 is t=0)'
+                          'rather than a time base that is relative to the '
+                          'beginning of the data for each region'))
 args = parser.parse_args()
 
 if args.n_threads == 0:

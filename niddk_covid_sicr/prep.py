@@ -3,6 +3,7 @@ import numpy as np
 from numpy.random import gamma, exponential, lognormal
 import pandas as pd
 from pathlib import Path
+import sys
 
 import niddk_covid_sicr as ncs
 
@@ -30,23 +31,24 @@ def get_stan_data(full_data_path, args):
         tmdate = dfm.loc[dfm.region == args.roi, 'date'].values[0]
         tm = np.where(df["dates2"] == tmdate)[0][0]
     except Exception:
+        print("Could not use mitigation prior data; setting mitigation prior to default.")
         tm = t0 + 10
 
     n_proj = 0
     stan_data = {}
-    # stan_data['n_scale'] = 1000  # use this instead of population
-    # stan_data['n_theta'] = 8
-    # stan_data['n_difeq'] = 5
     stan_data['n_ostates'] = 3
-    # stan_data['t0'] = t0-1  # to for ODE is day one,
-    #                         # index before start of series
-
     stan_data['tm'] = tm
     stan_data['ts'] = np.arange(t0, len(df['dates2']) + n_proj)
     stan_data['y'] = df[['new_cases', 'new_recover', 'new_deaths']].to_numpy()\
         .astype(int)[t0:, :]
     stan_data['n_obs'] = len(df['dates2']) - t0
     stan_data['n_total'] = len(df['dates2']) - t0 + n_proj
+    if args.fixed_t:
+        global_start = datetime.strptime('01/22/20', '%m/%d/%y')
+        frame_start = datetime.strptime(df['dates2'][0], '%m/%d/%y')
+        offset = (frame_start - global_start).days
+        stan_data['tm'] += offset
+        stan_data['ts'] += offset
     return stan_data, df['dates2'][t0]
 
 
