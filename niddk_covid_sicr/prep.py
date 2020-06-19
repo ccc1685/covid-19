@@ -1,6 +1,6 @@
 from datetime import datetime
 import numpy as np
-from numpy.random import gamma, exponential, lognormal
+from numpy.random import gamma, exponential, lognormal,normal
 import pandas as pd
 from pathlib import Path
 import sys
@@ -74,17 +74,20 @@ def get_init_fun(args, stan_data, force_fresh=False):
     else:
         print("Using default values to initialize fit")
         result = {'f1': gamma(1.5, 2.),
-                  'f2': gamma(1.5, 1.5),
-                  'sigmar': gamma(2., .1/2.),
-                  'sigmad': gamma(2., .1/2.),
-                  'sigmau': gamma(2., .1/2.),
+                  'f2': gamma(40., 1/100.),
+                  'sigmar': gamma(15, 1/120.),
+                  'sigmad': gamma(20, 1/1200),
+                  'sigmau': gamma(2., 1/20.),
                   'q': exponential(.1),
                   'mbase': gamma(2., .1/2.),
-                  'mlocation': lognormal(np.log(stan_data['tm']), 1.),
+                  # 'mlocation': lognormal(np.log(stan_data['tm']), 1.),
+                  'mlocation': normal(stan_data['tm'], 1.),
                   'extra_std': exponential(1.),
                   'cbase': gamma(2., 2.),
-                  'clocation': lognormal(np.log(20.), 1.),
-                  'n_pop': lognormal(np.log(1e5), 1.),
+                  # 'clocation': lognormal(np.log(20.), 1.),
+                  'clocation': normal(20., 1.),
+                  # 'n_pop': lognormal(np.log(1e5), 1.),
+                  'n_pop': normal(1e5, 10.),
                   'sigmar1': gamma(2., .1/2.)
                   }
 
