@@ -34,6 +34,10 @@ parameters {
 
 model {
     //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
+#include priorcore.stan
+#include priorM.stan
+#include priorQ.stan
+/*
     f1 ~ gamma(2.,1./10.);                 // f1  initital infected to case ratio
     f2 ~ gamma(1.5,1.);                    // f2  beta - sigmau
     sigmar ~ inv_gamma(4.,.2);             // sigmar
@@ -47,7 +51,7 @@ model {
     //clocation ~ lognormal(log(20.),2.);    // clocation
     //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
     //n_pop ~ lognormal(log(1e5),4.);        // population
-
+*/
     //likelihood
 #include likelihood.stan
 }

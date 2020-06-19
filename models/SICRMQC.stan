@@ -30,7 +30,14 @@ parameters {
 #include transformedparameters.stan
 // model block for all SICR models
 model {
-    //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
+//priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
+#include priorcore.stan
+#include priorM.stan
+#include priorQ.stan
+#include priorC.stan
+#include priorPop.stan
+
+/*
     f1 ~ gamma(2.,1./10.);                 // f1  initital infected to case ratio
     f2 ~ gamma(1.5,1.);                    // f2  beta - sigmau
     sigmar ~ inv_gamma(4.,.2);             // sigmar
@@ -44,7 +51,7 @@ model {
     clocation ~ lognormal(log(20.),2.);    // clocation
     n_pop ~ lognormal(log(1e5),4.);        // population
     //sigmar1 ~ inv_gamma(4.,.2);           // sigmar1
-
+*/
     // Likelihood function
 #include likelihood.stan
 }
