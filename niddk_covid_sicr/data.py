@@ -102,7 +102,7 @@ def get_countries(d: pd.DataFrame, filter: bool = True):
         filter (bool, optional): Whether to filter by quality criteria.
     """
     if filter:
-        has_recoveries = d['recovered'].index[d['recovered'].max(axis=1) > 0]\
+        has_recoveries = d['recovered'].index[d['recovered'].max(axis=1) > -1]\
                         .tolist()
         enough_cases = d['confirmed'].index[d['confirmed'].diff(axis=1)
                                             .max(axis=1) >= 5].tolist()
