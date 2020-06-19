@@ -7,10 +7,14 @@ import numpy as np
 import pandas as pd
 import requests
 from tqdm import tqdm
+from typing import Union
 from urllib.error import HTTPError
 
+JHU_FILTER_DEFAULTS = {'confirmed': 5, 'recovered': 1, 'deaths': 0}
+COVIDTRACKER_FILTER_DEFAULTS = {'cum_cases': 5, 'cum_recover': 1, 'cum_deaths': 0}
 
-def get_jhu(data_path: str, filter: bool = True) -> None:
+
+def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
     """Gets data from Johns Hopkins CSSEGIS (countries only).
 
     https://coronavirus.jhu.edu/map.html
@@ -60,7 +64,7 @@ def get_jhu(data_path: str, filter: bool = True) -> None:
 
     # Generate a list of countries that have "good" data,
     # according to these criteria:
-    good_countries = get_countries(dfs['global'], filter=filter)
+    good_countries = get_countries(dfs['global'], filter_=filter_)
 
     # For each "good" country,
     # reformat and save that data in its own .csv file.
@@ -93,7 +97,7 @@ def get_jhu(data_path: str, filter: bool = True) -> None:
             print("No data for %s" % country)
 
 
-def get_countries(d: pd.DataFrame, filter: bool = True):
+def get_countries(d: pd.DataFrame, filter_: Union[dict, bool] = True):
     """Get a list of countries from a global dataframe optionally passing
     a quality check
 
@@ -101,24 +105,20 @@ def get_countries(d: pd.DataFrame, filter: bool = True):
         d (pd.DataFrame): Data from JHU tracker (e.g. df['global]).
         filter (bool, optional): Whether to filter by quality criteria.
     """
-    if filter:
-        has_recoveries = d['recovered'].index[d['recovered'].max(axis=1) > 0]\
-                        .tolist()
-        enough_cases = d['confirmed'].index[d['confirmed'].diff(axis=1)
-                                            .max(axis=1) >= 5].tolist()
-        reports_deaths = d['deaths'].index[d['deaths'].max(axis=1) > 0]\
-                                    .to_list()
-        criteria = list(map(set, [has_recoveries, enough_cases,
-                                  reports_deaths]))
-        good_countries = list(set.intersection(*criteria))
-        print("JHU has %d countries with good data." % len(good_countries))
-    else:
-        good_countries = list(set(d['confirmed'].index))
-        print("JHU has %d countries." % len(good_countries))
-    return good_countries
+    good = set(d['confirmed'].index)
+    if filter_ and not isinstance(filter_, dict):
+        filter_ = JHU_FILTER_DEFAULTS
+    if filter_:
+        for key, minimum in filter_.items():
+            enough = d[key].index[d[key].max(axis=1) >= minimum].tolist()
+            good = good.intersection(enough)
+    bad = set(d['confirmed'].index).difference(good)
+    print("JHU data acceptable for %s" % ','.join(good))
+    print("JHU data not acceptable for %s" % ','.join(bad))
+    return good
 
 
-def get_covid_tracking(data_path: str, filter: bool = True,
+def get_covid_tracking(data_path: str, filter_: Union[dict, bool] = True,
                        fixes: bool = False) -> None:
     """Gets data from The COVID Tracking Project (US states only).
 
@@ -136,67 +136,47 @@ def get_covid_tracking(data_path: str, filter: bool = True,
 
     states = df_raw['state'].unique()
 
-    # Fix Michigan
-    if fixes:
-        michigan_url = ('https://www.michigan.gov/coronavirus/'
-                        '0,9753,7-406-98163_98173_99207---,00.html')
-        response = requests.get(michigan_url)
-        soup = bs4.BeautifulSoup(response.content, features="lxml")
-        three_five_index = [x.find_all('td')[0].text for x in
-                            soup.find('table').find_all('tr')
-                            if x.find_all('td')].index('5-Mar')
-        daily_counts = [int(x.find_all('td')[-1].text)
-                        for x in soup.find('table').find_all('tr')
-                        if x.find_all('td')][:-1]
-        cum_counts = np.cumsum(daily_counts)
-        cum_counts = cum_counts[three_five_index:]
-
-        def fix_dates_mich(x):
-            return datetime.strptime(str(x), '%Y%m%d')
-
-        to_fix = df_raw.loc[df_raw['state'] == 'MI', 'date']\
-                       .apply(fix_dates_mich).sort_values().index
-        df_raw.loc[to_fix[:len(cum_counts)], 'positive'] = cum_counts
-
+    if filter_ and not isinstance(filter_, dict):
+        filter_ = COVIDTRACKER_FILTER_DEFAULTS
     good = []
     bad = []
     for state in tqdm(states, desc='US States'):  # For each country
         source = df_raw[df_raw['state'] == state]  # Only the given state
         # If we have data in the downloaded file for that state
-        if True:
-            df = pd.DataFrame(columns=['dates2', 'cum_cases', 'cum_deaths',
+        df = pd.DataFrame(columns=['dates2', 'cum_cases', 'cum_deaths',
                                        'cum_recover', 'new_cases',
                                        'new_deaths', 'new_recover',
                                        'new_uninfected'])
 
-            def fix_dates(x):
-                return datetime.strftime(datetime.strptime(
-                        str(x), '%Y%m%d'), '%m/%d/%y')
+        def fix_dates(x):
+            return datetime.strftime(datetime.strptime(
+                    str(x), '%Y%m%d'), '%m/%d/%y')
 
-            # Convert date format
-            df['dates2'] = source['date'].apply(fix_dates)
-            df['cum_cases'] = source['positive'].values
-            df['cum_deaths'] = source['death'].values
-            df['cum_recover'] = source['recovered'].values
-            # Fill NaN with 0 and convert to int
-            df = df.set_index('dates2').fillna(0).astype(int)
-            df = df.sort_index()  # Sort by date ascending
-            df[['new_cases', 'new_deaths', 'new_recover']] = \
-                df[['cum_cases', 'cum_deaths', 'cum_recover']].diff()
-            if df['new_cases'].max() >= 5 or not filter:
-                df['new_uninfected'] = df['new_recover'] + df['new_deaths']
-                df = df.fillna(0).astype(int)
-                # Overwrite old data
-                df.to_csv(data_path / ('covidtimeseries_US_%s.csv' % state))
-                good.append(state)
-            else:
-                bad.append(state)
-        else:
+        # Convert date format
+        df['dates2'] = source['date'].apply(fix_dates)
+        df['cum_cases'] = source['positive'].values
+        df['cum_deaths'] = source['death'].values
+        df['cum_recover'] = source['recovered'].values
+        # Fill NaN with 0 and convert to int
+        df = df.set_index('dates2').fillna(0).astype(int)
+        df = df.sort_index()  # Sort by date ascending
+        enough = True
+        if filter_:
+            for key, minimum in filter_.items():
+                enough *= (df[key].max() >= minimum)
+        if not enough:
             bad.append(state)
-
-    if filter:
-        print("COVID Tracking had recovery data for %s" % ','.join(good))
-        print("COVID Tracking has no recovery data for %s" % ','.join(bad))
+        else:
+            df[['new_cases', 'new_deaths', 'new_recover']] = \
+            df[['cum_cases', 'cum_deaths', 'cum_recover']].diff()
+            df['new_uninfected'] = df['new_recover'] + df['new_deaths']
+            df = df.fillna(0).astype(int)
+            # Overwrite old data
+            df.to_csv(data_path / ('covidtimeseries_US_%s.csv' % state))
+            good.append(state)    
+    
+    print("COVID Tracking data acceptable for %s" % ','.join(good))
+    print("COVID Tracking data not acceptable for %s" % ','.join(bad))
 
 
 def fix_negatives(data_path: str, plot: bool = False) -> None:

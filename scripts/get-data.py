@@ -44,7 +44,7 @@ def get_scraper(name):
 for source in args.sources:
     print("Getting data from %s..." % source)
     f = get_scraper(source)
-    f(data_path, filter=args.filter)
+    f(data_path, filter_=args.filter)
 
 if args.fix_negatives:
     print("Fixing negative values in daily data...")
