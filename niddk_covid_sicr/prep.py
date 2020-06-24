@@ -73,7 +73,7 @@ def get_init_fun(args, stan_data, force_fresh=False):
             print("Using last sample from previous fit to initialize")
     else:
         print("Using default values to initialize fit")
-        result = {'f1': gamma(1.5, 2.),
+        result = {'f1': gamma(2., 10.),
                   'f2': gamma(40., 1/100.),
                   'sigmar': gamma(15, 1/120.),
                   'sigmad': gamma(20, 1/1200),
