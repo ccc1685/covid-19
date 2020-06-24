@@ -24,20 +24,20 @@ parser = argparse.ArgumentParser(description=('Executes all of the analysis '
 
 parser.add_argument('model_name',
                     help='Name of the Stan model file (without extension)')
-parser.add_argument('-dp', '--data_path', default='./data',
+parser.add_argument('-dp', '--data-path', default='./data',
                     help='Path to directory containing the data files')
-parser.add_argument('-fp', '--fits_path', default='./fits',
+parser.add_argument('-fp', '--fits-path', default='./fits',
                     help='Path to directory containing pickled fit files')
-parser.add_argument('-rp', '--results_path', default='./results/vis-notebooks',
+parser.add_argument('-rp', '--results-path', default='./results/vis-notebooks',
                     help=('Path to directory where resulting notebooks '
                           'will be stored'))
-parser.add_argument('-mp', '--models_path', default='./models',
+parser.add_argument('-mp', '--models-path', default='./models',
                     help='Path to directory containing .stan files')
 parser.add_argument('-r', '--rois', default=[], nargs='+',
                     help='Space separated list of ROIs')
-parser.add_argument('-n', '--n_threads', type=int, default=16, nargs='+',
+parser.add_argument('-n', '--n-threads', type=int, default=16, nargs='+',
                     help='Number of threads to use for analysis')
-parser.add_argument('-f', '--fit_format', type=int, default=1,
+parser.add_argument('-f', '--fit-format', type=int, default=1,
                     help='Version of fit format')
 parser.add_argument('-v', '--verbose', type=int, default=0,
                     help='Verbose error reporting')

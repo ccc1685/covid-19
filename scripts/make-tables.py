@@ -16,19 +16,19 @@ import niddk_covid_sicr as ncs
 parser = argparse.ArgumentParser(description=('Generates an all-regions table '
                                               'for a model'))
 
-parser.add_argument('-ms', '--model_names',
+parser.add_argument('-ms', '--model-names',
                     default=[], nargs='+',
                     help=('Name of the Stan model files '
                           '(without .stan extension)'))
-parser.add_argument('-mp', '--models_path', default='./models',
+parser.add_argument('-mp', '--models-path', default='./models',
                     help='Path to directory containing the .stan model files')
 parser.add_argument('-dp', '--data-path', default='./data',
                     help='Path to directory containing the data files')
-parser.add_argument('-fp', '--fits_path', default='./fits',
+parser.add_argument('-fp', '--fits-path', default='./fits',
                     help='Path to directory to save fit files')
-parser.add_argument('-tp', '--tables_path', default='./tables/',
+parser.add_argument('-tp', '--tables-path', default='./tables/',
                     help='Path to directory to save tables')
-parser.add_argument('-f', '--fit_format', type=int, default=1,
+parser.add_argument('-f', '--fit-format', type=int, default=1,
                     help='Version of fit format')
 parser.add_argument('-p', '--params', default=['R0', 'car', 'ifr'], nargs='+',
                     help='Which params to include in the table')
@@ -46,6 +46,10 @@ parser.add_argument('-ft', '--fixed-t', type=int, default=0,
                     help=('Use a fixed time base (where 1/22/20 is t=0)'
                           'rather than a time base that is relative to the '
                           'beginning of the data for each region'))
+parser.add_argument('-ao', '--average-only', type=int, default=0,
+                    help=('Assume all of the model-specific tables already '
+                          'exist, skip creating them and instead make only '
+                          'the concatenated (raw) and reweighted tables'))
 args = parser.parse_args()
 
 # If no model_names are provided, use all of them
@@ -101,21 +105,26 @@ def roi_df(args, model_name, roi):
     return model_name, roi, df
 
 
-result = p_map(roi_df, repeat(args), *combos)
 tables_path = Path(args.tables_path)
 tables_path.mkdir(exist_ok=True)
 
+if not args.average_only:
+    result = p_map(roi_df, repeat(args), *combos)
+
 dfs = []
 for model_name in args.model_names:
-    tables = [df_ for model_name_, roi, df_ in result
-              if model_name_ == model_name]
-    if not len(tables):  # Probably no matching models
-        continue
-    df = pd.concat(tables)
     out = tables_path / ('%s_fit_table.csv' % model_name)
-    df = df.sort_index()
-    # Export the CSV file for this model
-    df.to_csv(out)
+    if not args.average_only:
+        tables = [df_ for model_name_, roi, df_ in result
+              if model_name_ == model_name]
+        if not len(tables):  # Probably no matching models
+            continue
+        df = pd.concat(tables)
+        df = df.sort_index()
+        # Export the CSV file for this model
+        df.to_csv(out)
+    else:
+        df = pd.read_csv(out)
     # Then prepare for the big table (across models)
     df['model'] = model_name
     dfs.append(df)
@@ -143,11 +152,12 @@ df = df[~df.index.duplicated(keep='last')]
 df.to_csv(out)
 
 # Get n_data_pts and t0 obtained from `scripts/get-n-data.py`
-path = Path(args.fits_path) / ('n_data.csv')
-print(path)
-if path.is_file():
-    extra = pd.read_csv('n_data.csv').set_index('roi')
+n_data_path = Path(args.data_path) / ('n_data.csv')
+if n_data_path.resolve().is_file():
+    extra = pd.read_csv(n_data_path).set_index('roi')
     extra['t0'] = extra['t0'].astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
 
     # Model-averaged table
     ncs.reweighted_stats(out, extra=extra, dates=args.dates)
+else:
+    print("No sample size file found at %s; unable to compute global average" % n_data_path.resolve())
