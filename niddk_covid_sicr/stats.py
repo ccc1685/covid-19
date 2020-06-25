@@ -199,6 +199,8 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
                            .isin(['min', 'max'])]  # Remove min and max
     if extra is not None:
         extra.columns.name = 'param'
+        # Don't overwrite with anything already present in the result
+        extra = extra[[col for col in extra if col not in result]]
         result = result.join(extra)
         
     # Add stats for a fixed date
