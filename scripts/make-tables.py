@@ -124,7 +124,10 @@ for model_name in args.model_names:
         # Export the CSV file for this model
         df.to_csv(out)
     else:
-        df = pd.read_csv(out)
+        try:
+            df = pd.read_csv(out)
+        except FileNotFoundError:
+            warnings.warn('No table found for %s; skipping...' % model_name)
     # Then prepare for the big table (across models)
     df['model'] = model_name
     dfs.append(df)
