@@ -59,20 +59,21 @@ if not args.model_names:
         ("No such model files matching: *.stan' at %s" % (args.models_path))
 
 # Get all model_names, roi combinations
-combos = []
-for model_name in args.model_names:
-    model_path = ncs.get_model_path(args.models_path, model_name)
-    extension = ['csv', 'pkl'][args.fit_format]
-    rois = ncs.list_rois(args.fits_path, model_name, extension)
-    if args.rois:
-        rois = list(set(rois).intersection(args.rois))
-    combos += [(model_name, roi) for roi in rois]
-# Organize into (model_name, roi) tuples
-combos = list(zip(*combos))
-assert len(combos), "No combinations of models and ROIs found"
-print("There are %d combinations of models and ROIs" % len(combos))
+if not args.average_only:
+    combos = []
+    for model_name in args.model_names:
+        model_path = ncs.get_model_path(args.models_path, model_name)
+        extension = ['csv', 'pkl'][args.fit_format]
+        rois = ncs.list_rois(args.fits_path, model_name, extension)
+        if args.rois:
+            rois = list(set(rois).intersection(args.rois))
+        combos += [(model_name, roi) for roi in rois]
+    # Organize into (model_name, roi) tuples
+    combos = list(zip(*combos))
+    assert len(combos), "No combinations of models and ROIs found"
+    print("There are %d combinations of models and ROIs" % len(combos))
 
-
+    
 def roi_df(args, model_name, roi):
     if args.fixed_t:
         args.roi = roi  # Temporary
@@ -128,6 +129,7 @@ for model_name in args.model_names:
             df = pd.read_csv(out)
         except FileNotFoundError:
             print('No table found for %s; skipping...' % model_name)
+            continue
     # Then prepare for the big table (across models)
     df['model'] = model_name
     dfs.append(df)
