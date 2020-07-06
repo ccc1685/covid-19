@@ -18,7 +18,7 @@ parser.add_argument('model_name',
                     help='Name of the Stan model file (without extension)')
 parser.add_argument('-mp', '--models-path', default='./models',
                     help='Path to directory containing the .stan model files')
-parser.add_argument('-dp', '--data-path', default='./data',
+parser.add_argument('-dp', '--data-path', default='./data_MMODS',
                     help='Path to directory containing the data files')
 parser.add_argument('-fp', '--fits-path', default='./fits',
                     help='Path to directory to save fit files')
