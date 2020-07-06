@@ -198,6 +198,7 @@ int<lower=0> new_cases[185,4];
 int moving_sum[186];
 real<lower=0> t2wks;
 real<lower=0> t5pc;
+real<lower=0> prob_outbreak[4];
 
 real llx[n_obs, 2];
 real ll_; // log-likelihood for model
@@ -222,6 +223,7 @@ for (i in 1:n_obs) {
     int flag5pc;
 
     real u[n_total, 5];
+    real mean_new_cases[185,4];
     real trelax[4];
     real theta[8] ;
     theta = {f1, f2, sigmar, sigmad, sigmau, q, mbase, 243.};
@@ -238,7 +240,8 @@ for (i in 1:n_obs) {
     active_cases[1,1] = neg_binomial_2_rng(max([u[n_obs,2]*n_pop,0.0001]),phi);
     cum_deaths[1,1]   =   neg_binomial_2_rng(max([sigmad*(u[n_obs,5]-u[n_obs-1,5])*n_pop,0.0001]),phi);
     cum_infected[1,1] = neg_binomial_2_rng(max([(u[n_obs,3]-u[n_obs-1,3])*n_pop,0.0001]),phi);
-    new_cases[1,1]    = neg_binomial_2_rng(max([(u[n_obs,4]-u[n_obs-1,4])*n_pop,0.0001]),phi);
+    mean_new_cases[1,1] = max([(u[n_obs,4]-u[n_obs-1,4])*n_pop,0.0001]);
+    new_cases[1,1]    = neg_binomial_2_rng(mean_new_cases[1,1],phi);
 
     cases[8] = new_cases[1,1];
     moving_sum[2] = cases[8] + moving_sum[1] - cases[1];   // moving avg on May 15
@@ -248,7 +251,8 @@ for (i in 1:n_obs) {
         active_cases[i,1] = neg_binomial_2_rng(max([u[n_obs+i-1,2]*n_pop,0.0001]),phi);
         cum_deaths[i,1] =   cum_deaths[i-1,1] + neg_binomial_2_rng(max([sigmad*(u[n_obs+i-1,5]-u[n_obs+i-2,5])*n_pop,0.0001]),phi);
         cum_infected[i,1] = cum_infected[i-1,1] + neg_binomial_2_rng(max([(u[n_obs+i-1,3]-u[n_obs+i-2,3])*n_pop,0.0001]),phi);
-        new_cases[i,1] = neg_binomial_2_rng(max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]),phi);
+        mean_new_cases[i,1] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
+        new_cases[i,1] = neg_binomial_2_rng(mean_new_cases[i,1],phi);
 
         cases[7+i] = new_cases[i,1];
         moving_sum[i+1] = cases[i+7] + moving_sum[i] - cases[i];
@@ -314,14 +318,28 @@ for (i in 1:n_obs) {
         active_cases[1,j] = neg_binomial_2_rng(max([u[n_obs,2]*n_pop,0.0001]),phi);
         cum_deaths[1,j] =   neg_binomial_2_rng(max([sigmad*(u[n_obs,5]-u[n_obs-1,5])*n_pop,0.0001]),phi);
         cum_infected[1,j] = neg_binomial_2_rng(max([(u[n_obs,3]-u[n_obs-1,3])*n_pop,0.0001]),phi);
-        new_cases[1,j] = neg_binomial_2_rng(max([(u[n_obs,4]-u[n_obs-1,4])*n_pop,0.0001]),phi);
+        mean_new_cases[1,j] = max([(u[n_obs,4]-u[n_obs-1,4])*n_pop,0.0001]);
+        new_cases[1,j] = neg_binomial_2_rng(mean_new_cases[1,j],phi);
 
         for (i in 2:185) {
             active_cases[i,j] = neg_binomial_2_rng(max([u[n_obs+i-1,2]*n_pop,0.0001]),phi);
             cum_deaths[i,j] =   cum_deaths[i-1,j] + neg_binomial_2_rng(max([sigmad*(u[n_obs+i-1,5]-u[n_obs+i-2,5])*n_pop,0.0001]),phi);
             cum_infected[i,j] = cum_infected[i-1,j] + neg_binomial_2_rng(max([(u[n_obs+i-1,3]-u[n_obs+i-2,3])*n_pop,0.0001]),phi);
-            new_cases[i,j] = neg_binomial_2_rng(max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]),phi);
+            mean_new_cases[i,j] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
+            new_cases[i,j] = neg_binomial_2_rng(mean_new_cases[i,j],phi);
         }
+    }
+
+
+    for (j in 1:4) {
+      prob_outbreak[j] = 0;
+      for (k in 1:1000)
+        for (i in 1:185)
+           if (neg_binomial_2_rng(mean_new_cases[i,j],phi) > 10) {
+             prob_outbreak[j] += 1;
+             break;
+           }
+      prob_outbreak[j] /= 1000.;
     }
 
   }
