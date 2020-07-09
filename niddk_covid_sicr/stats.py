@@ -15,14 +15,14 @@ from .io import extract_samples
 
 def get_rhat(fit) -> float:
     """Get `rhat` for the log-probability of a fit.
-    
+
     This is a measure of the convergence across sampling chains.
     Good convergence is indicated by a value near 1.0.
     """
     x = _summary(fit, ['lp__'], [])
     summary = pd.DataFrame(x['summary'], columns=x['summary_colnames'], index=x['summary_rownames'])
     return summary.loc['lp__', 'Rhat']
-    
+
 
 def get_waic(samples: pd.DataFrame) -> dict:
     """Get the Widely-Used Information Criterion (WAIC) for a fit.
@@ -154,7 +154,7 @@ def reweighted_stat(stat_vals: np.array, loo_vals: np.array,
     Returns:
         float: A new average value for the statistic, weighted across models.
     """
-    
+
     # Assume that loo is on a deviance scale (lower is better)
     min_loo = min(loo_vals)
     weights = np.exp(-0.5*(loo_vals-min_loo))
@@ -202,48 +202,124 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
         # Don't overwrite with anything already present in the result
         extra = extra[[col for col in extra if col not in result]]
         result = result.join(extra)
-        
+
     # Add stats for a fixed date
     if dates:
         if isinstance(dates, str):
             dates = [dates]
         for date in dates:
             result = add_fixed_date(result, date, ['Rt', 'car', 'ifr'])
-        
+
     # Compute global stats
     means = result.unstack('roi').loc['mean'].unstack('param')
     means = means.drop('AA_Global', errors='ignore')
-    
+    means = means.drop('US_Region', errors ='ignore')
     means = means[sorted(means.columns)]
-    
+
+    # Get weights for global region and calculate mean and var
+    (global_mean, global_var) = get_weight(result, means, roi_weight)
+
+    global_sd = global_var**(1/2)
+
+    result.loc[('AA_Global', 'mean'), :] = global_mean
+    result.loc[('AA_Global', 'std'), :] = global_sd
+
+
+
+    # Compute super region stats (US states)
+    superMeans = means
+    superResult = result
+
+
+    # For Super Region: iterate through index and remove roi's not in super region
+    (superMeans, superResult) = filter_region(superResult, superMeans,"US")
+
+    # Get weights for super region and calculate mean and var
+    (super_mean, super_var) = get_weight(superResult, superMeans, roi_weight)
+
+    super_sd = super_var**(1/2)
+
+    superResult.loc[('AA_US_Region', 'mean'), :] = super_mean
+    superResult.loc[('AA_US_Region', 'std'), :] = super_sd
+
+    # Insert into a new column beside 'R0' the average between super region mean
+    #   and the specific ROI
+    superResult.insert(1, "superR0_roiR0_Avg", (super_mean[0] + superResult['R0'])/2)
+
+    # Remove superR0 average from non-super region spots
+    # So far, this removes it everywhere...
+    for i in range(len(superMeans.index)-1):
+        if not superResult.index.get_level_values('roi')[i].startswith("US"):
+            superResult["superR0_roiR0_Avg"] = np.nan
+
+    superResult = superResult.sort_index()
+
+    if save:
+        path = Path(raw_table_path).parent / 'fit_table_reweighted.csv'
+        # result.to_csv(path)
+        superResult.to_csv(path)
+        return superResult
+
+def get_weight(result, means, roi_weight):
+    """ Helper function for reweighted_stats() that calculates roi weight for
+        either global region or super region.
+
+        Args:
+            result (pd.DataFrame): Dataframe that includes global mean (result df)
+                                or super mean (superResult)
+
+            means (pd.DataFrame): Global region mean or super region mean
+
+            roi_weight ()
+
+        Returns:
+            region_mean: global or super region mean.
+            region_var: global or super region variance.
+     """
     if roi_weight == 'var':
         inv_var = 1/result.unstack('roi').loc['std']**2
         weights = inv_var.fillna(0).unstack('param')
-        global_mean = (means*weights).sum() / weights.sum()
-        global_var = ((weights*((means - global_mean)**2)).sum()/weights.sum())
+
+        region_mean = (means*weights).sum() / weights.sum()
+        region_var = ((weights*((means - region_mean)**2)).sum()/weights.sum())
+
     elif roi_weight == 'waic':
         waic = means['waic']
         n_data = means['n_data_pts']
         # Assume that waic is on a deviance scale (lower is better)
         weights = np.exp(-0.5*waic/n_data)
-        global_mean = means.mul(weights, axis=0).sum() / weights.sum()
-        global_var = (((means - global_mean)**2).mul(weights, axis=0)).sum()/weights.sum()
+        region_mean = means.mul(weights, axis=0).sum() / weights.sum()
+        region_var = (((means - region_mean)**2).mul(weights, axis=0)).sum()/weights.sum()
+
     elif roi_weight == 'n_data_pts':
         n_data = means['n_data_pts']
         # Assume that waic is on a deviance scale (lower is better)
         weights = n_data
-        global_mean = means.mul(weights, axis=0).sum() / weights.sum()
-        global_var = (((means - global_mean)**2).mul(weights, axis=0)).sum()/weights.sum()
-    global_sd = global_var**(1/2)
-    result.loc[('AA_Global', 'mean'), :] = global_mean
-    result.loc[('AA_Global', 'std'), :] = global_sd
-    result = result.sort_index()
+        region_mean = means.mul(weights, axis=0).sum() / weights.sum()
+        region_var = (((means - region_mean)**2).mul(weights, axis=0)).sum()/weights.sum()
 
-    if save:
-        path = Path(raw_table_path).parent / 'fit_table_reweighted.csv'
-        result.to_csv(path)
-    return result
+    return region_mean, region_var
+#
+def filter_region(superResult, superMeans, region):
+    """ Helper function for reweighted_stats() that filters rois based on the
+    defined super region and drops non-super region rois from the DataFrame.
 
+    Args:
+    Returns:
+        superMeans: DataFrame containing
+    """
+    for i in range(len(superMeans.index)-1):
+        if not superMeans.index[i].startswith(region):
+            superMeans = superMeans.drop(superMeans.index[i])
+            superResult = superResult.drop(superResult.index[i])
+    return superMeans, superResult
+    #     """ Helper function for reweighted_stats() that filters .
+    #         Args:
+    #             superResult (pd.DataFrame): Copy of result DataFrame
+    #             superMeans (pd.DataFrame): Copy of means DataFrame
+    #         Returns:
+    #             superMeans, superResult: DataFrames on
+    #      """
 
 def days_into_2020(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d')
