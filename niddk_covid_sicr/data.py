@@ -77,11 +77,7 @@ def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
                                        'new_deaths', 'new_recover',
                                        'new_uninfected'])
             df['dates2'] = source['confirmed'].columns
-
-            def fix_dates(x):
-                return datetime.strftime(
-                            datetime.strptime(x, '%m/%d/%y'), '%m/%d/%y')
-            df['dates2'] = df['dates2'].apply(fix_dates)
+            df['dates2'] = df['dates2'].apply(fix_jhu_dates)
             df['cum_cases'] = source['confirmed'].loc[country].values
             df['cum_deaths'] = source['deaths'].loc[country].values
             df['cum_recover'] = source['recovered'].loc[country].values
@@ -95,6 +91,16 @@ def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
                                 ('covidtimeseries_%s.csv' % country))
         else:
             print("No data for %s" % country)
+            
+
+def fix_jhu_dates(x):
+    y = datetime.strptime(x, '%m/%d/%y')
+    return datetime.strftime(y, '%m/%d/%y')
+
+
+def fix_ct_dates(x):
+    y = datetime.strptime(str(x), '%Y%m%d')
+    return datetime.strftime(y, '%m/%d/%y')
 
 
 def get_countries(d: pd.DataFrame, filter_: Union[dict, bool] = True):
@@ -148,12 +154,8 @@ def get_covid_tracking(data_path: str, filter_: Union[dict, bool] = True,
                                        'new_deaths', 'new_recover',
                                        'new_uninfected'])
 
-        def fix_dates(x):
-            return datetime.strftime(datetime.strptime(
-                    str(x), '%Y%m%d'), '%m/%d/%y')
-
         # Convert date format
-        df['dates2'] = source['date'].apply(fix_dates)
+        df['dates2'] = source['date'].apply(fix_ct_dates)
         df['cum_cases'] = source['positive'].values
         df['cum_deaths'] = source['death'].values
         df['cum_recover'] = source['recovered'].values

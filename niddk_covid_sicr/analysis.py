@@ -1,5 +1,6 @@
 """Analyses to run on the fits."""
 
+from datetime import datetime
 import math
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,6 +10,37 @@ from scipy.stats import norm
 from tqdm import tqdm
 
 from .io import get_data, get_fit_path, list_rois, load_fit
+
+
+def get_top_n(
+    data_path,
+    n=25,
+    prefix="covidtimeseries",
+    extension=".csv",
+    last_date=None,
+    verbose=False,
+    exclude_us_states=False,
+):
+    """Get the top N regions, by total case count, up to a certain date.
+    
+    last_data: Use 'YYYY/MM/DD' format.
+    """
+    rois = list_rois(data_path, prefix, extension)
+    if exclude_us_states:
+        rois = [roi for roi in rois if not roi.startswith('US_')]
+    total_cases = pd.Series(index=rois, dtype=int)
+    for roi in rois:
+        file_path = Path(data_path) / ("%s_%s%s" % (prefix, roi, extension))
+        df = pd.read_csv(file_path).set_index("dates2")
+        df.index = df.index.map(lambda x: datetime.strptime(x, "%m/%d/%y"))
+        # return df
+        if last_date:
+            df = df[df.index <= last_date]
+        total_cases[roi] = df["cum_cases"].max()
+    total_cases = total_cases.sort_values(ascending=False)
+    if verbose:
+        print(total_cases.head(n))
+    return list(total_cases.head(n).index)
 
 
 def make_table(roi: str, samples: pd.DataFrame, params: list, stats: dict,
