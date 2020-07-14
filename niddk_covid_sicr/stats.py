@@ -223,16 +223,16 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
     result.loc[('AA_Global', 'std'), :] = global_sd
     result = result.sort_index()
 
-    # Compute stats for a super region (Asia, Southern Asia, United States, etc)
+    # Compute stats for a superregion (Asia, Southern Asia, United States, etc)
     super_means = means
     super_result = result
 
-    # Define super region as second argument and iterate through index removing
-    #   rois not in super region.
+    # Define superregion as second argument and iterate through index removing
+    #   rois not in superregion.
     (super_means, region) = filter_region(super_means, 'United States')
 
 
-    # Get weights for super region and calculate mean and variance.
+    # Get weights for superregion and calculate mean and variance.
     (super_mean, super_var) = get_weight(super_result, super_means, roi_weight)
 
     super_sd = super_var**(1/2)
@@ -240,7 +240,7 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
     super_result.loc[('AA_'+region, 'mean'), :] = super_mean
     super_result.loc[('AA_'+region, 'std'), :] = super_sd
 
-    # Insert into a new column beside 'R0' the average between super region mean
+    # Insert into a new column beside 'R0' the average between superregion mean
     #   and ROI in that row.
     super_result.insert(1, region+"_avg", (super_mean[0] + super_result['R0'])/2)
 
@@ -253,19 +253,19 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
 
 def get_weight(result, means, roi_weight):
     """ Helper function for reweighted_stats() that calculates roi weight for
-        either global region or super region.
+        either global region or superregion.
 
         Args:
             result (pd.DataFrame): Dataframe that includes global mean (result df)
                                 or super mean (super_result)
 
-            means (pd.DataFrame): Global region mean or super region mean
+            means (pd.DataFrame): Global region mean or superregion mean
 
             roi_weight (str): argument referenced in reweighted_stats()
 
         Returns:
-            region_mean: global or super region mean.
-            region_var: global or super region variance.
+            region_mean: global or superregion mean.
+            region_var: global or superregion variance.
      """
     if roi_weight == 'var':
         inv_var = 1/result.unstack('roi').loc['std']**2
@@ -293,18 +293,18 @@ def get_weight(result, means, roi_weight):
 #
 def filter_region(super_means, region):
     """ Helper function for reweighted_stats() that filters rois based on the
-    defined super region and drops non-super region rois from the DataFrame that
-    gets used to calculate super region mean and variance.
+    defined superregion and drops non-superregion rois from the DataFrame that
+    gets used to calculate superregion mean and variance.
 
     Args:
         super_means (pd.DataFrame): DataFrame containing all ROI means.
-        region (str): Super region in question; can be a region or subregion
+        region (str): superregion in question; can be a region or subregion
                       (Europe, Northern Europe, etc).
 
     Returns:
         super_means (pd.DataFrame): DataFrame containing means for ROIs that fall
-                                   under super region.
-        region (str): Super region in question; return value is used to create
+                                   under superregion.
+        region (str): superregion in question; return value is used to create
                       column and index names.
     """
     # Open CSV containing rois, regions, and subregions.
@@ -313,7 +313,7 @@ def filter_region(super_means, region):
     # Find all rois that fall under specified region.
     super_region = super_region[(super_region['subregion']==region) | (super_region['region']==region)]
 
-    # If roi not in super region list of rois, exclude from super region stats
+    # If roi not in superregion list of rois, exclude from superregion stats
     #   calculations by dropping from DataFrame
     for i in super_means.index:
         if i not in super_region.values:
