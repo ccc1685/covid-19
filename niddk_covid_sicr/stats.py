@@ -218,47 +218,38 @@ def reweighted_stats(raw_table_path: str, save: bool = True,
 
     # Get weights for global region and calculate mean and var
     (global_mean, global_var) = get_weight(result, means, roi_weight)
-
     global_sd = global_var**(1/2)
-
     result.loc[('AA_Global', 'mean'), :] = global_mean
     result.loc[('AA_Global', 'std'), :] = global_sd
+    result = result.sort_index()
+
+    # Compute stats for a super region (Asia, Southern Asia, United States, etc)
+    super_means = means
+    super_result = result
+
+    # Define super region as second argument and iterate through index removing
+    #   rois not in super region.
+    (super_means, region) = filter_region(super_means, 'United States')
 
 
-
-    # Compute super region stats (US states)
-    superMeans = means
-    superResult = result
-
-
-    # For Super Region: iterate through index and remove roi's not in super region
-    (superMeans, superResult) = filter_region(superResult, superMeans,"US")
-
-    # Get weights for super region and calculate mean and var
-    (super_mean, super_var) = get_weight(superResult, superMeans, roi_weight)
+    # Get weights for super region and calculate mean and variance.
+    (super_mean, super_var) = get_weight(super_result, super_means, roi_weight)
 
     super_sd = super_var**(1/2)
 
-    superResult.loc[('AA_US_Region', 'mean'), :] = super_mean
-    superResult.loc[('AA_US_Region', 'std'), :] = super_sd
+    super_result.loc[('AA_'+region, 'mean'), :] = super_mean
+    super_result.loc[('AA_'+region, 'std'), :] = super_sd
 
     # Insert into a new column beside 'R0' the average between super region mean
-    #   and the specific ROI
-    superResult.insert(1, "superR0_roiR0_Avg", (super_mean[0] + superResult['R0'])/2)
+    #   and ROI in that row.
+    super_result.insert(1, region+"_avg", (super_mean[0] + super_result['R0'])/2)
 
-    # Remove superR0 average from non-super region spots
-    # So far, this removes it everywhere...
-    for i in range(len(superMeans.index)-1):
-        if not superResult.index.get_level_values('roi')[i].startswith("US"):
-            superResult["superR0_roiR0_Avg"] = np.nan
-
-    superResult = superResult.sort_index()
+    super_result = super_result.sort_index()
 
     if save:
         path = Path(raw_table_path).parent / 'fit_table_reweighted.csv'
-        # result.to_csv(path)
-        superResult.to_csv(path)
-        return superResult
+        super_result.to_csv(path)
+        return super_result
 
 def get_weight(result, means, roi_weight):
     """ Helper function for reweighted_stats() that calculates roi weight for
@@ -266,11 +257,11 @@ def get_weight(result, means, roi_weight):
 
         Args:
             result (pd.DataFrame): Dataframe that includes global mean (result df)
-                                or super mean (superResult)
+                                or super mean (super_result)
 
             means (pd.DataFrame): Global region mean or super region mean
 
-            roi_weight ()
+            roi_weight (str): argument referenced in reweighted_stats()
 
         Returns:
             region_mean: global or super region mean.
@@ -300,26 +291,35 @@ def get_weight(result, means, roi_weight):
 
     return region_mean, region_var
 #
-def filter_region(superResult, superMeans, region):
+def filter_region(super_means, region):
     """ Helper function for reweighted_stats() that filters rois based on the
-    defined super region and drops non-super region rois from the DataFrame.
+    defined super region and drops non-super region rois from the DataFrame that
+    gets used to calculate super region mean and variance.
 
     Args:
+        super_means (pd.DataFrame): DataFrame containing all ROI means.
+        region (str): Super region in question; can be a region or subregion
+                      (Europe, Northern Europe, etc).
+
     Returns:
-        superMeans: DataFrame containing
+        super_means (pd.DataFrame): DataFrame containing means for ROIs that fall
+                                   under super region.
+        region (str): Super region in question; return value is used to create
+                      column and index names.
     """
-    for i in range(len(superMeans.index)-1):
-        if not superMeans.index[i].startswith(region):
-            superMeans = superMeans.drop(superMeans.index[i])
-            superResult = superResult.drop(superResult.index[i])
-    return superMeans, superResult
-    #     """ Helper function for reweighted_stats() that filters .
-    #         Args:
-    #             superResult (pd.DataFrame): Copy of result DataFrame
-    #             superMeans (pd.DataFrame): Copy of means DataFrame
-    #         Returns:
-    #             superMeans, superResult: DataFrames on
-    #      """
+    # Open CSV containing rois, regions, and subregions.
+    super_region = pd.read_csv('niddk_covid_sicr/rois.csv')
+
+    # Find all rois that fall under specified region.
+    super_region = super_region[(super_region['subregion']==region) | (super_region['region']==region)]
+
+    # If roi not in super region list of rois, exclude from super region stats
+    #   calculations by dropping from DataFrame
+    for i in super_means.index:
+        if i not in super_region.values:
+            super_means = super_means.drop(index=i)
+
+    return super_means, region
 
 def days_into_2020(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d')
