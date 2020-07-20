@@ -195,6 +195,7 @@ int<lower=0> cum_deaths[185,4];
 int<lower=0> cum_infected[185,4];
 int<lower=0> active_cases[185,4];
 int<lower=0> new_cases[185,4];
+int<lower=0> hospitalization[185,4];
 int moving_sum[186];
 real<lower=0> t2wks;
 real<lower=0> t5pc;
@@ -221,6 +222,7 @@ for (i in 1:n_obs) {
     int peak;
     int flag2wks;
     int flag5pc;
+    real fhosp;
 
     real u[n_total, 5];
     real mean_new_cases[185,4];
@@ -237,11 +239,14 @@ for (i in 1:n_obs) {
         moving_sum[1] += cases[i];  // moving sum on May 14
     }
 
+    fhosp = gamma_rng(1.68, 0.273)/100.
+
     active_cases[1,1] = neg_binomial_2_rng(max([u[n_obs,2]*n_pop,0.0001]),phi);
     cum_deaths[1,1]   =   neg_binomial_2_rng(max([sigmad*(u[n_obs,5]-u[n_obs-1,5])*n_pop,0.0001]),phi);
     cum_infected[1,1] = neg_binomial_2_rng(max([(u[n_obs,3]-u[n_obs-1,3])*n_pop,0.0001]),phi);
     mean_new_cases[1,1] = max([(u[n_obs,4]-u[n_obs-1,4])*n_pop,0.0001]);
     new_cases[1,1]    = neg_binomial_2_rng(mean_new_cases[1,1],phi);
+    hospitalization[1,1] = fhosp * active_cases[1,1];
 
     cases[8] = new_cases[1,1];
     moving_sum[2] = cases[8] + moving_sum[1] - cases[1];   // moving avg on May 15
@@ -253,6 +258,8 @@ for (i in 1:n_obs) {
         cum_infected[i,1] = cum_infected[i-1,1] + neg_binomial_2_rng(max([(u[n_obs+i-1,3]-u[n_obs+i-2,3])*n_pop,0.0001]),phi);
         mean_new_cases[i,1] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
         new_cases[i,1] = neg_binomial_2_rng(mean_new_cases[i,1],phi);
+        hospitalization[i,1] = fhosp * active_cases[i,1];
+
 
         cases[7+i] = new_cases[i,1];
         moving_sum[i+1] = cases[i+7] + moving_sum[i] - cases[i];
@@ -320,6 +327,7 @@ for (i in 1:n_obs) {
         cum_infected[1,j] = neg_binomial_2_rng(max([(u[n_obs,3]-u[n_obs-1,3])*n_pop,0.0001]),phi);
         mean_new_cases[1,j] = max([(u[n_obs,4]-u[n_obs-1,4])*n_pop,0.0001]);
         new_cases[1,j] = neg_binomial_2_rng(mean_new_cases[1,j],phi);
+        hospitalization[1,j] = fhosp * active_cases[1,j];
 
         for (i in 2:185) {
             active_cases[i,j] = neg_binomial_2_rng(max([u[n_obs+i-1,2]*n_pop,0.0001]),phi);
@@ -327,6 +335,7 @@ for (i in 1:n_obs) {
             cum_infected[i,j] = cum_infected[i-1,j] + neg_binomial_2_rng(max([(u[n_obs+i-1,3]-u[n_obs+i-2,3])*n_pop,0.0001]),phi);
             mean_new_cases[i,j] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
             new_cases[i,j] = neg_binomial_2_rng(mean_new_cases[i,j],phi);
+            hospitalization[1,j] = fhosp * active_cases[1,j];
         }
     }
 
