@@ -195,11 +195,12 @@ int<lower=0> cum_deaths[185,4];
 int<lower=0> cum_infected[185,4];
 int<lower=0> active_cases[185,4];
 int<lower=0> new_cases[185,4];
-int<lower=0> hospitalization[185,4];
+real<lower=0> hospitalization[185,4];
 int moving_sum[186];
 real<lower=0> t2wks;
 real<lower=0> t5pc;
 real<lower=0> prob_outbreak[4];
+real fhosp;
 
 real llx[n_obs, 2];
 real ll_; // log-likelihood for model
@@ -222,7 +223,6 @@ for (i in 1:n_obs) {
     int peak;
     int flag2wks;
     int flag5pc;
-    real fhosp;
 
     real u[n_total, 5];
     real mean_new_cases[185,4];
