@@ -195,7 +195,7 @@ int<lower=0> cum_deaths[185,4];
 int<lower=0> cum_infected[185,4];
 int<lower=0> active_cases[185,4];
 int<lower=0> new_cases[185,4];
-real<lower=0> hospitalization[185,4];
+real hospitalization[185,4];
 int moving_sum[186];
 real<lower=0> t2wks;
 real<lower=0> t5pc;
@@ -204,6 +204,8 @@ real fhosp;
 
 real llx[n_obs, 2];
 real ll_; // log-likelihood for model
+
+fhosp = gamma_rng(1.68, 0.273)/100.;
 
 ll_ = 0;
 for (i in 1:n_obs) {
@@ -239,8 +241,6 @@ for (i in 1:n_obs) {
         moving_sum[1] += cases[i];  // moving sum on May 14
     }
 
-    fhosp = gamma_rng(1.68, 0.273)/100.;
-
     active_cases[1,1] = neg_binomial_2_rng(max([u[n_obs,2]*n_pop,0.0001]),phi);
     cum_deaths[1,1]   =   neg_binomial_2_rng(max([sigmad*(u[n_obs,5]-u[n_obs-1,5])*n_pop,0.0001]),phi);
     cum_infected[1,1] = neg_binomial_2_rng(max([(u[n_obs,3]-u[n_obs-1,3])*n_pop,0.0001]),phi);
@@ -259,7 +259,6 @@ for (i in 1:n_obs) {
         mean_new_cases[i,1] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
         new_cases[i,1] = neg_binomial_2_rng(mean_new_cases[i,1],phi);
         hospitalization[i,1] = fhosp * active_cases[i,1];
-
 
         cases[7+i] = new_cases[i,1];
         moving_sum[i+1] = cases[i+7] + moving_sum[i] - cases[i];
@@ -335,10 +334,9 @@ for (i in 1:n_obs) {
             cum_infected[i,j] = cum_infected[i-1,j] + neg_binomial_2_rng(max([(u[n_obs+i-1,3]-u[n_obs+i-2,3])*n_pop,0.0001]),phi);
             mean_new_cases[i,j] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
             new_cases[i,j] = neg_binomial_2_rng(mean_new_cases[i,j],phi);
-            hospitalization[1,j] = fhosp * active_cases[1,j];
+            hospitalization[i,j] = fhosp * active_cases[i,j];
         }
     }
-
 
     for (j in 1:4) {
       prob_outbreak[j] = 0;
