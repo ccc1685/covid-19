@@ -239,7 +239,7 @@ for (i in 1:n_obs) {
         moving_sum[1] += cases[i];  // moving sum on May 14
     }
 
-    fhosp = gamma_rng(1.68, 0.273)/100.
+    fhosp = gamma_rng(1.68, 0.273)/100.;
 
     active_cases[1,1] = neg_binomial_2_rng(max([u[n_obs,2]*n_pop,0.0001]),phi);
     cum_deaths[1,1]   =   neg_binomial_2_rng(max([sigmad*(u[n_obs,5]-u[n_obs-1,5])*n_pop,0.0001]),phi);
