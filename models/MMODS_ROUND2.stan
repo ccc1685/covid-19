@@ -195,7 +195,8 @@ int<lower=0> cum_deaths[185,4];
 int<lower=0> cum_infected[185,4];
 int<lower=0> active_cases[185,4];
 int<lower=0> new_cases[185,4];
-real hospitalization[185,4];
+real max_hospitalization[4];
+
 int moving_sum[186];
 real<lower=0> t2wks;
 real<lower=0> t5pc;
@@ -216,6 +217,7 @@ for (i in 1:n_obs) {
     }
 
   {
+    real hospitalization[4,185];
     int cases[186+7];
 
     int delta_mov_sum[185];
@@ -258,7 +260,7 @@ for (i in 1:n_obs) {
         cum_infected[i,1] = cum_infected[i-1,1] + neg_binomial_2_rng(max([(u[n_obs+i-1,3]-u[n_obs+i-2,3])*n_pop,0.0001]),phi);
         mean_new_cases[i,1] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
         new_cases[i,1] = neg_binomial_2_rng(mean_new_cases[i,1],phi);
-        hospitalization[i,1] = fhosp * active_cases[i,1];
+        hospitalization[1,i] = fhosp * active_cases[i,1];
 
         cases[7+i] = new_cases[i,1];
         moving_sum[i+1] = cases[i+7] + moving_sum[i] - cases[i];
@@ -326,7 +328,7 @@ for (i in 1:n_obs) {
         cum_infected[1,j] = neg_binomial_2_rng(max([(u[n_obs,3]-u[n_obs-1,3])*n_pop,0.0001]),phi);
         mean_new_cases[1,j] = max([(u[n_obs,4]-u[n_obs-1,4])*n_pop,0.0001]);
         new_cases[1,j] = neg_binomial_2_rng(mean_new_cases[1,j],phi);
-        hospitalization[1,j] = fhosp * active_cases[1,j];
+        hospitalization[j,1] = fhosp * active_cases[1,j];
 
         for (i in 2:185) {
             active_cases[i,j] = neg_binomial_2_rng(max([u[n_obs+i-1,2]*n_pop,0.0001]),phi);
@@ -334,11 +336,12 @@ for (i in 1:n_obs) {
             cum_infected[i,j] = cum_infected[i-1,j] + neg_binomial_2_rng(max([(u[n_obs+i-1,3]-u[n_obs+i-2,3])*n_pop,0.0001]),phi);
             mean_new_cases[i,j] = max([(u[n_obs+i-1,4]-u[n_obs+i-2,4])*n_pop,0.0001]);
             new_cases[i,j] = neg_binomial_2_rng(mean_new_cases[i,j],phi);
-            hospitalization[i,j] = fhosp * active_cases[i,j];
+            hospitalization[j,i] = fhosp * active_cases[i,j];
         }
     }
 
     for (j in 1:4) {
+      max_hospitalization[j] = max(hospitalization[j]);
       prob_outbreak[j] = 0;
       for (k in 1:1000)
         for (i in 1:185)
