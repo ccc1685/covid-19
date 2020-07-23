@@ -54,7 +54,7 @@ functions {
                      real R1 = u[5]; // recovery compartment 1
                      real D1 = u[6]; // death compartment 1
 
-
+                     trelax += mlocation;
                      sigmac *= transition(cbase,clocation,t);  // case detection change
                      //beta *= transition(mbase,mlocation,t);  // mitigation
                      if (t < trelax) {
@@ -174,11 +174,11 @@ model {
     sigmau ~ exponential(1.);           // sigmau
     q ~ exponential(2.);                   // q
     mbase ~ exponential(1.);               // mbase
-    mlocation ~ lognormal(log(tm+5),1.);   // mlocation
+    mlocation ~ lognormal(log(tm),1.);   // mlocation
     extra_std ~ exponential(1.);           // likelihood over dispersion std
     cbase ~ exponential(.2);               // cbase
     clocation ~ lognormal(log(20.),2.);    // clocation
-    n_pop ~ lognormal(log(1e6),4.);        // population
+    n_pop ~ lognormal(log(1e6),3.);        // population
     //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
     trelax ~ lognormal(log(tm+50),1.);   // trelax
     sigmar1 ~ normal(1.,.1);            // sigmar1
