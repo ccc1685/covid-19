@@ -167,22 +167,21 @@ transformed parameters{
 model {
 //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
 
-    f1 ~ gamma(2.,1./10.);                 // f1  initital infected to case ratio
-    f2 ~ gamma(20,50);                    // f2  beta - sigmau
-    sigmar ~ exponential(1.);             // sigmar
-    sigmad ~ exponential(1.);         // sigmad
-    sigmau ~ exponential(1.);           // sigmau
+    f1 ~ gamma(2.,.1);                     // f1  initital infected to case ratio
+    f2 ~ gamma(100.,350.);                 // f2  beta - sigmau
+    sigmar ~ exponential(2.);              // sigmar
+    sigmad ~ exponential(2.);              // sigmad
+    sigmau ~ exponential(2.);              // sigmau
     q ~ exponential(2.);                   // q
-    mbase ~ exponential(1.);               // mbase
-    mlocation ~ lognormal(log(tm),1.);   // mlocation
-    extra_std ~ exponential(1.);           // likelihood over dispersion std
+    mbase ~ exponential(4.);               // mbase
+    mlocation ~ lognormal(log(tm),1.);     // mlocation
+    extra_std ~ gamma(300.,400.);          // likelihood over dispersion std
     cbase ~ exponential(.2);               // cbase
     clocation ~ lognormal(log(20.),2.);    // clocation
     n_pop ~ lognormal(log(1e6),3.);        // population
-    //sigmar1 ~ inv_gamma(4.,.2);            // sigmar1
-    trelax ~ lognormal(log(tm+50),1.);   // trelax
-    sigmar1 ~ normal(1.,.1);            // sigmar1
-    sigmad1 ~ exponential(1.);            // sigmad1
+    trelax ~ lognormal(log(tm+50),1.);     // trelax
+    sigmar1 ~ exponential(2.);             // sigmar1
+    sigmad1 ~ exponential(2.);             // sigmad1
 
 
 
