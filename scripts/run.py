@@ -33,7 +33,7 @@ parser.add_argument('-tn', '--n-thin', type=int, default=1,
                     help='thinning number')
 parser.add_argument('-th', '--n-threads', type=int, default=0,
                     help='Number of threads to use the whole run')
-parser.add_argument('-ad', '--adapt-delta', type=float, default=0.995,
+parser.add_argument('-ad', '--adapt-delta', type=float, default=0.85,
                     help='Adapt delta control parameter')
 parser.add_argument('-fc', '--force-recompile', type=int, default=0,
                     help='Force recompilation of model (no cache)')
