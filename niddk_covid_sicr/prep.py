@@ -89,7 +89,9 @@ def get_init_fun(args, stan_data, force_fresh=False):
                   'ctransition': normal(10., 1.),
                   # 'n_pop': lognormal(np.log(1e5), 1.),
                   'n_pop': normal(1e6, 1e4),
-                  'sigmar1': gamma(2., .1/2.)
+                  'sigmar1': gamma(2., .01),
+                  'sigmad1': gamma(2., .01),
+                  'trelax': normal(50.,5.)
                   }
 
     def init_fun():
