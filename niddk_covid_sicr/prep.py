@@ -21,7 +21,7 @@ def get_stan_data(full_data_path, args):
 
     # t0 := where to start time series, index space
     try:
-        t0 = np.where(df["new_cases"].values >= 1)[0][0]
+        t0 = np.where(df["new_cases"].values >= 5)[0][0]
     except IndexError:
         return [None, None]
     # tm := start of mitigation, index space
@@ -75,17 +75,19 @@ def get_init_fun(args, stan_data, force_fresh=False):
         print("Using default values to initialize fit")
         result = {'f1': gamma(2., 10.),
                   'f2': gamma(40., 1/100.),
-                  'sigmar': gamma(15, 1/120.),
-                  'sigmad': gamma(20, 1/1200),
+                  'sigmar': gamma(20, 1/120.),
+                  'sigmad': gamma(20, 1/120),
                   'sigmau': gamma(2., 1/20.),
                   'q': exponential(.1),
                   'mbase': gamma(2., .1/2.),
                   # 'mlocation': lognormal(np.log(stan_data['tm']), 1.),
-                  'mlocation': normal(stan_data['tm'], 1.),
-                  'extra_std': exponential(1.),
-                  'cbase': gamma(2., 2.),
+                  'mlocation': normal(stan_data['tm'], 4.),
+                  'extra_std': exponential(.5),
+                  'extra_std_R': exponential(.5),
+                  'extra_std_D': exponential(.5),
+                  'cbase': gamma(1., 1.),
                   # 'clocation': lognormal(np.log(20.), 1.),
-                  'clocation': normal(20., 1.),
+                  'clocation': normal(50., 1.),
                   'ctransition': normal(10., 1.),
                   # 'n_pop': lognormal(np.log(1e5), 1.),
                   'n_pop': normal(1e6, 1e4),
