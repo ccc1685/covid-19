@@ -160,8 +160,7 @@ df.to_csv(out)
 n_data_path = Path(args.data_path) / ('n_data.csv')
 if n_data_path.resolve().is_file():
     extra = pd.read_csv(n_data_path).set_index('roi')
-    extra['t0'] = extra['t0'].astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
-
+    extra['t0'] = extra['t0'].fillna('2020-01-23').astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
     # Model-averaged table
     ncs.reweighted_stats(out, extra=extra, dates=args.dates)
 else:
