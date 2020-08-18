@@ -1,0 +1,732 @@
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Afghanistan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Albania'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Algeria'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Andorra'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Angola'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Antigua and Barbuda'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Argentina'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Armenia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Australia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Austria'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Azerbaijan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Bahamas'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Bahrain'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Bangladesh'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Barbados'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Belarus'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Belgium'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Belize'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Benin'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Bhutan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Bolivia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Bosnia and Herzegovina'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Botswana'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Brazil'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Brunei'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Bulgaria'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Burkina Faso'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Burma'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Burundi'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Cabo Verde'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Cambodia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Cameroon'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Canada'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Central African Republic'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Chad'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Chile'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='China'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Colombia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Comoros'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Congo (Brazzaville)'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Congo (Kinshasa)'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Costa Rica'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Cote d'Ivoire'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Croatia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Cuba'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Cyprus'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Czechia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Denmark'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Diamond Princess'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Djibouti'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Dominica'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Dominican Republic'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Ecuador'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Egypt'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='El Salvador'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Equatorial Guinea'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Eritrea'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Estonia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Eswatini'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Ethiopia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Fiji'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Finland'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='France'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Gabon'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Gambia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Georgia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Germany'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Ghana'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Greece'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Grenada'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Guatemala'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Guinea-Bissau'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Guinea'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Guyana'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Haiti'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Holy See'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Honduras'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Hungary'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Iceland'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='India'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Indonesia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Iran'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Iraq'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Ireland'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Israel'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Italy'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Jamaica'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Japan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Jordan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Kazakhstan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Kenya'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Korea, South'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Kosovo'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Kuwait'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Kyrgyzstan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Laos'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Latvia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Lebanon'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Lesotho'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Liberia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Libya'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Liechtenstein'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Lithuania'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Luxembourg'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='MS Zaandam'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Madagascar'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Malawi'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Malaysia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Maldives'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Mali'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Malta'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Mauritania'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Mauritius'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Mexico'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Moldova'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Monaco'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Mongolia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Montenegro'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Morocco'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Mozambique'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Namibia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Nepal'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Netherlands'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='New Zealand'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Nicaragua'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Niger'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Nigeria'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='North Macedonia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Norway'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Oman'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Pakistan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Panama'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Papua New Guinea'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Paraguay'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Peru'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Philippines'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Poland'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Portugal'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Qatar'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Romania'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Russia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Rwanda'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Saint Kitts and Nevis'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Saint Lucia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Saint Vincent and the Grenadines'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='San Marino'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Sao Tome and Principe'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Saudi Arabia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Senegal'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Serbia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Seychelles'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Sierra Leone'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Singapore'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Slovakia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Slovenia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Somalia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='South Africa'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='South Sudan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Spain'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Sri Lanka'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Sudan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Suriname'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Sweden'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Switzerland'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Syria'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Taiwan*'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Tajikistan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Tanzania'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Thailand'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Timor-Leste'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Togo'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Trinidad and Tobago'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Tunisia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Turkey'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_AK'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_AL'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_AR'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_AS'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_AZ'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_CA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_CO'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_CT'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_DC'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_DE'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_FL'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_GA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_GU'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_HI'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_IA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_ID'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_IL'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_IN'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_KS'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_KY'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_LA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MD'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_ME'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MI'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MN'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MO'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MP'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MS'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_MT'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_NC'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_ND'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_NE'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_NH'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_NJ'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_NM'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_NV'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_NY'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_OH'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_OK'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_OR'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_PA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_PR'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_RI'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_SC'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_SD'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_TN'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_TX'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_UT'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_VA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_VI'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_VT'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_WA'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_WI'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_WV'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='US_WY'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Uganda'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Ukraine'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='United Arab Emirates'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='United Kingdom'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Uruguay'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Uzbekistan'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Venezuela'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Vietnam'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='West Bank and Gaza'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Western Sahara'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Yemen'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Zambia'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
+source /data/carsonc/conda/etc/profile.d/conda.sh \
+&& conda activate covid-19 \
+&& python /home/carsonc/covid-sicr/scripts/run.py	SICRMQC2R2DX	-r='Zimbabwe'	-mp='/home/carsonc/covid-sicr/models/'	-dp='/home/carsonc/covid-sicr/data/'	-fp='/data/carsonc/covid-19/fit16/'	-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1
