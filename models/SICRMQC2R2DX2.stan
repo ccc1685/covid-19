@@ -1,4 +1,4 @@
-// SICRMQC2R2DX.stan
+// SICRMQC2R2DX2.stan
 // Latent variable nonlinear SICR model with mitigation and release, q>0
 
 functions {
@@ -67,9 +67,9 @@ functions {
                         beta *= relax(minit,t-trelax);   // relaxation from lockdown
                      }
 
-                     du_dt[1] = beta*(I+q*(C+R1))*(1-Z) - sigmac*I - sigmau*I; //I
+                     du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; //I
                      du_dt[2] = sigmac*I - sigma*C;                            //C
-                     du_dt[3] = beta*(I+q*(C+R1))*(1-Z);                       //N_I
+                     du_dt[3] = beta*(I+q*C)*(1-Z);                       //N_I
                      du_dt[4] = sigmac*I;                    // N_C case appearance rate
                      du_dt[5] = sigmar*C - sigmar1*R1;       // recovery compartment 1
                      du_dt[6] = sigmad*C - sigmad1*D1;       // death compartment 1
@@ -81,7 +81,15 @@ functions {
         }
 
 
-#include data.stan
+data {
+      int<lower=1> n_obs;       // number of days observed
+      int n_total;               // total number of days simulated, n_total-n_obs is days beyond last data point
+      int<lower=1> n_ostates;   // number of observed states
+      int y[n_obs,n_ostates];     // data, per-day-tally [cases,recovered,death]
+      real tm;                    // start day of mitigation
+      real ts[n_total];             // time points that were observed + projected
+  }
+
 
 transformed data {
     real x_r[0];
@@ -122,6 +130,7 @@ transformed parameters{
   real ifr[n_total];          //total dead / total infected
   real Rt[n_total];           // time dependent reproduction number
   real phi[3];
+  real frac_infected[n_total];
 
   real u_init[8];     // initial conditions for fractions
 
@@ -165,11 +174,13 @@ transformed parameters{
      lambda[1,1] = max([(u[1,4]-u_init[4])*n_pop,0.01]); //C: cases per day
      lambda[1,2] = max([(u[1,7]-u_init[7])*n_pop,0.01]); //R: recovered per day
      lambda[1,3] = max([(u[1,8]-u_init[8])*n_pop,0.01]); //D: dead per day
+     frac_infected[1] = u[1,1];
 
      for (i in 2:n_total){
         lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,0.01]); //C: cases per day
         lambda[i,2] = max([(u[i,7]-u[i-1,7])*n_pop,0.01]); //R: recovered per day
         lambda[i,3] = max([(u[i,8]-u[i-1,8])*n_pop,0.01]); //D: dead per day
+        frac_infected[i] = u[i,1];
         }
     }
 }
