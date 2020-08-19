@@ -165,6 +165,7 @@ transformed parameters{
   //real Rt[n_total];           // time dependent reproduction number
   //real phi[3];
   real frac_infectious[n_total];
+  real cumulativeV[n_total];
 
   real u_init[9];     // initial conditions for fractions
 
@@ -181,9 +182,7 @@ transformed parameters{
   {
      real theta[15] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,sigmar1,sigmad1,trelax,cbase,clocation,ctransition,mtransition};
 
-     real u[n_total, 8];   // solution from the ODE solver
-     real sigmact;
-     real betat;
+     real u[n_total, 9];   // solution from the ODE solver
 
      real cinit = y[1,1]/n_pop;
 
@@ -197,7 +196,6 @@ transformed parameters{
      u_init[8] = 0;             // V
      u_init[9] = 0;             // cum V
 
-
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,2000);
 
      for (i in 1:n_total){
@@ -208,16 +206,6 @@ transformed parameters{
         //Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
         }
 
-        du_dt[1] = -beta*(I+q*C)*S -sigmaVS*S + sigmaSR*R + sigmaSR1*R1 ; //dS/dt
-        du_dt[2] = beta*(I+q*C)*S +sigmaIV*V - sigmaCI*I - sigmaRI*I - sigmaDI*I;     //dI/dt
-        du_dt[3] = sigmaCI*I - sigmaRC*C - sigmaDC*C - sigmaH1C*C;          //dC/dt
-        du_dt[4] = sigmaRC*C + sigmaRH1*H1 + sigmaRH2*H2 +sigmaRV*V - sigmaSR*R;     // dR/dt
-        du_dt[5] = sigmaRI*I - sigmaSR1*R1;                               // dRI/dt
-        du_dt[6] = sigmaH1C*C +sigmaH1V*V- sigmaH2H1*H1 - sigmaRH1*H1 - sigmaDH1*H1; // dH1/dt
-        du_dt[7] = sigmaH2H1*H1 - sigmaRH2*H2 - sigmaDH2*H2;             // dH2/dt
-        du_dt[8] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V;   // dV/dt
-
-
      for (i in 1:n_total){
         lambda[i,1] = sigmaCI*u[2]*n_pop;  //C: cases per day
         lambda[i,2] = sigmaRC*U[3] + sigmaRH1*U[6] + sigmaRH2*U[7] +sigmaRV*U[8]; // new R per day
@@ -226,13 +214,14 @@ transformed parameters{
         lambda[i,5] = sigmaH1V*U[8];                 //new H2 per day
         //lambda[i,6] = sigmaDC*u[3] + sigmaDH1*u[6] + sigmaDH2*U[7] + sigma; //new V per day
         frac_infectious[i] = u[i,2];
+        cumulativeV[i] = u[i,9];
         }
     }
 }
 
 
 model {
-//priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
+//priors Stan convention:  exponential(rate), gamma(shape,rate), inversegamma(shape,rate)
 
     f1 ~ gamma(2.,.1);                     // f1  initital infected to case ratio
     f2 ~ gamma(100.,350.);                 // f2  beta - sigmau
@@ -240,64 +229,56 @@ model {
     sigmaVS ~ exponential(7.);
     sigmaSR ~ exponential(180.);
     sigmaSR1 ~ exponential(180.);
-    sigmaIV ~ exponential(4.);
-    sigmaRI ~ gamma(10.,3.);
-    sigmaDI ~ gamma(10.,3.);
-    sigmaRC ~ exponential(4.);
-    sigmaRH1 ~ exponential(4.);
-    sigmaRH2 ~ exponential(4.);
-    sigmaRV ~ exponential(4.);
-    sigmaH1C ~ exponential(4.);
-    sigmaH1V ~ exponential(4.);
-    sigmaH2H1 ~ exponential(4.);
-    sigmaRH1 ~ exponential(4.);
-    sigmaDH1 ~ exponential(4.);
-/*
-    sigmar ~ gamma(10.,3.);              // sigmar
-    sigmad ~ gamma(10.,3.);              // sigmad
-    sigmar1 ~ exponential(4.);             // sigmar1
-    sigmad1 ~ exponential(4.);             // sigmad1
-    sigmau ~ exponential(2.);              // sigmau
-*/
+    sigmaIV ~ exponential(100.);
+    sigmaRI ~ exponential(14.);
+    sigmaDI ~ exponential(30.);
+    sigmaRC ~ exponential(14.);
+    sigmaRH1 ~ exponential(14.);
+    sigmaRH2 ~ exponential(14.);
+    sigmaRV ~ exponential(31.);
+    sigmaH1C ~ exponential(14.);
+    sigmaH1V ~ exponential(30.);
+    sigmaH2H1 ~ exponential(7.);
+    sigmaRH1 ~ exponential(14.);
+    sigmaDH1 ~ exponential(30.);
     q ~ exponential(2.);                   // q
-    mbase ~ exponential(3.);               // mbase
-    mlocation ~ normal(tm,20.);     // mlocation
+    n_pop ~ normal(4e6,2e6);        // population
+
+//    mbase ~ exponential(3.);               // mbase
+//    mlocation ~ normal(tm,20.);     // mlocation
 //    extra_std ~ exponential(1.);          // likelihood over dispersion std C
 //    extra_std_R ~ exponential(1.);          // likelihood over dispersion std R
 //    extra_std_D ~ exponential(1.);          // likelihood over dispersion std D
-    cbase ~ exponential(.2);               // cbase
-    clocation ~ normal(120.,60.);    // clocation
-    n_pop ~ normal(4e6,2e6);        // population
-    trelax ~ normal(70,30.);     // trelax
+//    cbase ~ exponential(.2);               // cbase
+//    clocation ~ normal(120.,60.);    // clocation
+//    trelax ~ normal(70,30.);     // trelax
 
 
-//#include likelihood.stan
 // Likelihood function
 
 for (i in 1:n_obs){
-  for (j in 1:3) {
+  for (j in 1:5) {
     if (y[i,j] > -1.)
-      target += neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi[j]);
+      target += poisson_lpmf(y[i,j]|lambda[i,j]);
     }
 }
 
 }
 
-//#include generatedquantities.stan
 // generated quantities
 
 generated quantities {
-    real llx[n_obs, 3];
+    real llx[n_obs, 5];
     real ll_; // log-likelihood for model
     int n_data_pts;
-    real y_proj[n_total,3];
+    real y_proj[n_total,5];
 
     ll_ = 0;
     n_data_pts = 0;
     for (i in 1:n_obs) {
-        for (j in 1:3) {
+        for (j in 1:5) {
            if (y[i,j] > -1.){
-                llx[i, j] = neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi[j]);
+                llx[i, j] = poisson_lpmf(y[i,j]|lambda[i,j]);
                 n_data_pts += 1;
                 ll_ += llx[i, j];
                }
@@ -308,9 +289,9 @@ generated quantities {
     }
 
     for (i in 1:n_total) {
-        for (j in 1:3) {
+        for (j in 1:5) {
           if (lambda[i,j] < 1e8)
-            y_proj[i,j] = neg_binomial_2_rng(lambda[i,j],phi[j]);
+            y_proj[i,j] = poisson_rng(lambda[i,j]);
           else
             y_proj[i,j] = poisson_rng(1e8);
         }
