@@ -1,4 +1,4 @@
-// SICRMQCR2HV.stan
+// SICR2HV.stan
 // Latent variable nonlinear SICR model with mitigation and release, q>0
 
 functions {
