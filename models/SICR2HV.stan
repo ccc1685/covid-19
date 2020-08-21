@@ -122,6 +122,7 @@ transformed data {
 
     real sigmaM = .05;
     real mbase = 2.;
+    int ncols = 3;
 }
 
 parameters {
@@ -198,23 +199,17 @@ transformed parameters{
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,2000);
 
      for (i in 1:n_total){
-        //car[i] = u[i,4]/u[i,3];
-        //ifr[i] = u[i,8]/u[i,3];
-        //betat = beta*transition(mbase,mlocation,mtransition,i)*(1-u[i,3]);
-        //sigmact = sigmac*transition(cbase,clocation,ctransition,i);
-        //Rt[i] = betat*(sigma+q*sigmact)/sigma/(sigmact+sigmau);
+
+        lambda[i,1] = sigmaCI*u[i,2]*n_pop;  //C: cases per day
+        lambda[i,2] = (sigmaRC*u[i,3] + sigmaRH1*u[i,6] + sigmaRH2*u[i,7] +sigmaRV*u[i,8])*n_pop; // new R per day
+        lambda[i,3] = (sigmaDC*u[i,3] + sigmaDH1*u[i,6] + sigmaDH2*u[i,7])*n_pop; //new D per day
+        lambda[i,4] = (sigmaH1C*u[i,3] + sigmaH1V*u[i,8])*n_pop; //new H1 per day
+        lambda[i,5] = sigmaH1V*u[i,8]*n_pop;                 //new H2 per day
+        //lambda[i,6] = sigmaDC*u[i,3] + sigmaDH1*u[i,6] + sigmaDH2*u[i,7] + sigma; //new V per day
+        frac_infectious[i] = u[i,2];
+        cumulativeV[i] = u[i,9]*n_pop;
         }
 
-     for (i in 1:n_total){
-        lambda[i,1] = sigmaCI*u[2]*n_pop;  //C: cases per day
-        lambda[i,2] = sigmaRC*U[3] + sigmaRH1*U[6] + sigmaRH2*U[7] +sigmaRV*U[8]; // new R per day
-        lambda[i,3] = sigmaDC*u[3] + sigmaDH1*u[6] + sigmaDH2*U[7] + sigma; //new D per day
-        lambda[i,4] = sigmaH1C*u[3] + sigmaH1V*U[8]; //new H1 per day
-        lambda[i,5] = sigmaH1V*U[8];                 //new H2 per day
-        //lambda[i,6] = sigmaDC*u[3] + sigmaDH1*u[6] + sigmaDH2*U[7] + sigma; //new V per day
-        frac_infectious[i] = u[i,2];
-        cumulativeV[i] = u[i,9];
-        }
     }
 }
 
@@ -227,7 +222,7 @@ model {
 
     sigmaVS ~ exponential(7.);
     sigmaSR ~ exponential(180.);
-    sigmaSR1 ~ exponential(180.);
+    sigmaSRI ~ exponential(180.);
     sigmaIV ~ exponential(100.);
     sigmaRI ~ exponential(14.);
     sigmaDI ~ exponential(30.);
