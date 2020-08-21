@@ -33,36 +33,36 @@ functions {
                      real f2 = theta[2];          // beta - sigma u
                      real sigmaVS = theta[3];
                      real sigmaSR = theta[4];
-                     real sigmaSR1 = theta[5];
+                     real sigmaSRI = theta[5];
                      real sigmaIV = theta[6];
                      real sigmaRI = theta[7];
                      real sigmaDI = theta[8];
                      real sigmaRC = theta[9];
-                     real sigmaRH1 = theta[10];
-                     real sigmaRH2 = theta[11];
-                     real sigmaRV = theta[12];
-                     real sigmaH1C = theta[13];
-                     real sigmaH1V = theta[14];
-                     real sigmaH2H1 = theta[15];
-                     real sigmaRH1 = theta[16];
-                     real sigmaDH1 = theta[17];
-
-                     real q = theta[18];
+                     real sigmaDC = theta[10];
+                     real sigmaRH1 = theta[11];
+                     real sigmaRH2 = theta[12];
+                     real sigmaDH2 = theta[13];
+                     real sigmaRV = theta[14];
+                     real sigmaH1C = theta[15];
+                     real sigmaH1V = theta[16];
+                     real sigmaH2H1 = theta[17];
+                     real sigmaDH1 = theta[18];
+                     real q = theta[19];
+                     real sigmaM = theta[20];
+                     real mbase = theta[21];
+/*
                      real mbase = theta[19];
                      real mlocation = theta[20];
-
                      real trelax = theta[23];
                      real cbase = theta[24];
                      real clocation = theta[25];
                      real ctransition = theta[26];
                      real mtransition = theta[27];
                      real minit;
-
-
+*/
 
                      real sigmaCI = f2/(1+f1);
                      real beta = f2 + sigmaRI + sigmaDI;
-
 
                      real S = u[1];  // susceptibles, latent
                      real I = u[2];  // infected, latent
@@ -75,8 +75,7 @@ functions {
                      real M = u[10]; // mitigation
                      real Cdot = sigmaCI*I - sigmaRC*C - sigmaDC*C - sigmaH1C*C;
 
-
-
+/*
                      trelax += mlocation;
                      sigmac *= transition(cbase,clocation,ctransition,t);  // case detection change
                      if (t < trelax) {
@@ -87,18 +86,18 @@ functions {
                         minit = transition(mbase,mlocation,mtransition,trelax);
                         beta *= relax(minit,t-trelax);   // relaxation from lockdown
                      }
-
-                     du_dt[1] = -beta*(I+q*C)*S*M -sigmaVS*S + sigmaSR*R + sigmaSR1*R1 ; //dS/dt
+*/
+                     du_dt[1] = -beta*(I+q*C)*S*M -sigmaVS*S + sigmaSR*R + sigmaSRI*RI ; //dS/dt
                      du_dt[2] = beta*(I+q*C)*S*M +sigmaIV*V - sigmaCI*I - sigmaRI*I - sigmaDI*I;     //dI/dt
-                     du_dt[3] = Cdot         //dC/dt
+                     du_dt[3] = Cdot;        //dC/dt
                      du_dt[4] = sigmaRC*C + sigmaRH1*H1 + sigmaRH2*H2 +sigmaRV*V - sigmaSR*R;     // dR/dt
-                     du_dt[5] = sigmaRI*I - sigmaSR1*R1;                               // dRI/dt
+                     du_dt[5] = sigmaRI*I - sigmaSRI*RI;                               // dRI/dt
                      du_dt[6] = sigmaH1C*C +sigmaH1V*V- sigmaH2H1*H1 - sigmaRH1*H1 - sigmaDH1*H1; // dH1/dt
                      du_dt[7] = sigmaH2H1*H1 - sigmaRH2*H2 - sigmaDH2*H2;             // dH2/dt
                      du_dt[8] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V;   // dV/dt
                      du_dt[9] = sigmaVS*S;                                              // cum V
                      du_dt[10] = Cdot -u[10]/14;     // 14 day moving average of change in C
-                     du_dt[11] = 1 - sigmaM*M - mbase*max([u[10],0])*M   // mitigation
+                     du_dt[11] = 1 - sigmaM*M - mbase*max([u[10],0])*M;  // mitigation
 
                      return du_dt;
 
@@ -129,32 +128,35 @@ parameters {
 
     real<lower=0> f1;             // initial infected to case ratio
     real<lower=0> f2;             // f2  beta - sigmaCI - sigmaDI
-
-    real<lower=0> sigmaSR
-    real<lower=0> sigmaIV
-    real<lower=0> sigmaRI
-    real<lower=0> sigmaDI
-    real<lower=0> sigmaRC
-    real<lower=0> sigmaRH1
-    real<lower=0> sigmaRH2
-    real<lower=0> sigmaRV
-    real<lower=0> sigmaH1C
-    real<lower=0> sigmaH1V
-    real<lower=0> sigmaH2H1
-    real<lower=0> sigmaRH1
-    real<lower=0> sigmaDH1
-
+    real<lower=0> sigmaVS;
+    real<lower=0> sigmaSR;
+    real<lower=0> sigmaSRI;
+    real<lower=0> sigmaIV;
+    real<lower=0> sigmaRI;
+    real<lower=0> sigmaDI;
+    real<lower=0> sigmaRC;
+    real<lower=0> sigmaDC;
+    real<lower=0> sigmaRH1;
+    real<lower=0> sigmaRH2;
+    real<lower=0> sigmaDH2;
+    real<lower=0> sigmaRV;
+    real<lower=0> sigmaH1C;
+    real<lower=0> sigmaH1V;
+    real<lower=0> sigmaH2H1;
+    real<lower=0> sigmaDH1;
     real<lower=0> q;              // infection factor for cases
-    real<lower=0> mbase;          // mitigation strength
-    real<lower=0> mlocation;      // day of mitigation application
-    real<lower=0> trelax;         // day of relaxation from mitigation
+    real<lower=1> n_pop;      // population size
+
+
+//    real<lower=0> mbase;          // mitigation strength
+//    real<lower=0> mlocation;      // day of mitigation application
+//    real<lower=0> trelax;         // day of relaxation from mitigation
 //    real<lower=0> extra_std;      // phi = 1/extra_std^2 in neg_binomial_2(mu,phi)
 //    real<lower=0> extra_std_R;      // phi = 1/extra_std^2 in neg_binomial_2(mu,phi)
 //    real<lower=0> extra_std_D;      // phi = 1/extra_std^2 in neg_binomial_2(mu,phi)
+//    real<lower=0> cbase;          // case detection factor
+//    real<lower=0> clocation;      // day of case change
 
-    real<lower=0> cbase;          // case detection factor
-    real<lower=0> clocation;      // day of case change
-    real<lower=1> n_pop;      // population size
 
 }
 
@@ -176,7 +178,7 @@ transformed parameters{
   //phi[3] = max([1/(extra_std_D^2),1e-10]); // likelihood over-dispersion of std for D
 
   {
-     real theta[17] = {f1,f2,sigmaVS,sigmaSR,sigmaSR1,sigmaIV,sigmaRI,sigmaDI,sigmaRC,sigmaRH1,sigmaRH2,sigmaRV,sigmaH1C,sigmaH1V,sigmaH2H1,sigmaRH1,sigmaDH1};
+     real theta[21] = {f1,f2,sigmaVS,sigmaSR,sigmaSRI,sigmaIV,sigmaRI,sigmaDI,sigmaRC,sigmaDC,sigmaRH1,sigmaRH2,sigmaDH2,sigmaRV,sigmaH1C,sigmaH1V,sigmaH2H1,sigmaDH1,q,sigmaM,mbase};
      real u[n_total, 11];   // solution from the ODE solver
      real cinit = y[1,1]/n_pop;
      real u_init[11];     // initial conditions for fractions
