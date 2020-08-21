@@ -174,13 +174,13 @@ transformed parameters{
      lambda[1,1] = max([(u[1,4]-u_init[4])*n_pop,0.01]); //C: cases per day
      lambda[1,2] = max([(u[1,7]-u_init[7])*n_pop,0.01]); //R: recovered per day
      lambda[1,3] = max([(u[1,8]-u_init[8])*n_pop,0.01]); //D: dead per day
-     frac_infected[1] = u[1,1];
+     frac_infected[1] = u[1,1]+u[1,2];
 
      for (i in 2:n_total){
         lambda[i,1] = max([(u[i,4]-u[i-1,4])*n_pop,0.01]); //C: cases per day
         lambda[i,2] = max([(u[i,7]-u[i-1,7])*n_pop,0.01]); //R: recovered per day
         lambda[i,3] = max([(u[i,8]-u[i-1,8])*n_pop,0.01]); //D: dead per day
-        frac_infected[i] = u[i,1];
+        frac_infected[i] = u[i,1]+u[i,2];
         }
     }
 }

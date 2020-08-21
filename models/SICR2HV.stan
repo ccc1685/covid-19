@@ -71,7 +71,10 @@ functions {
                      real RI = u[5]; // recovery compartment from I, latent
                      real H1 = u[6]; // hospital compartment 1, observed
                      real H2 = u[7]; // hosplital compartment 2, observed
-                     real V = u[8]
+                     real V = u[8];  // vaccinated
+                     real M = u[10]; // mitigation
+                     real Cdot = sigmaCI*I - sigmaRC*C - sigmaDC*C - sigmaH1C*C;
+
 
 
                      trelax += mlocation;
@@ -85,19 +88,19 @@ functions {
                         beta *= relax(minit,t-trelax);   // relaxation from lockdown
                      }
 
-                     du_dt[1] = -beta*(I+q*C)*S -sigmaVS*S + sigmaSR*R + sigmaSR1*R1 ; //dS/dt
-                     du_dt[2] = beta*(I+q*C)*S +sigmaIV*V - sigmaCI*I - sigmaRI*I - sigmaDI*I;     //dI/dt
-                     du_dt[3] = sigmaCI*I - sigmaRC*C - sigmaDC*C - sigmaH1C*C;          //dC/dt
+                     du_dt[1] = -beta*(I+q*C)*S*M -sigmaVS*S + sigmaSR*R + sigmaSR1*R1 ; //dS/dt
+                     du_dt[2] = beta*(I+q*C)*S*M +sigmaIV*V - sigmaCI*I - sigmaRI*I - sigmaDI*I;     //dI/dt
+                     du_dt[3] = Cdot         //dC/dt
                      du_dt[4] = sigmaRC*C + sigmaRH1*H1 + sigmaRH2*H2 +sigmaRV*V - sigmaSR*R;     // dR/dt
                      du_dt[5] = sigmaRI*I - sigmaSR1*R1;                               // dRI/dt
                      du_dt[6] = sigmaH1C*C +sigmaH1V*V- sigmaH2H1*H1 - sigmaRH1*H1 - sigmaDH1*H1; // dH1/dt
                      du_dt[7] = sigmaH2H1*H1 - sigmaRH2*H2 - sigmaDH2*H2;             // dH2/dt
                      du_dt[8] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V;   // dV/dt
                      du_dt[9] = sigmaVS*S;                                              // cum V
+                     du_dt[10] = Cdot -u[10]/14;     // 14 day moving average of change in C
+                     du_dt[11] = 1 - sigmaM*M - mbase*max([u[10],0])*M   // mitigation
 
                      return du_dt;
-
-
 
                    }
         }
@@ -117,12 +120,9 @@ transformed data {
     real x_r[0];
     int x_i[0];
     int n_difeq = 5;     // number of differential equations for yhat
-    real mtransition = 7.;
-    real ctransition = 21.;
-    //real q = 0.;
-    //real n_pop = 1000;
-    //real cbase = 1.;
-    //real clocation = 10.;
+
+    real sigmaM = .05;
+    real mbase = 2.;
 }
 
 parameters {
@@ -159,7 +159,7 @@ parameters {
 }
 
 transformed parameters{
-  real lambda[n_total,3];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
+  real lambda[n_total,5];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
   //real car[n_total];          //total cases / total infected
   //real ifr[n_total];          //total dead / total infected
   //real Rt[n_total];           // time dependent reproduction number
@@ -167,24 +167,19 @@ transformed parameters{
   real frac_infectious[n_total];
   real cumulativeV[n_total];
 
-  real u_init[9];     // initial conditions for fractions
-
   real sigmaCI = f2/(1+f1);
   real beta = f2 + sigmaRI + sigmaDI;
 
   //real R0 = beta*(sigma+q*sigmac)/sigma/(sigmac+sigmau);   // reproduction number
-
-
   //phi[1] = max([1/(extra_std^2),1e-10]); // likelihood over-dispersion of std for C
   //phi[2] = max([1/(extra_std_R^2),1e-10]); // likelihood over-dispersion of std for R
   //phi[3] = max([1/(extra_std_D^2),1e-10]); // likelihood over-dispersion of std for D
 
   {
-     real theta[15] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,sigmar1,sigmad1,trelax,cbase,clocation,ctransition,mtransition};
-
-     real u[n_total, 9];   // solution from the ODE solver
-
+     real theta[17] = {f1,f2,sigmaVS,sigmaSR,sigmaSR1,sigmaIV,sigmaRI,sigmaDI,sigmaRC,sigmaRH1,sigmaRH2,sigmaRV,sigmaH1C,sigmaH1V,sigmaH2H1,sigmaRH1,sigmaDH1};
+     real u[n_total, 11];   // solution from the ODE solver
      real cinit = y[1,1]/n_pop;
+     real u_init[11];     // initial conditions for fractions
 
      u_init[1] = 1;                 //S
      u_init[2] = f1*cinit;         // I, f1 * Cinit
@@ -195,6 +190,8 @@ transformed parameters{
      u_init[7] = 0;             // H2
      u_init[8] = 0;             // V
      u_init[9] = 0;             // cum V
+     u_init[10] = sigmaCI*f1*cinit - (sigmaRC + sigmaDC + sigmaH1C)*cinit;
+     u_init[11] = 1;
 
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,2000);
 
@@ -257,7 +254,7 @@ model {
 // Likelihood function
 
 for (i in 1:n_obs){
-  for (j in 1:5) {
+  for (j in 1:ncols) {
     if (y[i,j] > -1.)
       target += poisson_lpmf(y[i,j]|lambda[i,j]);
     }
@@ -268,15 +265,15 @@ for (i in 1:n_obs){
 // generated quantities
 
 generated quantities {
-    real llx[n_obs, 5];
+    real llx[n_obs, ncols];
     real ll_; // log-likelihood for model
     int n_data_pts;
-    real y_proj[n_total,5];
+    real y_proj[n_total,ncols];
 
     ll_ = 0;
     n_data_pts = 0;
     for (i in 1:n_obs) {
-        for (j in 1:5) {
+        for (j in 1:ncols) {
            if (y[i,j] > -1.){
                 llx[i, j] = poisson_lpmf(y[i,j]|lambda[i,j]);
                 n_data_pts += 1;
@@ -289,7 +286,7 @@ generated quantities {
     }
 
     for (i in 1:n_total) {
-        for (j in 1:5) {
+        for (j in 1:ncols) {
           if (lambda[i,j] < 1e8)
             y_proj[i,j] = poisson_rng(lambda[i,j]);
           else
