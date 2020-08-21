@@ -19,89 +19,92 @@ functions {
          }
 
 
-                // nonlinear SICR model with R delay ODE function
-                   real[] SICR(
-                   real t,             // time
-                   real[] u,           // system state {infected,cases,susceptible}
-                   real[] theta,       // parameters
-                   real[] x_r,
-                   int[] x_i
-                   )
-                   {
-                     real du_dt[9];
-                     real f1 = theta[1];          // beta - sigmau - sigmac
-                     real f2 = theta[2];          // beta - sigma u
-                     real sigmaVS = theta[3];
-                     real sigmaSR = theta[4];
-                     real sigmaSRI = theta[5];
-                     real sigmaIV = theta[6];
-                     real sigmaRI = theta[7];
-                     real sigmaDI = theta[8];
-                     real sigmaRC = theta[9];
-                     real sigmaDC = theta[10];
-                     real sigmaRH1 = theta[11];
-                     real sigmaRH2 = theta[12];
-                     real sigmaDH2 = theta[13];
-                     real sigmaRV = theta[14];
-                     real sigmaH1C = theta[15];
-                     real sigmaH1V = theta[16];
-                     real sigmaH2H1 = theta[17];
-                     real sigmaDH1 = theta[18];
-                     real q = theta[19];
-                     real sigmaM = theta[20];
-                     real mbase = theta[21];
+          // nonlinear SICR model with R delay ODE function
+             real[] SICR(
+             real t,             // time
+             real[] u,           // system state {infected,cases,susceptible}
+             real[] theta,       // parameters
+             real[] x_r,
+             int[] x_i
+             )
+             {
+               real du_dt[11];
+               real f1 = theta[1];          // beta - sigmau - sigmac
+               real f2 = theta[2];          // beta - sigma u
+               real sigmaVS = theta[3];
+               real sigmaSR = theta[4];
+               real sigmaSRI = theta[5];
+               real sigmaIV = theta[6];
+               real sigmaRI = theta[7];
+               real sigmaDI = theta[8];
+               real sigmaRC = theta[9];
+               real sigmaDC = theta[10];
+               real sigmaRH1 = theta[11];
+               real sigmaRH2 = theta[12];
+               real sigmaDH2 = theta[13];
+               real sigmaRV = theta[14];
+               real sigmaH1C = theta[15];
+               real sigmaH1V = theta[16];
+               real sigmaH2H1 = theta[17];
+               real sigmaDH1 = theta[18];
+               real q = theta[19];
+               real sigmaM = theta[20];
+               real mbase = theta[21];
 /*
-                     real mbase = theta[19];
-                     real mlocation = theta[20];
-                     real trelax = theta[23];
-                     real cbase = theta[24];
-                     real clocation = theta[25];
-                     real ctransition = theta[26];
-                     real mtransition = theta[27];
-                     real minit;
+               real mbase = theta[19];
+               real mlocation = theta[20];
+               real trelax = theta[23];
+               real cbase = theta[24];
+               real clocation = theta[25];
+               real ctransition = theta[26];
+               real mtransition = theta[27];
+               real minit;
 */
 
-                     real sigmaCI = f2/(1+f1);
-                     real beta = f2 + sigmaRI + sigmaDI;
 
-                     real S = u[1];  // susceptibles, latent
-                     real I = u[2];  // infected, latent
-                     real C = u[2];  // cases, observed
-                     real R = u[4];  // recovery compartment from C, observed
-                     real RI = u[5]; // recovery compartment from I, latent
-                     real H1 = u[6]; // hospital compartment 1, observed
-                     real H2 = u[7]; // hosplital compartment 2, observed
-                     real V = u[8];  // vaccinated
-                     real M = u[10]; // mitigation
-                     real Cdot = sigmaCI*I - sigmaRC*C - sigmaDC*C - sigmaH1C*C;
+               real S = u[1];  // susceptibles, latent
+               real I = u[2];  // infected, latent
+               real C = u[2];  // cases, observed
+               real R = u[4];  // recovery compartment from C, observed
+               real RI = u[5]; // recovery compartment from I, latent
+               real H1 = u[6]; // hospital compartment 1, observed
+               real H2 = u[7]; // hosplital compartment 2, observed
+               real V = u[8];  // vaccinated
+               real M = u[11]; // mitigation
+
+               real sigmaCI = f2/(1+f1);
+               real beta = (f2 + sigmaRI + sigmaDI)/M;
+               real Cdot = sigmaCI*I- sigmaRC*C - sigmaDC*C - sigmaH1C*C;
+
+
 
 /*
-                     trelax += mlocation;
-                     sigmac *= transition(cbase,clocation,ctransition,t);  // case detection change
-                     if (t < trelax) {
-                        //beta *= mitigation(mbase,mlocation,t);  // mitigation
-                        beta *= transition(mbase,mlocation,mtransition,t);  // mitigation
-                     }
-                     else {
-                        minit = transition(mbase,mlocation,mtransition,trelax);
-                        beta *= relax(minit,t-trelax);   // relaxation from lockdown
-                     }
+               trelax += mlocation;
+               sigmac *= transition(cbase,clocation,ctransition,t);  // case detection change
+               if (t < trelax) {
+                  //beta *= mitigation(mbase,mlocation,t);  // mitigation
+                  beta *= transition(mbase,mlocation,mtransition,t);  // mitigation
+               }
+               else {
+                  minit = transition(mbase,mlocation,mtransition,trelax);
+                  beta *= relax(minit,t-trelax);   // relaxation from lockdown
+               }
 */
-                     du_dt[1] = -beta*(I+q*C)*S*M -sigmaVS*S + sigmaSR*R + sigmaSRI*RI ; //dS/dt
-                     du_dt[2] = beta*(I+q*C)*S*M +sigmaIV*V - sigmaCI*I - sigmaRI*I - sigmaDI*I;     //dI/dt
-                     du_dt[3] = Cdot;        //dC/dt
-                     du_dt[4] = sigmaRC*C + sigmaRH1*H1 + sigmaRH2*H2 +sigmaRV*V - sigmaSR*R;     // dR/dt
-                     du_dt[5] = sigmaRI*I - sigmaSRI*RI;                               // dRI/dt
-                     du_dt[6] = sigmaH1C*C +sigmaH1V*V- sigmaH2H1*H1 - sigmaRH1*H1 - sigmaDH1*H1; // dH1/dt
-                     du_dt[7] = sigmaH2H1*H1 - sigmaRH2*H2 - sigmaDH2*H2;             // dH2/dt
-                     du_dt[8] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V;   // dV/dt
-                     du_dt[9] = sigmaVS*S;                                              // cum V
-                     du_dt[10] = Cdot -u[10]/14;     // 14 day moving average of change in C
-                     du_dt[11] = 1 - sigmaM*M - mbase*max([u[10],0])*M;  // mitigation
+               du_dt[1] = -beta*(I+q*C)*S*M - sigmaVS*S + sigmaSR*R + sigmaSRI*RI ; //dS/dt
+               du_dt[2] = beta*(I+q*C)*S*M + sigmaIV*V - sigmaCI*I - sigmaRI*I - sigmaDI*I;     //dI/dt
+               du_dt[3] = Cdot;        //dC/dt
+               du_dt[4] = sigmaRC*C + sigmaRH1*H1 + sigmaRH2*H2 + sigmaRV*V - sigmaSR*R;     // dR/dt
+               du_dt[5] = sigmaRI*I - sigmaSRI*RI;                               // dRI/dt
+               du_dt[6] = sigmaH1C*C +sigmaH1V*V- sigmaH2H1*H1 - sigmaRH1*H1 - sigmaDH1*H1; // dH1/dt
+               du_dt[7] = sigmaH2H1*H1 - sigmaRH2*H2 - sigmaDH2*H2;             // dH2/dt
+               du_dt[8] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V;   // dV/dt
+               du_dt[9] = sigmaVS*S;                                              // cum V
+               du_dt[10] = Cdot - u[10]/14;     // 14 day moving average of change in C
+               du_dt[11] = 1 - sigmaM*M - mbase*max([u[10],0])*M;  // mitigation
 
-                     return du_dt;
+               return du_dt;
 
-                   }
+             }
         }
 
 
@@ -118,17 +121,15 @@ data {
 transformed data {
     real x_r[0];
     int x_i[0];
-    int n_difeq = 5;     // number of differential equations for yhat
 
     real sigmaM = .05;
     real mbase = 2.;
-    int ncols = 3;
 }
 
 parameters {
 
     real<lower=0> f1;             // initial infected to case ratio
-    real<lower=0> f2;             // f2  beta - sigmaCI - sigmaDI
+    real<lower=0> f2;             // f2  M*beta - sigmaCI - sigmaDI
     real<lower=0> sigmaVS;
     real<lower=0> sigmaSR;
     real<lower=0> sigmaSRI;
@@ -193,10 +194,12 @@ transformed parameters{
      u_init[7] = 0;             // H2
      u_init[8] = 0;             // V
      u_init[9] = 0;             // cum V
-     u_init[10] = sigmaCI*f1*cinit - (sigmaRC + sigmaDC + sigmaH1C)*cinit;
+     u_init[10] = 0;
      u_init[11] = 1;
 
      u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,2000);
+
+     //print(u_init);
 
      for (i in 1:n_total){
 
@@ -205,7 +208,7 @@ transformed parameters{
         lambda[i,3] = (sigmaDC*u[i,3] + sigmaDH1*u[i,6] + sigmaDH2*u[i,7])*n_pop; //new D per day
         lambda[i,4] = (sigmaH1C*u[i,3] + sigmaH1V*u[i,8])*n_pop; //new H1 per day
         lambda[i,5] = sigmaH1V*u[i,8]*n_pop;                 //new H2 per day
-        //lambda[i,6] = sigmaDC*u[i,3] + sigmaDH1*u[i,6] + sigmaDH2*u[i,7] + sigma; //new V per day
+        //lambda[i,6] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V; //new V per day
         frac_infectious[i] = u[i,2];
         cumulativeV[i] = u[i,9]*n_pop;
         }
@@ -227,6 +230,7 @@ model {
     sigmaRI ~ exponential(14.);
     sigmaDI ~ exponential(30.);
     sigmaRC ~ exponential(14.);
+    sigmaDC ~ exponential(30.);
     sigmaRH1 ~ exponential(14.);
     sigmaRH2 ~ exponential(14.);
     sigmaRV ~ exponential(31.);
@@ -234,7 +238,8 @@ model {
     sigmaH1V ~ exponential(30.);
     sigmaH2H1 ~ exponential(7.);
     sigmaRH1 ~ exponential(14.);
-    sigmaDH1 ~ exponential(30.);
+    sigmaDH1 ~ exponential(7.);
+    sigmaDH2 ~ exponential(.5);
     q ~ exponential(2.);                   // q
     n_pop ~ normal(4e6,2e6);        // population
 
@@ -251,9 +256,9 @@ model {
 // Likelihood function
 
 for (i in 1:n_obs){
-  for (j in 1:ncols) {
+  for (j in 1:n_ostates) {
     if (y[i,j] > -1.)
-      target += poisson_lpmf(y[i,j]|lambda[i,j]);
+      target += poisson_lpmf(y[i,j]|max([lambda[i,j],.01]));
     }
 }
 
@@ -262,17 +267,18 @@ for (i in 1:n_obs){
 // generated quantities
 
 generated quantities {
-    real llx[n_obs, ncols];
+    real llx[n_obs, n_ostates];
     real ll_; // log-likelihood for model
     int n_data_pts;
-    real y_proj[n_total,ncols];
+    real y_proj[n_total,n_ostates];
+    print(n_ostates);
 
     ll_ = 0;
     n_data_pts = 0;
     for (i in 1:n_obs) {
-        for (j in 1:ncols) {
+        for (j in 1:n_ostates) {
            if (y[i,j] > -1.){
-                llx[i, j] = poisson_lpmf(y[i,j]|lambda[i,j]);
+                llx[i, j] = poisson_lpmf(y[i,j]|max([lambda[i,j],.01]));
                 n_data_pts += 1;
                 ll_ += llx[i, j];
                }
@@ -283,11 +289,12 @@ generated quantities {
     }
 
     for (i in 1:n_total) {
-        for (j in 1:ncols) {
+        for (j in 1:n_ostates) {
           if (lambda[i,j] < 1e8)
-            y_proj[i,j] = poisson_rng(lambda[i,j]);
+            y_proj[i,j] = poisson_rng(max([lambda[i,j],.01]));
           else
             y_proj[i,j] = poisson_rng(1e8);
         }
     }
+
 }
