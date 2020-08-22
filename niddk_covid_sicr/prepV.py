@@ -76,8 +76,8 @@ def get_init_funV(args, stan_data, force_fresh=False):
         result = {'f1': gamma(2., 1.),
                   'f2': gamma(100., 1/350.),
                   'sigmaVS': exponential(1/10.),
-                  'sigmaSR':  exponential(1/100.),
-                  'sigmaSRI':  exponential(1/100.),
+                  'sigmaSR':  exponential(1/400.),
+                  'sigmaSRI':  exponential(1/400.),
                   'sigmaIV':  exponential(1/100.),
                   'sigmaRI':  exponential(1/10.),
                   'sigmaDI':  exponential(1/30.),
@@ -92,8 +92,10 @@ def get_init_funV(args, stan_data, force_fresh=False):
                   'sigmaRH1':  exponential(1/10.),
                   'sigmaDH1':  exponential(1/10.),
                   'sigmaDH2':  exponential(1/10.),
+                  'sigmaM':  exponential(1/10.),
+                  'mbase':  exponential(1/10.),
                   'q': exponential(.1),
-                  'n_pop': normal(1e6, 1e4),
+                  'n_pop': normal(1e6, 1e4)
                           }
 
     def init_fun():

@@ -80,19 +80,21 @@ data {
 transformed data {
     real x_r[0];
     int x_i[0];
+    real sigmaVS = 0;
+    real sigmaIV = 0;
+    real sigmaH1V = 0;
 
-    real sigmaM = .05;
-    real mbase = 0.;
+
 }
 
 parameters {
 
     real<lower=0> f1;             // initial infected to case ratio
-    real<lower=0> f2;             // f2  M*beta - sigmaCI - sigmaDI
-    real<lower=0> sigmaVS;
+    real<lower=0> f2;             // f2  beta - sigmaCI - sigmaDI
+    //real<lower=0> sigmaVS;
     real<lower=0> sigmaSR;
     real<lower=0> sigmaSRI;
-    real<lower=0> sigmaIV;
+    //real<lower=0> sigmaIV;
     real<lower=0> sigmaRI;
     real<lower=0> sigmaDI;
     real<lower=0> sigmaRC;
@@ -102,9 +104,11 @@ parameters {
     real<lower=0> sigmaDH2;
     real<lower=0> sigmaRV;
     real<lower=0> sigmaH1C;
-    real<lower=0> sigmaH1V;
+    //real<lower=0> sigmaH1V;
     real<lower=0> sigmaH2H1;
     real<lower=0> sigmaDH1;
+    real<lower=0> sigmaM;
+    real<lower=0> mbase;
     real<lower=0> q;              // infection factor for cases
     real<lower=1> n_pop;      // population size
 
@@ -113,8 +117,8 @@ parameters {
 
 transformed parameters{
   real lambda[n_total,5];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
-  real frac_infectious[n_total];
-  real cumulativeV[n_total];
+  //real frac_infectious[n_total];
+  //real cumulativeV[n_total];
 
   real sigmaCI = f2/(1+f1);
   real beta = f2 + sigmaRI + sigmaDI;
@@ -150,8 +154,8 @@ transformed parameters{
         lambda[i,4] = (sigmaH1C*u[i,3] + sigmaH1V*u[i,8])*n_pop; //new H1 per day
         lambda[i,5] = sigmaH1V*u[i,8]*n_pop;                 //new H2 per day
         //lambda[i,6] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V; //new V per day
-        frac_infectious[i] = u[i,2];
-        cumulativeV[i] = u[i,9]*n_pop;
+        //frac_infectious[i] = u[i,2];
+        //cumulativeV[i] = u[i,9]*n_pop;
         }
 
     }
@@ -165,22 +169,24 @@ model {
     f2 ~ gamma(100.,350.);                 // f2  beta - sigmau
 
     sigmaVS ~ exponential(7.);
-    sigmaSR ~ exponential(180.);
-    sigmaSRI ~ exponential(180.);
+    sigmaSR ~ exponential(360.);
+    sigmaSRI ~ exponential(360.);
     sigmaIV ~ exponential(100.);
     sigmaRI ~ exponential(14.);
     sigmaDI ~ exponential(30.);
     sigmaRC ~ exponential(14.);
-    sigmaDC ~ exponential(30.);
+    sigmaDC ~ exponential(60.);
     sigmaRH1 ~ exponential(14.);
     sigmaRH2 ~ exponential(14.);
     sigmaRV ~ exponential(31.);
-    sigmaH1C ~ exponential(14.);
+    sigmaH1C ~ exponential(7.);
     sigmaH1V ~ exponential(30.);
-    sigmaH2H1 ~ exponential(7.);
+    sigmaH2H1 ~ exponential(14.);
     sigmaRH1 ~ exponential(14.);
-    sigmaDH1 ~ exponential(7.);
+    sigmaDH1 ~ exponential(30.);
     sigmaDH2 ~ exponential(.5);
+    sigmaM ~ exponential(1.);
+    mbase ~ exponential(10.);
     q ~ exponential(2.);                   // q
     n_pop ~ normal(4e6,2e6);        // population
 
