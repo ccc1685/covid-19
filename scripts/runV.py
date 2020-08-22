@@ -23,11 +23,11 @@ parser.add_argument('-fp', '--fits-path', default='./fits',
                     help='Path to directory to save fit files')
 parser.add_argument('-r', '--roi', default='US_NY',
                     help='ROI to use')
-parser.add_argument('-ch', '--n-chains', type=int, default=4,
+parser.add_argument('-ch', '--n-chains', type=int, default=1,
                     help='Number of chains to run')
-parser.add_argument('-wm', '--n-warmups', type=int, default=500,
+parser.add_argument('-wm', '--n-warmups', type=int, default=50,
                     help='Number of warmups')
-parser.add_argument('-it', '--n-iter', type=int, default=1000,
+parser.add_argument('-it', '--n-iter', type=int, default=100,
                     help='Number of iterations')
 parser.add_argument('-tn', '--n-thin', type=int, default=1,
                     help='thinning number')

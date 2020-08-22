@@ -34,7 +34,7 @@ def get_stan_dataV(full_data_path, args):
         print("Could not use mitigation prior data; setting mitigation prior to default.")
         tm = t0 + 10
 
-    n_proj = 0
+    n_proj = 60
     stan_data = {}
     stan_data['n_ostates'] = 5
     stan_data['tm'] = tm
@@ -73,8 +73,8 @@ def get_init_funV(args, stan_data, force_fresh=False):
             print("Using last sample from previous fit to initialize")
     else:
         print("Using default values to initialize fit")
-        result = {'f1': gamma(2., 1.),
-                  'f2': gamma(100., 1/350.),
+        result = {'f1': exponential(1.),
+                  'f2': exponential(1.),
                   'sigmaVS': exponential(1/10.),
                   'sigmaSR':  exponential(1/400.),
                   'sigmaSRI':  exponential(1/400.),

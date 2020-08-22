@@ -59,7 +59,7 @@ functions {
          du_dt[8] = sigmaVS*S - sigmaIV*V - sigmaRV*V - sigmaH1V*V;   // dV/dt
          du_dt[9] = sigmaVS*S;                                              // cum V
          du_dt[10] = Cdot - u[10]/14;     // 14 day moving average of change in C
-         du_dt[11] = 1 - sigmaM*M - mbase*max([u[10],0])*M;  // mitigation
+         du_dt[11] = sigmaM*(1 - M) - mbase*max([u[10],0])*M;  // mitigation
 
          return du_dt;
 
@@ -83,30 +83,35 @@ transformed data {
     real sigmaVS = 0;
     real sigmaIV = 0;
     real sigmaH1V = 0;
+    real sigmaRV = 0;
+    real sigmaSR = 0;
+    real sigmaSRI = 0;
 
 
 }
 
 parameters {
 
-    real<lower=0> f1;             // initial infected to case ratio
+    real<lower=0> f1;             //  sigmaCI = f2/(1+f1), initial infected to case ratio
     real<lower=0> f2;             // f2  beta - sigmaCI - sigmaDI
     //real<lower=0> sigmaVS;
-    real<lower=0> sigmaSR;
-    real<lower=0> sigmaSRI;
-    //real<lower=0> sigmaIV;
+    //real<lower=0> sigmaSR;
+    //real<lower=0> sigmaSRI;
+
     real<lower=0> sigmaRI;
     real<lower=0> sigmaDI;
     real<lower=0> sigmaRC;
     real<lower=0> sigmaDC;
+    real<lower=0> sigmaH1C;
     real<lower=0> sigmaRH1;
+    real<lower=0> sigmaDH1;
+    real<lower=0> sigmaH2H1;
     real<lower=0> sigmaRH2;
     real<lower=0> sigmaDH2;
-    real<lower=0> sigmaRV;
-    real<lower=0> sigmaH1C;
+    //real<lower=0> sigmaRV;
+    //real<lower=0> sigmaIV;
     //real<lower=0> sigmaH1V;
-    real<lower=0> sigmaH2H1;
-    real<lower=0> sigmaDH1;
+
     real<lower=0> sigmaM;
     real<lower=0> mbase;
     real<lower=0> q;              // infection factor for cases
@@ -116,12 +121,12 @@ parameters {
 }
 
 transformed parameters{
-  real lambda[n_total,5];     //neg_binomial_2 rate [new cases, new recovered, new deaths]
-  //real frac_infectious[n_total];
-  //real cumulativeV[n_total];
 
   real sigmaCI = f2/(1+f1);
   real beta = f2 + sigmaRI + sigmaDI;
+  real lambda[n_total,5];     // Poisson rate [new cases, new recovered, new deaths, new hosp, new ICU]
+  //real frac_infectious[n_total];
+  //real cumulativeV[n_total];
 
 
   {
@@ -152,8 +157,8 @@ transformed parameters{
         lambda[i,2] = (sigmaRC*u[i,3] + sigmaRH1*u[i,6] + sigmaRH2*u[i,7] +sigmaRV*u[i,8])*n_pop; // new R per day
         lambda[i,3] = (sigmaDC*u[i,3] + sigmaDH1*u[i,6] + sigmaDH2*u[i,7])*n_pop; //new D per day
         lambda[i,4] = (sigmaH1C*u[i,3] + sigmaH1V*u[i,8])*n_pop; //new H1 per day
-        lambda[i,5] = sigmaH1V*u[i,8]*n_pop;                 //new H2 per day
-        //lambda[i,6] = sigmaVS*S -sigmaIV*V - sigmaRV*V -sigmaH1V*V; //new V per day
+        lambda[i,5] = sigmaH2H1*u[i,6]*n_pop;                 //new H2 per day
+        //lambda[i,6] = sigmaVS*u[i,1]; //new V per day
         //frac_infectious[i] = u[i,2];
         //cumulativeV[i] = u[i,9]*n_pop;
         }
@@ -165,26 +170,25 @@ transformed parameters{
 model {
 //priors Stan convention:  exponential(rate), gamma(shape,rate), inversegamma(shape,rate)
 
-    f1 ~ gamma(2.,.1);                     // f1  initital infected to case ratio
-    f2 ~ gamma(100.,350.);                 // f2  beta - sigmau
+    f1 ~ gamma(2.,1.);                     // f1  initital infected to case ratio
+    f2 ~ exponential(4.);                 // f2  beta - sigmau
 
-    sigmaVS ~ exponential(7.);
-    sigmaSR ~ exponential(360.);
-    sigmaSRI ~ exponential(360.);
-    sigmaIV ~ exponential(100.);
+    //sigmaVS ~ exponential(7.);
+    //sigmaSR ~ exponential(360.);
+    //sigmaSRI ~ exponential(360.);
+    //sigmaIV ~ exponential(100.);
     sigmaRI ~ exponential(14.);
-    sigmaDI ~ exponential(30.);
+    sigmaDI ~ exponential(100.);
     sigmaRC ~ exponential(14.);
     sigmaDC ~ exponential(60.);
     sigmaRH1 ~ exponential(14.);
-    sigmaRH2 ~ exponential(14.);
-    sigmaRV ~ exponential(31.);
+    sigmaRH2 ~ exponential(31.);
+    //sigmaRV ~ exponential(31.);
     sigmaH1C ~ exponential(7.);
-    sigmaH1V ~ exponential(30.);
+    //sigmaH1V ~ exponential(30.);
     sigmaH2H1 ~ exponential(14.);
-    sigmaRH1 ~ exponential(14.);
-    sigmaDH1 ~ exponential(30.);
-    sigmaDH2 ~ exponential(.5);
+    sigmaDH1 ~ exponential(60.);
+    sigmaDH2 ~ exponential(7.);
     sigmaM ~ exponential(1.);
     mbase ~ exponential(10.);
     q ~ exponential(2.);                   // q
@@ -205,11 +209,11 @@ for (i in 1:n_obs){
 // generated quantities
 
 generated quantities {
-    real llx[n_obs, n_ostates];
-    real ll_; // log-likelihood for model
-    int n_data_pts;
+  //  real llx[n_obs, n_ostates];
+  //  real ll_; // log-likelihood for model
+  //  int n_data_pts;
     real y_proj[n_total,n_ostates];
-
+/*
     ll_ = 0;
     n_data_pts = 0;
     for (i in 1:n_obs) {
@@ -224,7 +228,7 @@ generated quantities {
                }
           }
     }
-
+*/
     for (i in 1:n_total) {
         for (j in 1:n_ostates) {
           if (lambda[i,j] < 1e8)
