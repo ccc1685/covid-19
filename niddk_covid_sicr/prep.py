@@ -34,7 +34,7 @@ def get_stan_data(full_data_path, args):
         print("Could not use mitigation prior data; setting mitigation prior to default.")
         tm = t0 + 10
 
-    n_proj = 0
+    n_proj = 120
     stan_data = {}
     stan_data['n_ostates'] = 3
     stan_data['tm'] = tm

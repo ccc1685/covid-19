@@ -95,6 +95,7 @@ transformed data {
     real x_r[0];
     int x_i[0];
     int n_difeq = 5;     // number of differential equations for yhat
+    int n_proj = n_total - n_obs;
     real mtransition = 7.;
     real ctransition = 21.;
     //real q = 0.;
@@ -198,14 +199,14 @@ model {
     sigmau ~ exponential(2.);              // sigmau
     q ~ exponential(2.);                   // q
     mbase ~ exponential(3.);               // mbase
-    mlocation ~ normal(tm,20.);     // mlocation
+    mlocation ~ normal(tm,7.);     // mlocation
     extra_std ~ exponential(1.);          // likelihood over dispersion std C
     extra_std_R ~ exponential(1.);          // likelihood over dispersion std R
     extra_std_D ~ exponential(1.);          // likelihood over dispersion std D
     cbase ~ exponential(.2);               // cbase
-    clocation ~ normal(120.,60.);    // clocation
+    clocation ~ normal(80,5.);    // clocation
     n_pop ~ normal(4e6,2e6);        // population
-    trelax ~ normal(70,30.);     // trelax
+    trelax ~ normal(60,7.);     // trelax
 
 
 //#include likelihood.stan
@@ -215,6 +216,8 @@ for (i in 1:n_obs){
   for (j in 1:3) {
     if (y[i,j] > -1.)
       target += neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi[j]);
+      target += exponential_lpdf(ifr[i] | 10.);   // regularization
+      target += gamma_lpdf(car[i] | 2.,10.);
     }
 }
 
