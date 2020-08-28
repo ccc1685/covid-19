@@ -217,7 +217,7 @@ for (i in 1:n_obs){
     if (y[i,j] > -1.)
       target += neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi[j]);
       target += exponential_lpdf(ifr[i] | 10.);   // regularization
-      target += gamma_lpdf(car[i] | 2.,10.);
+      target += gamma_lpdf(car[i] | 4.,10.);
     }
 }
 
