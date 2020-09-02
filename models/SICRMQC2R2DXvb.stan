@@ -19,67 +19,83 @@ functions {
          }
 
 
-                // nonlinear SICR model with R delay ODE function
-                   real[] SICR(
-                   real t,             // time
-                   real[] u,           // system state {infected,cases,susceptible}
-                   real[] theta,       // parameters
-                   real[] x_r,
-                   int[] x_i
-                   )
-                   {
-                     real du_dt[8];
-                     real f1 = theta[1];          // beta - sigmau - sigmac
-                     real f2 = theta[2];          // beta - sigma u
-                     real sigmar = theta[3];
-                     real sigmad =  theta[4];
-                     real sigmau = theta[5];
-                     real q = theta[6];
-                     real mbase = theta[7];
-                     real mlocation = theta[8];
-                     real sigmar1 = theta[9];
-                     real sigmad1 = theta[10];
-                     real trelax = theta[11];
-                     real cbase = theta[12];
-                     real clocation = theta[13];
-                     real ctransition = theta[14];
-                     real mtransition = theta[15];
-                     real minit;
+        // nonlinear SICR model with R delay ODE function
+           real[] SICR(
+           real t,             // time
+           real[] u,           // system state {infected,cases,susceptible}
+           real[] theta)
+           //,       // parameters
+           //real[] x_r,
+           //int[] x_i
+           //)
+           {
+             real du_dt[8];
+             real f1 = theta[1];          // beta - sigmau - sigmac
+             real f2 = theta[2];          // beta - sigma u
+             real sigmar = theta[3];
+             real sigmad =  theta[4];
+             real sigmau = theta[5];
+             real q = theta[6];
+             real mbase = theta[7];
+             real mlocation = theta[8];
+             real sigmar1 = theta[9];
+             real sigmad1 = theta[10];
+             real trelax = theta[11];
+             real cbase = theta[12];
+             real clocation = theta[13];
+             real ctransition = theta[14];
+             real mtransition = theta[15];
+             real minit;
 
-                     real sigmac = f2/(1+f1);
-                     real beta = f2 + sigmau;
-                     real sigma = sigmar + sigmad;
+             real sigmac = f2/(1+f1);
+             real beta = f2 + sigmau;
+             real sigma = sigmar + sigmad;
 
-                     real I = u[1];  // infected, latent
-                     real C = u[2];  // cases, observed
-                     real Z = u[3];  // total infected
-                     real R1 = u[5]; // recovery compartment 1
-                     real D1 = u[6]; // death compartment 1
+             real I = u[1];  // infected, latent
+             real C = u[2];  // cases, observed
+             real Z = u[3];  // total infected
+             real R1 = u[5]; // recovery compartment 1
+             real D1 = u[6]; // death compartment 1
 
-                     trelax += mlocation;
-                     sigmac *= transition(cbase,clocation,ctransition,t);  // case detection change
-                     if (t < trelax) {
-                        //beta *= mitigation(mbase,mlocation,t);  // mitigation
-                        beta *= transition(mbase,mlocation,mtransition,t);  // mitigation
-                     }
-                     else {
-                        minit = transition(mbase,mlocation,mtransition,trelax);
-                        beta *= relax(minit,t-trelax);   // relaxation from lockdown
-                     }
+             trelax += mlocation;
+             sigmac *= transition(cbase,clocation,ctransition,t);  // case detection change
+             if (t < trelax) {
+                //beta *= mitigation(mbase,mlocation,t);  // mitigation
+                beta *= transition(mbase,mlocation,mtransition,t);  // mitigation
+             }
+             else {
+                minit = transition(mbase,mlocation,mtransition,trelax);
+                beta *= relax(minit,t-trelax);   // relaxation from lockdown
+             }
 
-                     du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; //I
-                     du_dt[2] = sigmac*I - sigma*C;                            //C
-                     du_dt[3] = beta*(I+q*C)*(1-Z);                       //N_I
-                     du_dt[4] = sigmac*I;                    // N_C case appearance rate
-                     du_dt[5] = sigmar*C - sigmar1*R1;       // recovery compartment 1
-                     du_dt[6] = sigmad*C - sigmad1*D1;       // death compartment 1
-                     du_dt[7] = sigmar1*R1;                  // total case recoveries
-                     du_dt[8] = sigmad1*D1;                  // total case deaths
+             du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; //I
+             du_dt[2] = sigmac*I - sigma*C;                            //C
+             du_dt[3] = beta*(I+q*C)*(1-Z);                       //N_I
+             du_dt[4] = sigmac*I;                    // N_C case appearance rate
+             du_dt[5] = sigmar*C - sigmar1*R1;       // recovery compartment 1
+             du_dt[6] = sigmad*C - sigmad1*D1;       // death compartment 1
+             du_dt[7] = sigmar1*R1;                  // total case recoveries
+             du_dt[8] = sigmad1*D1;                  // total case deaths
 
-                     return du_dt;
-                   }
+             return du_dt;
+           }
+
+
+        real[,] integrate_euler(real[] u_init, int total, real[] theta){
+
+          real u[total,8];
+          real up[8];
+
+          u[1,:] = u_init;
+          for (t in 1:total-1) {
+            up = SICR((t-1)*1., u[t,:], theta);
+            for (j in 1:8)
+              u[t+1,j] = u[t,j] + up[j];
+          }
+          return u;
         }
 
+      }
 
 data {
       int<lower=1> n_obs;       // number of days observed
@@ -162,7 +178,8 @@ transformed parameters{
      u_init[7] = 0;             // total R
      u_init[8] = 0;             // total D
 
-     u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-3,1e-5,2000);
+     //u = integrate_ode_rk45(SICR, u_init, ts[1]-1, ts, theta, x_r, x_i,1e-2,1e-2,20000);
+    u = integrate_euler(u_init, n_total, theta);
 
      for (i in 1:n_total){
         car[i] = u[i,4]/u[i,3];
@@ -209,15 +226,14 @@ model {
     trelax ~ normal(60,7.);     // trelax
 
 
-//#include likelihood.stan
 // Likelihood function
 
 for (i in 1:n_obs){
   for (j in 1:3) {
     if (y[i,j] > -1.)
       target += neg_binomial_2_lpmf(y[i,j]|lambda[i,j],phi[j]);
-      target += exponential_lpdf(ifr[i] | 10.);   // regularization
-      target += gamma_lpdf(car[i] | 4.,10.);
+      //target += exponential_lpdf(ifr[i] | 10.);   // regularization
+      //target += gamma_lpdf(car[i] | 4.,10.);
     }
 }
 

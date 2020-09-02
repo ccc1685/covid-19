@@ -87,7 +87,6 @@ transformed data {
     real sigmaSR = 0;
     real sigmaSRI = 0;
 
-
 }
 
 parameters {
@@ -170,29 +169,29 @@ transformed parameters{
 model {
 //priors Stan convention:  exponential(rate), gamma(shape,rate), inversegamma(shape,rate)
 
-    f1 ~ gamma(2.,1.);                     // f1  initital infected to case ratio
-    f2 ~ exponential(4.);                 // f2  beta - sigmau
+    f1 ~ normal(1.75,.1);                     // f1  initital infected to case ratio
+    f2 ~ normal(.25,.1);                 // f2  beta - sigmau
 
     //sigmaVS ~ exponential(7.);
     //sigmaSR ~ exponential(360.);
     //sigmaSRI ~ exponential(360.);
     //sigmaIV ~ exponential(100.);
-    sigmaRI ~ exponential(14.);
-    sigmaDI ~ exponential(100.);
-    sigmaRC ~ exponential(14.);
-    sigmaDC ~ exponential(60.);
-    sigmaRH1 ~ exponential(14.);
-    sigmaRH2 ~ exponential(31.);
-    //sigmaRV ~ exponential(31.);
-    sigmaH1C ~ exponential(7.);
-    //sigmaH1V ~ exponential(30.);
-    sigmaH2H1 ~ exponential(14.);
-    sigmaDH1 ~ exponential(60.);
-    sigmaDH2 ~ exponential(7.);
+    sigmaRI ~ normal(.01,.003);
+    sigmaDI ~ normal(.03,.01);
+    sigmaRC ~ normal(.08,.03);
+    sigmaDC ~ normal(.003,.001);
+    sigmaRH1 ~ normal(1.,.3);
+    sigmaRH2 ~ normal(.1,.03);
+    //sigmaRV ~ normal(31.);
+    sigmaH1C ~ normal(.01,.003);
+    //sigmaH1V ~ normal(30.);
+    sigmaH2H1 ~ normal(.4,.1);
+    sigmaDH1 ~ normal(.003,.001);
+    sigmaDH2 ~ normal(.001,.0003);
     sigmaM ~ exponential(1.);
-    mbase ~ exponential(10.);
+    mbase ~ exponential(1.);
     q ~ exponential(2.);                   // q
-    n_pop ~ normal(4e6,2e6);        // population
+    n_pop ~ normal(4e6,1e6);        // population
 
 
 // Likelihood function

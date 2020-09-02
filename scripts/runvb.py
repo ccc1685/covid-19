@@ -63,14 +63,14 @@ csv = Path(args.data_path) / ("covidtimeseries_%s.csv" % args.roi)
 csv = csv.resolve()
 assert csv.exists(), "No such csv file: %s" % csv
 
-stan_data, t0 = ncs.get_stan_dataV(csv, args)
+stan_data, t0 = ncs.get_stan_data(csv, args)
 if stan_data is None:
     print("No data for %s; skipping fit." % args.roi)
     sys.exit(0)
 if args.n_data_only:
     print(ncs.get_n_data(stan_data))
     sys.exit(0)
-init_fun = ncs.get_init_funV(args, stan_data)
+init_fun = ncs.get_init_fun(args, stan_data)
 
 model_path = Path(args.models_path) / ('%s.stan' % args.model_name)
 model_path = model_path.resolve()
@@ -82,12 +82,12 @@ stanrunmodel = ncs.load_or_compile_stan_model(args.model_name,
                                               force_recompile=args.force_recompile)
 
 # Fit Stan
-fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control,
-                            chains=args.n_chains,
-                            chain_id=np.arange(args.n_chains),
-                            warmup=args.n_warmups, iter=args.n_iter,
-                            thin=args.n_thin)
-# fit = stanrunmodel.vb(data=stan_data)
+# fit = stanrunmodel.sampling(data=stan_data, init=init_fun, control=control,
+#                             chains=args.n_chains,
+#                             chain_id=np.arange(args.n_chains),
+#                             warmup=args.n_warmups, iter=args.n_iter,
+#                             thin=args.n_thin)
+fit = stanrunmodel.vb(data=stan_data,init=init_fun)
 
 # Uncomment to print fit summary
 print(fit)
