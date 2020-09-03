@@ -24,7 +24,7 @@ for modelname in models
     iter = "-it=10000"
     warm = "-wm=6000"
     format = "-f=1"
-    fitpath = "-fp='/data/carsonc/covid-19/fitUS06-27-20V/'"
+    fitpath = "-fp='/data/carsonc/covid-19/fitUS06-27-20-2HV/'"
     modelpath = "-mp='/home/carsonc/covid-sicr/models/'"
     # datapath = "-dp='/home/carsonc/covid-sicr/data/'"
     datapath = "-dp='/home/carsonc/VaxBRAModelEPI/USStates/'"
