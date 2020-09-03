@@ -31,6 +31,7 @@ for modelname in models
     ad = "-ad=.85"
     ft = "-ft=1"
     ld = "-ld='06/27/20'"
+    ch = "-ch=4"
     runfile = "&& python /home/carsonc/covid-sicr/scripts/runV.py"
 
 
@@ -44,7 +45,7 @@ for modelname in models
         regionarg = "-r='" * region * "'"
         writedlm(f,["source /data/carsonc/conda/etc/profile.d/conda.sh \\" ])
         writedlm(f,[ "&& conda activate covid-19 \\" ])
-        writedlm(f,[ runfile modelname regionarg modelpath datapath fitpath iter warm format ad ft ld])
+        writedlm(f,[ runfile modelname regionarg modelpath datapath fitpath iter warm ch format ad ft ld])
         # writedlm(f,[ "/data/carsonc/conda/envs/covid-19/bin/python run.py" modelname region fitpath iter warm format ])
     end
 
