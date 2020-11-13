@@ -8,7 +8,7 @@ import sys
 import niddk_covid_sicr as ncs
 
 
-def get_stan_data(full_data_path, args):
+def get_stan_dataV(full_data_path, args):
     df = pd.read_csv(full_data_path)
     if getattr(args, 'last_date', None):
         try:
@@ -36,10 +36,10 @@ def get_stan_data(full_data_path, args):
 
     n_proj = 120
     stan_data = {}
-    stan_data['n_ostates'] = 3
+    stan_data['n_ostates'] = 5
     stan_data['tm'] = tm
     stan_data['ts'] = np.arange(t0, len(df['dates2']) + n_proj)
-    stan_data['y'] = df[['new_cases', 'new_recover', 'new_deaths']].to_numpy()\
+    stan_data['y'] = df[['new_cases', 'new_recover', 'new_deaths', 'new_hosp', 'new_icu']].to_numpy()\
         .astype(int)[t0:, :]
     stan_data['n_obs'] = len(df['dates2']) - t0
     stan_data['n_total'] = len(df['dates2']) - t0 + n_proj
@@ -60,7 +60,7 @@ def get_n_data(stan_data):
 
 
 # functions used to initialize parameters
-def get_init_fun(args, stan_data, force_fresh=False):
+def get_init_funV(args, stan_data, force_fresh=False):
     if args.init and not force_fresh:
         try:
             init_path = Path(args.fits_path) / args.init
@@ -73,28 +73,54 @@ def get_init_fun(args, stan_data, force_fresh=False):
             print("Using last sample from previous fit to initialize")
     else:
         print("Using default values to initialize fit")
-        result = {'f1': gamma(2., 10.),
-                  'f2': gamma(40., 1/100.),
-                  'sigmar': gamma(20, 1/120.),
-                  'sigmad': gamma(20, 1/120),
-                  'sigmau': gamma(2., 1/20.),
-                  'q': exponential(.1),
-                  'mbase': gamma(2., .1/2.),
-                  # 'mlocation': lognormal(np.log(stan_data['tm']), 1.),
-                  'mlocation': normal(stan_data['tm'], 4.),
-                  'extra_std': exponential(.5),
-                  'extra_std_R': exponential(.5),
-                  'extra_std_D': exponential(.5),
-                  'cbase': gamma(1., 1.),
-                  # 'clocation': lognormal(np.log(20.), 1.),
-                  'clocation': normal(50., 1.),
-                  'ctransition': normal(10., 1.),
-                  # 'n_pop': lognormal(np.log(1e5), 1.),
-                  'n_pop': normal(1e6, 1e4),
-                  'sigmar1': gamma(2., .01),
-                  'sigmad1': gamma(2., .01),
-                  'trelax': normal(50.,5.)
-                  }
+
+        result = {'f1': 1.75,
+                  'f2': .25,
+                  'sigmaVS': exponential(1/10.),
+                  'sigmaSR':  exponential(1/400.),
+                  'sigmaSRI':  exponential(1/400.),
+                  'sigmaIV':  exponential(1/100.),
+                  'sigmaRI':  .01,
+                  'sigmaDI':  .03,
+                  'sigmaRC':  .08,
+                  'sigmaDC':  .003,
+                  'sigmaRH1':  1.,
+                  'sigmaRH2':  .1,
+                  'sigmaRV':  exponential(1/10.),
+                  'sigmaH1C':  .01,
+                  'sigmaH1V':  exponential(1/10.),
+                  'sigmaH2H1':  .4,
+                  'sigmaDH1':  .003,
+                  'sigmaDH2':  .001,
+                  'sigmaM':  exponential(1/10.),
+                  'mbase':  exponential(1/10.),
+                  'q': exponential(.5),
+                  'n_pop': normal(4e6, 1e4)
+                          }
+        # result = {'f1': exponential(1.),
+        #           'f2': exponential(1.),
+        #           'sigmaVS': exponential(1/10.),
+        #           'sigmaSR':  exponential(1/400.),
+        #           'sigmaSRI':  exponential(1/400.),
+        #           'sigmaIV':  exponential(1/100.),
+        #           'sigmaRI':  exponential(1/10.),
+        #           'sigmaDI':  exponential(1/30.),
+        #           'sigmaRC':  exponential(1/10.),
+        #           'sigmaDC':  exponential(1/10.),
+        #           'sigmaRH1':  exponential(1/10.),
+        #           'sigmaRH2':  exponential(1/10.),
+        #           'sigmaRV':  exponential(1/10.),
+        #           'sigmaH1C':  exponential(1/10.),
+        #           'sigmaH1V':  exponential(1/10.),
+        #           'sigmaH2H1':  exponential(1/10.),
+        #           'sigmaRH1':  exponential(1/10.),
+        #           'sigmaDH1':  exponential(1/10.),
+        #           'sigmaDH2':  exponential(1/10.),
+        #           'sigmaM':  exponential(1/10.),
+        #           'mbase':  exponential(1/10.),
+        #           'q': exponential(.1),
+        #           'n_pop': normal(1e6, 1e4)
+        #                   }
 
     def init_fun():
         return result

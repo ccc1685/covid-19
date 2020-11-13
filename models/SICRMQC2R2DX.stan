@@ -66,9 +66,9 @@ functions {
                         beta *= relax(minit,t-trelax);   // relaxation from lockdown
                      }
 
-                     du_dt[1] = beta*(I+q*(C+R1))*(1-Z) - sigmac*I - sigmau*I; //I
+                     du_dt[1] = beta*(I+q*C)*(1-Z) - sigmac*I - sigmau*I; //I
                      du_dt[2] = sigmac*I - sigma*C;                            //C
-                     du_dt[3] = beta*(I+q*(C+R1))*(1-Z);                       //N_I
+                     du_dt[3] = beta*(I+q*C)*(1-Z);                       //N_I
                      du_dt[4] = sigmac*I;                    // N_C case appearance rate
                      du_dt[5] = sigmar*C - sigmar1*R1;       // recovery compartment 1
                      du_dt[6] = sigmad*C - sigmad1*D1;       // death compartment 1

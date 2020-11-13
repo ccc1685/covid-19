@@ -7,6 +7,7 @@ from itertools import repeat
 import pandas as pd
 from pathlib import Path
 from p_tqdm import p_map
+from pathos.helpers import cpu_count
 import warnings
 warnings.simplefilter("ignore")
 
@@ -40,6 +41,9 @@ parser.add_argument('-ql', '--quantiles',
 parser.add_argument('-r', '--rois', default=[], nargs='+',
                     help=('Which rois to include in the table '
                           '(default is all of them)'))
+parser.add_argument('-mj', '--max-jobs', type=int, default=0,
+                    help=('How many jobs (regions) to extract data for '
+                          'simultaneously'))
 parser.add_argument('-a', '--append', type=int, default=0,
                     help='Append to old tables instead of overwriting them')
 parser.add_argument('-ft', '--fixed-t', type=int, default=0,
@@ -51,6 +55,10 @@ parser.add_argument('-ao', '--average-only', type=int, default=0,
                           'exist, skip creating them and instead make only '
                           'the concatenated (raw) and reweighted tables'))
 args = parser.parse_args()
+
+# Max jobs
+if not args.max_jobs:
+    args.max_jobs = cpu_count()
 
 # If no model_names are provided, use all of them
 if not args.model_names:
@@ -110,7 +118,7 @@ tables_path = Path(args.tables_path)
 tables_path.mkdir(exist_ok=True)
 
 if not args.average_only:
-    result = p_map(roi_df, repeat(args), *combos)
+    result = p_map(roi_df, repeat(args), *combos, num_cpus=args.max_jobs)
 
 dfs = []
 for model_name in args.model_names:
@@ -160,8 +168,7 @@ df.to_csv(out)
 n_data_path = Path(args.data_path) / ('n_data.csv')
 if n_data_path.resolve().is_file():
     extra = pd.read_csv(n_data_path).set_index('roi')
-    extra['t0'] = extra['t0'].astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
-
+    extra['t0'] = extra['t0'].fillna('2020-01-23').astype('datetime64').apply(lambda x: x.dayofyear).astype(int)
     # Model-averaged table
     ncs.reweighted_stats(out, extra=extra, dates=args.dates)
 else:
