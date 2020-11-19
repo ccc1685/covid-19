@@ -180,7 +180,7 @@ transformed parameters{
   //phi[3] = max([1/(extra_std_D^2),1e-10]); // likelihood over-dispersion of std for D
 
   {
-     real theta[15] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,sigmar1,sigmad1,trelax,cbase,clocation,ctransition,mtransition};
+     real theta[20] = {f1,f2,sigmar,sigmad,sigmau,q,mbase,mlocation,sigmar1,sigmad1,trelax,cbase,clocation,ctransition,mtransition};
 
      real u[n_total, 9];   // solution from the ODE solver
 

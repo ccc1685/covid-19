@@ -207,7 +207,7 @@ transformed parameters{
 model {
 //priors Stan convention:  gamma(shape,rate), inversegamma(shape,rate)
 
-    f1 ~ gamma(4.,.2);                     // f1  initital infected to case ratio
+    f1 ~ gamma(4.,.4);                     // f1  initital infected to case ratio
     f2 ~ gamma(100.,350.);                 // f2  beta - sigmau
     sigmar ~ gamma(10.,3.);              // sigmar
     sigmad ~ gamma(10.,3.);              // sigmad
