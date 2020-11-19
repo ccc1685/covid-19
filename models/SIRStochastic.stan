@@ -19,6 +19,8 @@ transformed data {
 parameters {
 
 real<lower=0> beta;             // infection rate
+real<lower=0> sigmau;             // uninfected rate
+real<lower=0> sigmac;             // case rate
 real<lower=0> sigmar;             // recovery rate
 real<lower=0> sigmad;                  // death rate
 
@@ -26,28 +28,36 @@ real<lower=0> sigmad;                  // death rate
 
 transformed parameters {
 
-
 }
 
 model {
 
-  beta ~ exponential(1.);
-  sigmac ~ exponential(1.);
-  sigmad ~ exponential(5.);
+  target += exponential_lpdf(beta | 1.);
+  target += exponential_lpdf(sigmar | 1.);
+  target += exponential_lpdf(sigmad | 5.);
 
   {
+    real dI;
+    real I;
+    real S;
+    real C;
+    S = N;
+    C = y[1,1];
+    I = C*100;
 
-  real<lower=0> dI;
-  real<lower=0> I;
-  real<lower=0> S;
-
-  S = N;
-  I = 1;
     for (i in 1:n_obs){
       dI = beta*S*I/N;
-      I +=  dI - y[2,i] - y[3,i];
       S -=  dI;
-      target += Poisson_lpdf(y[2,i] | sigmar*I) + poisson_ldf(y[3,i] | sigmad*I);
+      I += beta*S*I/N - sigmac*I - sigmau*I;
+      C += sigmac*I - sigmar*C - sigmad*C;
+
+  
+      print(I)
+      print(C)
+
+      target += poisson_lpmf(y[i,1] | max([sigmac*I,.0001]));
+      target += poisson_lpmf(y[i,2] | max([sigmar*C,.0001]));
+      target += poisson_lpmf(y[i,3] | max([sigmad*C,.0001]));
     }
 }
 
