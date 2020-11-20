@@ -1,5 +1,6 @@
 from datetime import datetime
 import numpy as np
+import math
 from numpy.random import gamma, exponential, lognormal,normal
 import pandas as pd
 from pathlib import Path
@@ -42,6 +43,7 @@ def get_stan_data(full_data_path, args):
     stan_data['y'] = df[['new_cases', 'new_recover', 'new_deaths']].to_numpy()\
         .astype(int)[t0:, :]
     stan_data['n_obs'] = len(df['dates2']) - t0
+    stan_data['n_weeks'] = math.floor(len(df['dates2']) - t0)
     stan_data['n_total'] = len(df['dates2']) - t0 + n_proj
     if args.fixed_t:
         global_start = datetime.strptime('01/22/20', '%m/%d/%y')
