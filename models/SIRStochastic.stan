@@ -13,6 +13,7 @@ data {
 
 transformed data {
   int N = 100000;
+
 }
 
 
@@ -50,10 +51,6 @@ model {
       S -=  dI;
       I += beta*S*I/N - sigmac*I - sigmau*I;
       C += sigmac*I - sigmar*C - sigmad*C;
-
-  
-      print(I)
-      print(C)
 
       target += poisson_lpmf(y[i,1] | max([sigmac*I,.0001]));
       target += poisson_lpmf(y[i,2] | max([sigmar*C,.0001]));
