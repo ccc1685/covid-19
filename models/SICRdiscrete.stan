@@ -30,40 +30,60 @@ parameters {
 real<lower=0> beta[n_weeks];             // infection rate
 //real<lower=0> lambda[n_weeks];  // infection rate
 real<lower=0> sigmau;             // uninfected rate
-real<lower=0> sigmac;             // case rate
+real<lower=0> sigmac0;             // case rate
+real<lower=0> sigmac1;             // case rate
+real<lower=0> sigmac2;
+//real<lower=0> sigmac2;             // case rate
 real<lower=0> sigmar;             // recovery rate
-real<lower=0> sigmad;             // death rate
+real<lower=0> sigmad0;             // death rate
+real<lower=0> sigmad1;
+real<lower=0> sigmad2;
 real<lower=0> alpha;
 }
 
 transformed parameters {
-  real I;
-  real C;
+
   real dI[n_weeks];
   real dC[n_weeks];
   real dR[n_weeks];
   real dD[n_weeks];
+  real sigmac[n_weeks];
+  real sigmad[n_weeks];
+{
+  real C;
+  real I;
+  real Cd[n_weeks];
 
   C = 0;
   I = 0;
   for (i in 1:n_weeks){
+    sigmac[i] = sigmac0 + sigmac1*i^2/(1+sigmac2*i^2);
+    sigmad[i] = sigmad0+ sigmad1/(1 + sigmad2*i^2);
     I += alpha;
-    I *= exp(beta[i] - sigmac - sigmau);
-    dC[i] = sigmac*I;
+    I *= exp(beta[i] - sigmac[i] - sigmau);
+    dC[i] = sigmac[i]*I;
     C += dC[i];
-    C *= exp(-(sigmar+sigmad));
+    C *= exp(-(sigmar+sigmad[i]));
+    Cd[i] = C;
     dI[i] = (exp(beta[i])-1)*I + alpha;
     dR[i] = sigmar*C;
-    dD[i] = sigmad*C;
+    if (i > 2)
+      dD[i] = sigmad[i]*Cd[i-2];
+    else
+      dD[i] = sigmad[i]*C;
+  }
   }
 }
 
 model {
-  sigmac ~ exponential(2.);
-  //sigmac0 ~ exponential(4.);
+  sigmac0 ~ exponential(.25);
+  sigmac1 ~ exponential(.25);
+  sigmac2 ~ normal(15.,1.);
   sigmau ~ exponential(5.);
   sigmar ~ exponential(4.);
-  sigmad ~ exponential(8.);
+  sigmad0 ~ exponential(1.);
+  sigmac1 ~ exponential(1.);
+  sigmac2 ~ normal(15.,1.);
   alpha ~ exponential(10.);
 
     for (i in 1:n_weeks){
@@ -74,8 +94,8 @@ model {
       target += poisson_lpmf(y_wk[i,3] | dD[i]);
     }
     for (i in 2:n_weeks-1){
-      target += normal_lpdf(beta[i+1]-beta[i] | 0, .05);
-      target += normal_lpdf(beta[i+1]-2*beta[i]+beta[i-1] | 0, .5);
+      target += normal_lpdf(beta[i+1]-beta[i] | 0, .02);
+      target += normal_lpdf(beta[i+1]-2*beta[i]+beta[i-1] | 0, .3);
     }
 }
 
@@ -87,6 +107,8 @@ generated quantities {
     real ifr[n_weeks];
     real Rt[n_weeks];
     int y_proj[n_weeks*7,n_ostates];
+
+    {
     real C_cum;
     real I_cum;
     real D_cum;
@@ -101,11 +123,12 @@ generated quantities {
       D_cum += dD[i];
       car[i] = C_cum/I_cum;
       ifr[i] = D_cum/I_cum;
-      Rt[i] = beta[i]/sigmac;
+      Rt[i] = beta[i]/sigmac[i];
       for (j in 1:7){
         y_proj[7*(i-1) + j,1] = poisson_rng(min([dC[i]/7,1e8]));
         y_proj[7*(i-1) + j,2] = poisson_rng(min([dR[i]/7,1e8]));
         y_proj[7*(i-1) + j,3] = poisson_rng(min([dD[i]/7,1e8]));
       }
+    }
     }
 }
