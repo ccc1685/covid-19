@@ -1,5 +1,5 @@
-// SICRStochastic.stan
-// stochastic SIR model
+// SICRdiscrete.stan
+// Discrete SICR model
 
 
 data {
@@ -38,7 +38,7 @@ real<lower=0> sigmar;             // recovery rate
 real<lower=0> sigmad0;             // death rate
 real<lower=0> sigmad1;
 real<lower=0> sigmad2;
-real<lower=0> alpha;
+real<lower=0> alpha[n_weeks];
 }
 
 transformed parameters {
@@ -57,20 +57,23 @@ transformed parameters {
   C = 0;
   I = 0;
   for (i in 1:n_weeks){
-    sigmac[i] = sigmac0 + sigmac1*i^2/(1+sigmac2*i^2);
-    sigmad[i] = sigmad0+ sigmad1/(1 + sigmad2*i^2);
-    I += alpha;
+    sigmac[i] = sigmac0 + .1*i;
+    sigmad[i] = sigmad0 + sigmad1/(1 + .1*i);
+    I += alpha[i];
     I *= exp(beta[i] - sigmac[i] - sigmau);
     dC[i] = sigmac[i]*I;
     C += dC[i];
     C *= exp(-(sigmar+sigmad[i]));
     Cd[i] = C;
-    dI[i] = (exp(beta[i])-1)*I + alpha;
+    dI[i] = (exp(beta[i])-1)*I + alpha[i];
     dR[i] = sigmar*C;
+    dD[i] = sigmad[i]*C;
+    /*
     if (i > 2)
       dD[i] = sigmad[i]*Cd[i-2];
     else
       dD[i] = sigmad[i]*C;
+      */
   }
   }
 }
@@ -84,18 +87,19 @@ model {
   sigmad0 ~ exponential(1.);
   sigmac1 ~ exponential(1.);
   sigmac2 ~ normal(15.,1.);
-  alpha ~ exponential(10.);
+
 
     for (i in 1:n_weeks){
       //lambda[i] ~ cauchy(0.,1.);
+      alpha[i] ~ exponential(10.);
       beta[i] ~ exponential(.5);
       target += poisson_lpmf(y_wk[i,1] | dC[i]);
       target += poisson_lpmf(y_wk[i,2] | dR[i]);
       target += poisson_lpmf(y_wk[i,3] | dD[i]);
     }
     for (i in 2:n_weeks-1){
-      target += normal_lpdf(beta[i+1]-beta[i] | 0, .02);
-      target += normal_lpdf(beta[i+1]-2*beta[i]+beta[i-1] | 0, .3);
+      target += normal_lpdf(beta[i+1]-beta[i] | 0, .2);
+      target += normal_lpdf(beta[i+1]-2*beta[i]+beta[i-1] | 0, .5);
     }
 }
 
