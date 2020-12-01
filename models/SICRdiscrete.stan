@@ -21,6 +21,8 @@ transformed data {
       y_wk[i,k] = y[7*(i-1) + 1,k];
       for (j in 2:7)
         y_wk[i,k] += y[7*(i-1) + j,k];
+      if (y_wk[i,k] < 0 )
+        y_wk[i,k] = 0;
     }
   }
 }
@@ -28,16 +30,13 @@ transformed data {
 
 parameters {
 real<lower=0> beta[n_weeks];             // infection rate
-//real<lower=0> lambda[n_weeks];  // infection rate
 real<lower=0> sigmau;             // uninfected rate
 real<lower=0> sigmac0;             // case rate
 real<lower=0> sigmac1;             // case rate
-real<lower=0> sigmac2;
-//real<lower=0> sigmac2;             // case rate
-real<lower=0> sigmar;             // recovery rate
+real<lower=0> sigmar0;             // recovery rate
+real<lower=0> sigmar1;             // recovery rate
 real<lower=0> sigmad0;             // death rate
 real<lower=0> sigmad1;
-real<lower=0> sigmad2;
 real<lower=0> alpha[n_weeks];
 }
 
@@ -49,6 +48,7 @@ transformed parameters {
   real dD[n_weeks];
   real sigmac[n_weeks];
   real sigmad[n_weeks];
+  real sigmar[n_weeks];
 {
   real C;
   real I;
@@ -57,16 +57,17 @@ transformed parameters {
   C = 0;
   I = 0;
   for (i in 1:n_weeks){
-    sigmac[i] = sigmac0 + .1*i;
-    sigmad[i] = sigmad0 + sigmad1/(1 + .1*i);
+    sigmac[i] = sigmac0 + (sigmac1)*i;
+    sigmad[i] = sigmad0/(1 + ((.1 + sigmad1)*i)^2);
+    sigmar[i] = sigmar0/(1 + ((.1 + sigmar1)*i)^2);
     I += alpha[i];
     I *= exp(beta[i] - sigmac[i] - sigmau);
     dC[i] = sigmac[i]*I;
     C += dC[i];
-    C *= exp(-(sigmar+sigmad[i]));
+    C *= exp(-(sigmar[i]+sigmad[i]));
     Cd[i] = C;
     dI[i] = (exp(beta[i])-1)*I + alpha[i];
-    dR[i] = sigmar*C;
+    dR[i] = sigmar[i]*C;
     dD[i] = sigmad[i]*C;
     /*
     if (i > 2)
@@ -81,16 +82,14 @@ transformed parameters {
 model {
   sigmac0 ~ exponential(.25);
   sigmac1 ~ exponential(.25);
-  sigmac2 ~ normal(15.,1.);
   sigmau ~ exponential(5.);
-  sigmar ~ exponential(4.);
+  sigmar0 ~ exponential(1.);
+  sigmar1 ~ exponential(1.);
   sigmad0 ~ exponential(1.);
-  sigmac1 ~ exponential(1.);
-  sigmac2 ~ normal(15.,1.);
+  sigmad1 ~ exponential(1.);
 
 
     for (i in 1:n_weeks){
-      //lambda[i] ~ cauchy(0.,1.);
       alpha[i] ~ exponential(10.);
       beta[i] ~ exponential(.5);
       target += poisson_lpmf(y_wk[i,1] | dC[i]);
