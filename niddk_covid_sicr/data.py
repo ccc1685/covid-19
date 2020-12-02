@@ -6,9 +6,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import requests
+from pathlib import Path
 from tqdm import tqdm
 from typing import Union
 from urllib.error import HTTPError
+import covidcast # API for Delphi’s COVID-19 Surveillance Streams (Carnegie Mellon)
+
 
 JHU_FILTER_DEFAULTS = {'confirmed': 5, 'recovered': 1, 'deaths': 0}
 COVIDTRACKER_FILTER_DEFAULTS = {'cum_cases': 5, 'cum_recover': 1, 'cum_deaths': 0}
@@ -91,7 +94,7 @@ def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
                                 ('covidtimeseries_%s.csv' % country))
         else:
             print("No data for %s" % country)
-            
+
 
 def fix_jhu_dates(x):
     y = datetime.strptime(x, '%m/%d/%y')
@@ -175,11 +178,147 @@ def get_covid_tracking(data_path: str, filter_: Union[dict, bool] = True,
             df = df.fillna(0).astype(int)
             # Overwrite old data
             df.to_csv(data_path / ('covidtimeseries_US_%s.csv' % state))
-            good.append(state)    
-    
+            good.append(state)
+
     print("COVID Tracking data acceptable for %s" % ','.join(good))
     print("COVID Tracking data not acceptable for %s" % ','.join(bad))
 
+def get_delphi(data_path: str, filter_: Union[dict, bool] = True) -> None: # What does filter_ do here?
+    """Gets data from Delphi’s COVID-19 Surveillance Streams (covidcast; US only)
+
+    https://cmu-delphi.github.io/delphi-epidata/api/covidcast.html
+
+    Args:
+        data_path (str): Full path to data directory.
+
+    Returns:
+        None
+    """
+    # Set data_sources and signals to pull API data for
+    delphi_data = [
+                ('jhu-csse','confirmed_cumulative_num'),
+                ('jhu-csse','confirmed_cumulative_prop'),
+                ('jhu-csse','confirmed_incidence_num'),
+                ('jhu-csse','confirmed_incidence_prop'),
+                ('jhu-csse','deaths_cumulative_num'),
+                ('jhu-csse','deaths_cumulative_prop'),
+                ('jhu-csse','deaths_incidence_num'),
+                ('jhu-csse','deaths_incidence_prop'),
+                ('hospital-admissions','smoothed_adj_covid19_from_claims'),
+                ('doctor-visits','smoothed_adj_cli'),
+                ('safegraph','full_time_work_prop'),
+                ('safegraph','part_time_work_prop'),
+                ('ght','smoothed_search'),
+                ('fb-survey','smoothed_cli'),
+                ('fb-survey','smoothed_hh_cmnty_cli')
+                # TODO: if we want below signals, need to fix code
+                # so that column values don't get duplicated for overlapping
+                # signal names.
+                # ('indicator-combination','confirmed_cumulative_num'),
+                # ('indicator-combination','confirmed_cumulative_prop'),
+                # ('indicator-combination','confirmed_incidence_num'),
+                # ('indicator-combination','confirmed_incidence_prop'),
+                # ('indicator-combination','deaths_cumulative_num'),
+                # ('indicator-combination','deaths_cumulative_prop'),
+                # ('indicator-combination','deaths_incidence_num'),
+                # ('indicator-combination','deaths_incidence_prop'),
+                # ('indicator-combination','nmf_day_doc_fbc_fbs_ght')
+                   ]
+
+    frames = [] # create separate dataframes for each datasource
+    filtered_frames = [] # for storing filtered dataframes (ROI, date, data-source signal)
+
+    # iterate through delphi data-source types and pull api data
+    # create dataframes for each data-source
+    for i in delphi_data:
+        data_source = i[0]
+        signal = i[1]
+        df = delphi_api_call(data_source, signal)
+        if df is not None:
+            frames.append(df)
+
+    for df in frames: # append filtered dfs to filtered_frames[]
+        if df is not None: # some data-sources aren't pulling any data (Quidel) so skip these
+            filtered_frames.append(filter_delphi(df))
+
+    # merge filtered frames
+    for i in range(len(filtered_frames)):
+        filtered_frames[0] = filtered_frames[0].merge(filtered_frames[i], how='outer')
+    df_delphi = filtered_frames[0].fillna(-1)
+    df_delphi.set_index('ROI', inplace=True)
+    df_delphi.sort_index(inplace=True)
+    rois =  df_delphi.index.unique() # return list of rois for scanning time-series
+    merge_delphi(data_path, df_delphi, rois)
+
+def delphi_api_call(data_source:str, signal:str):
+    """ Called by get_delphi() to pull state-level data from Delphi API
+    for data-sources (hospital admissions, doctor visits, etc)
+    for a default timeframe (March 3, 2020 to yesterday's date).
+        Args:
+            data_source (str): data-source we want data for. See
+            https://cmu-delphi.github.io/delphi-epidata/api/covidcast_signals.html
+            for complete list.
+            signal (str): signal for data-source.
+        Returns:
+            df (DataFrame): pulled data as DataFrame.
+    """
+    today = datetime.today() # get today's date
+    # other date below is the start date for which we want to pull data from
+    df = covidcast.signal(data_source, signal, datetime(2020, 3, 7), today, "state")
+    return df
+
+def filter_delphi(df:pd.DataFrame):
+    """ Called by get_delphi() to transform delphi data for
+        combining with time-series files.
+            Args:
+                df (pd.DataFrame): whole DataFrame from API call for data-source.
+            Returns:
+                df (pd.DataFrame): DataFrame containing API-pulled
+                for data-source containing columns: ROI, dates, data-source signal value.
+    """
+    signal = df['signal'].unique()[0].replace('-', '_') # get data-source as string with underscore
+    signal = 'd_' + signal # add Delphi prefix to string
+    df.rename(columns={"geo_value":"ROI", "value": signal,
+                       "time_value":"dates2"}, inplace=True)
+    df.drop(columns=['signal', 'issue', 'lag', 'stderr', 'sample_size',
+                     'data_source', 'geo_type'], inplace=True)
+    df['ROI'] = df['ROI'].apply(lambda x: 'US_' + x.upper()) # fix ROIs
+    df['dates2'] = df['dates2'].apply(fix_delphi_dates) # fix dates
+    return df
+
+def fix_delphi_dates(x):
+    y = datetime.strptime(str(x), '%Y-%m-%d %H:%M:%S')
+    return datetime.strftime(y, '%m/%d/%y')
+
+def merge_delphi(data_path:str, df_delphi:pd.DataFrame, rois:list):
+    """ Called by get_delphi() to merge Delphi date-source/signal data
+    to time-series files found in data_path (default='./data') that
+    match that ROI. Will overwrite matching CSVs.
+            Args:
+                data_path (str): Full path to data directory.
+                source_df (pd.DataFrame): Delphi dataframe.
+                rois (list): ROIs to iterate through.
+    """
+    for roi in rois: #  If ROI time-series exists, open as df and merge delphi
+        try:
+            timeseries_path = Path(data_path) / ('covidtimeseries_%s.csv' % roi)
+            df_timeseries = pd.read_csv(timeseries_path)
+        except FileNotFoundError as fnf_error:
+            print(fnf_error, 'Could not add Delphi data.')
+            pass
+
+        for i in df_timeseries.columns: # Check if Delphi data already included
+            if 'd_' in i: # prefix 'd_' is Delphi indicator
+                df_timeseries.drop([i], axis=1, inplace=True)
+
+        df_timeseries['dates2'] = df_timeseries['dates2'].apply(fix_jhu_dates) # convert date from 1/2/20 to 01/02/2020
+        df_delphi_roi = df_delphi[df_delphi.index == roi] # filter delphi rows that match roi
+        df_combined = df_timeseries.merge(df_delphi_roi, how='left', on='dates2')
+        df_combined.fillna(-1, inplace=True) # fill empty rows with -1
+        df_combined.sort_values(by=['dates2'], inplace=True)
+        df_combined = df_combined.loc[:, ~df_combined.columns.str.contains('^Unnamed')] # TODO: find out how Unnamed
+                                                                      # is occurring and remove this
+        df_combined.to_csv(timeseries_path, index=False) # overwrite timeseries CSV
 
 def fix_negatives(data_path: str, plot: bool = False) -> None:
     """Fix negative values in daily data.
