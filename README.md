@@ -59,5 +59,3 @@ Reproducbility of a particular version of the manuscript will require using a pa
 This code is open source under the MIT License.
 Correspondence on modeling should be directed to carsonc at nih dot gov or vattikutis at mail dot nih dot gov.
 Correspondence on the python code should be directed to rgerkin at asu dot edu.
-
-AS testing branch..

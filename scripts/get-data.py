@@ -10,8 +10,10 @@ from pathlib import Path
 parser = argparse.ArgumentParser(description='Get data to use for fitting')
 parser.add_argument('-dp', '--data-path', default='./data',
                     help='Path for storing data')
-parser.add_argument('-s', '--sources', default=['jhu', 'covid-tracking', 'delphi'],
-                    nargs='+', help='Data sources to use')
+parser.add_argument('-s', '--sources', default=['jhu', 'covid-tracking'],
+                    nargs='+', help='Data sources to use. Data from CMUs Delphi API'
+                    'can be gathered with "delphi".'
+                    )
 parser.add_argument('-fi', '--filter', default=1, type=int,
                     help='Whether or not to filter based on data thresholds')
 parser.add_argument('-fn', '--fix-negatives', default=0, type=int,
