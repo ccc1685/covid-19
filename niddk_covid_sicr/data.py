@@ -9,10 +9,10 @@ import requests
 from tqdm import tqdm
 from typing import Union
 from urllib.error import HTTPError
+import urllib.request, json
 
 JHU_FILTER_DEFAULTS = {'confirmed': 5, 'recovered': 1, 'deaths': 0}
 COVIDTRACKER_FILTER_DEFAULTS = {'cum_cases': 5, 'cum_recover': 1, 'cum_deaths': 0}
-
 
 def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
     """Gets data from Johns Hopkins CSSEGIS (countries only).
@@ -91,7 +91,6 @@ def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
                                 ('covidtimeseries_%s.csv' % country))
         else:
             print("No data for %s" % country)
-            
 
 def fix_jhu_dates(x):
     y = datetime.strptime(x, '%m/%d/%y')
@@ -175,11 +174,62 @@ def get_covid_tracking(data_path: str, filter_: Union[dict, bool] = True,
             df = df.fillna(0).astype(int)
             # Overwrite old data
             df.to_csv(data_path / ('covidtimeseries_US_%s.csv' % state))
-            good.append(state)    
-    
+            good.append(state)
     print("COVID Tracking data acceptable for %s" % ','.join(good))
     print("COVID Tracking data not acceptable for %s" % ','.join(bad))
 
+def get_canada(data_path: str, filter_: Union[dict, bool] = True,
+                       fixes: bool = False) -> None:
+    """ Gets data from Canada's Open Covid group for Canadian Provinces.
+        https://opencovid.ca/
+    """
+    dfs = [] # we will append dfs for cases, deaths, recovered here
+    # URL for API call to get Province-level timeseries data starting on Jan 22 2020
+    url_template = 'https://api.opencovid.ca/timeseries?stat=%s&loc=prov&date=01-22-2020'
+    for kind in ['cases', 'mortality', 'recovered']:
+        url_path = url_template % kind  # Create the full data URL
+        with urllib.request.urlopen(url_path) as url:
+            data = json.loads(url.read().decode())
+            source = pd.json_normalize(data[kind])
+            if kind == 'cases':
+                source.drop('cases', axis=1, inplace=True) # removing this column so
+                # we can index into date on all 3 dfs at same position
+            source.rename(columns={source.columns[1]: "date" }, inplace=True)
+            dfs.append(source)
+    cases = dfs[0]
+    deaths = dfs[1]
+    recovered = dfs[2]
+    # combine dfs
+    df_rawtemp = cases.merge(recovered, on=['date', 'province'], how='outer')
+    df_raw = df_rawtemp.merge(deaths, on=['date', 'province'], how='outer')
+    df_raw.fillna(0, inplace=True)
+
+    provinces = ['Alberta', 'BC', 'Manitoba', 'New Brunswick', 'NL',
+                'Nova Scotia', 'Nunavut', 'NWT', 'Ontario', 'PEI', 'Quebec',
+                'Saskatchewan', 'Yukon']
+
+    # Export timeseries data for each province
+    for province in tqdm(provinces, desc='Canadian Provinces'):
+        source = df_raw[df_raw['province'] == province]  # Only the given province
+        df = pd.DataFrame(columns=['dates2','cum_cases', 'cum_deaths',
+                                   'cum_recover', 'new_cases',
+                                   'new_deaths', 'new_recover',
+                                   'new_uninfected'])
+        df['dates2'] = source['date'].apply(fix_canada_dates) # Convert date format
+        df['cum_cases'] = source['cumulative_cases'].values
+        df['cum_deaths'] = source['cumulative_deaths'].values
+        df['cum_recover'] = source['cumulative_recovered'].values
+
+        df[['new_cases', 'new_deaths', 'new_recover']] = \
+            df[['cum_cases', 'cum_deaths', 'cum_recover']].diff()
+        df['new_uninfected'] = df['new_recover'] + df['new_deaths']
+        df.sort_values(by=['dates2'], inplace=True) # sort by datetime obj before converting to string
+        df['dates2'] = pd.to_datetime(df['dates2']).dt.strftime('%m/%d/%y') # convert dates to string
+        df = df.set_index('dates2').fillna(0).astype(int) # Fill NaN with 0 and convert to int
+        df.to_csv(data_path / ('covidtimeseries_CA_%s.csv' % province))
+
+def fix_canada_dates(x):
+    return datetime.strptime(x, '%d-%m-%Y')
 
 def fix_negatives(data_path: str, plot: bool = False) -> None:
     """Fix negative values in daily data.
@@ -221,7 +271,6 @@ def fix_neg(df: pd.DataFrame, roi: str,
         roi (str): One region, e.g 'US_MI' or 'Greece'.
         columns (list, optional): Columns to make non-decreasing.
             Defaults to ['cases', 'deaths', 'recover'].
-
     Returns:
         pd.DataFrame: [description]
     """
