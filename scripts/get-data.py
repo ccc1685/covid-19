@@ -10,8 +10,10 @@ from pathlib import Path
 parser = argparse.ArgumentParser(description='Get data to use for fitting')
 parser.add_argument('-dp', '--data-path', default='./data',
                     help='Path for storing data')
-parser.add_argument('-s', '--sources', default=['jhu', 'covid-tracking'],
-                    nargs='+', help='Data sources to use')
+parser.add_argument('-s', '--sources', default=['jhu', 'covid-tracking', 'canada'],
+                    nargs='+', help='Data sources to use.')
+# parser.add_argument('-s', '--sources', default=['jhu', 'covid-tracking', 'canada'],
+#                     nargs='+', help='Data sources to use.')
 parser.add_argument('-fi', '--filter', default=1, type=int,
                     help='Whether or not to filter based on data thresholds')
 parser.add_argument('-fn', '--fix-negatives', default=0, type=int,
@@ -49,7 +51,7 @@ for source in args.sources:
 if args.fix_negatives:
     print("Fixing negative values in daily data...")
     data.fix_negatives(data_path)
-    
+
 if args.negify_missing:
     print("Replacing missing columns with -1 in daily data...")
     data.negify_missing(data_path)
