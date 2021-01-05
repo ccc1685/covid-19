@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import calendar
 import numpy as np
 import math
@@ -8,7 +8,6 @@ from pathlib import Path
 import sys
 
 import niddk_covid_sicr as ncs
-
 
 def get_stan_data(full_data_path, args):
     df = pd.read_csv(full_data_path)
@@ -91,8 +90,7 @@ def get_stan_data_weekly_total(full_data_path, args):
         df.drop([week_frame_total, len(df)-1], inplace=True) # drop them
     df['Date'] = pd.to_datetime(df['dates2']) # used to calculate leading week
     df.set_index('Date', inplace=True) # need this for df.resample()
-
-    start_day = df.index[0] - datetime.timedelta(1)
+    start_day = df.index[0] - timedelta(1)
     start_day = start_day.strftime("%A")
     start_abr = start_day.upper()[:3] # get 3 letter abbrev
 
