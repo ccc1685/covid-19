@@ -85,9 +85,6 @@ def get_stan_data_weekly_total(full_data_path, args):
     n_proj = 120
     stan_data = {}
 
-    week_frame_total = math.floor((len(df['dates2'])/7))*7 # find num rows that fit (mod 7)
-    if len(df) != week_frame_total: # if we have dates that spill over our weekly chunks,
-        df.drop([week_frame_total, len(df)-1], inplace=True) # drop them
     df['Date'] = pd.to_datetime(df['dates2']) # used to calculate leading week
     df.set_index('Date', inplace=True) # need this for df.resample()
     start_day = df.index[0] - timedelta(1)
@@ -97,9 +94,15 @@ def get_stan_data_weekly_total(full_data_path, args):
     df['weeklytotal_new_cases'] = df.new_cases.resample('W-{}'.format(start_abr)).sum()
     df['weeklytotal_new_recover'] = df.new_recover.resample('W-{}'.format(start_abr)).sum()
     df['weeklytotal_new_deaths'] = df.new_deaths.resample('W-{}'.format(start_abr)).sum()
+
     df.reset_index(inplace=True) # reset index for df.groupby()
-    df = df.bfill(axis ='rows') # backfill nan to fill weeklytotal columns with
-                                    # weekly totals
+    df = df.bfill(axis ='rows') # backfill nan to fill weeklytotal columns with weekly totals
+    df.dropna(inplace=True) # drop last rows if they spill over weekly chunks and present NAs
+
+    df.weeklytotal_new_cases = df.weeklytotal_new_cases.astype(int) # convert float to int
+    df.weeklytotal_new_recover = df.weeklytotal_new_recover.astype(int)
+    df.weeklytotal_new_deaths = df.weeklytotal_new_deaths.astype(int)
+
     stan_data['n_ostates'] = 3
     stan_data['tm'] = tm
     stan_data['ts'] = np.arange(t0, len(df['dates2']) + n_proj)
