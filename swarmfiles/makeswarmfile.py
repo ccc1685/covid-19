@@ -24,7 +24,7 @@ models = ['SICRdiscrete', 'SICRdiscrete1', 'SICRMQC2R2DX']
 
 
 for model in models:
-    swarmFile = open(f"{model}.swarm", "w")
+    swarmFile = open(f"../{model}.swarm", "w")
     for roi in rois:
         line = ("source /data/schwartzao/conda/etc/profile.d/conda.sh "
             "&& conda activate covid "
