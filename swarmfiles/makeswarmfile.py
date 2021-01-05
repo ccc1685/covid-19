@@ -30,9 +30,9 @@ for model in models:
             "&& conda activate covid "
             f"&& python /home/schwartzao/covid-sicr/scripts/run.py {model} "
             f"-r='{roi}' "
-            "-mp='/data/schwartzao/covid-sicr/models/' "
+            "-mp='/home/schwartzao/covid-sicr/models/' "
             "-fp='/data/schwartzao/covid-sicr/fits20210105/' " # changes
-            "--it=10000	-wm=6000	-f=1	-ad=.85	-ft=1"
+            "-it=10000	-wm=6000	-f=1	-ad=.85	-ft=1"
             )
         swarmFile.write(line)
         swarmFile.write('\n')
