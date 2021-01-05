@@ -59,7 +59,8 @@ def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
                 elif region == 'US':
                     # Use state name as index
                     df = df.set_index('Province_State')
-                df = df[[x for x in df if '20' in x]]  # Use only data columns
+                df = df[[x for x in df if any(year in x for year in ['20', '21'])]]  # Use only data columns
+                                                # 20 or 21 signifies 2020 or 2021
                 dfs[region][kind] = df  # Add to dictionary of dataframes
 
     # Generate a list of countries that have "good" data,
@@ -98,8 +99,7 @@ def fix_jhu_dates(x):
 
 
 def fix_ct_dates(x):
-    y = datetime.strptime(str(x), '%Y%m%d')
-    return datetime.strftime(y, '%m/%d/%y')
+    return datetime.strptime(str(x), '%Y%m%d')
 
 
 def get_countries(d: pd.DataFrame, filter_: Union[dict, bool] = True):
@@ -159,8 +159,9 @@ def get_covid_tracking(data_path: str, filter_: Union[dict, bool] = True,
         df['cum_deaths'] = source['death'].values
         df['cum_recover'] = source['recovered'].values
         # Fill NaN with 0 and convert to int
+        df.sort_values(by=['dates2'], inplace=True) # sort by datetime obj before converting to string
+        df['dates2'] = pd.to_datetime(df['dates2']).dt.strftime('%m/%d/%y') # convert dates to string
         df = df.set_index('dates2').fillna(0).astype(int)
-        df = df.sort_index()  # Sort by date ascending
         enough = True
         if filter_:
             for key, minimum in filter_.items():
