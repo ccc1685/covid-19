@@ -10,7 +10,6 @@ from tqdm import tqdm
 from typing import Union
 from urllib.error import HTTPError
 import urllib.request, json
-from pathlib import Path
 
 JHU_FILTER_DEFAULTS = {'confirmed': 5, 'recovered': 1, 'deaths': 0}
 COVIDTRACKER_FILTER_DEFAULTS = {'cum_cases': 5, 'cum_recover': 1, 'cum_deaths': 0}
@@ -325,28 +324,7 @@ def fix_neg(df: pd.DataFrame, roi: str,
         # Replace the values
         df[new] = df[cum].diff().fillna(0).astype(int).values
     return df
-
-def add_population(data_path: str):
-    """Add population counts for rois found in data-path.
-    """
-    data_path = Path(data_path)
-    csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
-    df_pop = pd.read_csv(data_path / 'population_estimates.csv')
-    df_pop.set_index('roi', inplace=True)
-
-    for csv in csvs:
-        roi = str(csv).split('.')[0].split('_')
-        if len(roi) > 2: # handle US_ and CA_ prefixes
-            roi = roi[1] + '_' + roi[2]
-        else: # if not US state or Canadian province
-            roi = roi[1]
-        if roi in df_pop.index:
-            roi_pop = df_pop.loc[roi]['population']
-            df = pd.read_csv(csv)
-            df['population'] = roi_pop
-            df.to_csv(csv, index=False) # overwrite csv with new population counts
-        else:
-            print('population count missing for {}'.format(roi))
+    
 
 def negify_missing(data_path: str) -> None:
     """Fix negative values in daily data.

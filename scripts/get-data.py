@@ -48,12 +48,6 @@ for source in args.sources:
     f = get_scraper(source)
     f(data_path, filter_=args.filter)
 
-try: # add population counts
-    data.add_population(data_path)
-except:
-    print("could not add population counts.")
-    pass
-
 if args.fix_negatives:
     print("Fixing negative values in daily data...")
     data.fix_negatives(data_path)
