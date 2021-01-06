@@ -10,6 +10,7 @@ from tqdm import tqdm
 from typing import Union
 from urllib.error import HTTPError
 import urllib.request, json
+from pathlib import Path
 
 JHU_FILTER_DEFAULTS = {'confirmed': 5, 'recovered': 1, 'deaths': 0}
 COVIDTRACKER_FILTER_DEFAULTS = {'cum_cases': 5, 'cum_recover': 1, 'cum_deaths': 0}
@@ -328,7 +329,6 @@ def fix_neg(df: pd.DataFrame, roi: str,
 def add_population(data_path: str):
     """Add population counts for rois found in data-path.
     """
-    from pathlib import Path
     data_path = Path(data_path)
     csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
     df_pop = pd.read_csv(data_path / 'population_estimates.csv')
