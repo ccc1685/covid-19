@@ -56,6 +56,56 @@ def get_waic(samples: pd.DataFrame) -> dict:
     return {'waic': waic, 'se': se}
 
 
+def add_ir(data_path:str, tables_path:str):
+    """ Add infectivity ratio IR to tables using regional populations to compute
+    the fraction of population infected.
+
+    IR = cases * CAR / population
+    Arguments:
+        data_path(str): Data-path to timeseries files for getting cum_case counts
+                        per roi.
+        tables_path(str): Tables-path to tables for adding IR calculation to existing
+                          tables.
+    Returns:
+        None.
+    """
+    data_path = Path(data_path)
+    tables_path = Path(tables_path)
+    cases_csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
+    cases_data = []
+
+    for csv in cases_csvs:
+        roi = str(csv).split('.')[0].split('_') # get roi name
+        if len(roi) > 2: # handle US_ and CA_ prefixes
+            roi = roi[1] + '_' + roi[2]
+        else: # if not US state or Canadian province
+            roi = roi[1]
+        df_cases = pd.read_csv(csv)
+        cases_dict = {}
+        cum_cases = df_cases['cum_cases'][df_cases.index[-1]] # get most recent cum case count
+        cases_dict['roi'] = roi
+        cases_dict['cum_cases'] = cum_cases
+        cases_data.append(cases_dict)
+
+    df_cases = pd.DataFrame(cases_data)
+    df_cases.set_index('roi')
+
+    table_csvs = [x for x in tables_path.iterdir() if 'table.csv' in str(x)]
+    df_pop = pd.read_csv(data_path / 'population_estimates.csv') # get population counts
+    df_pop.drop(columns=['Sources'], inplace=True)
+
+    for table in table_csvs:
+        df = pd.read_csv(table)
+        col = ['population', 'cum_cases', 'ir'] # if exits, drop these columns to avoid duplicates
+        for i in col:
+            if i in df.columns:
+                df.drop(columns=[i], inplace=True)
+        df = df.merge(df_pop, on='roi', how='left')
+        df = df.merge(df_cases, on='roi', how='left')
+        df['ir'] = (df['cum_cases'] * df['car']) / df['population']
+        df.to_csv(table, index=False)
+
+
 def get_waic_and_loo(fit) -> dict:
     warn("`get_waic_and_loo` is deprecated, use `get_fit_quality` instead.",
          DeprecationWarning)
