@@ -227,7 +227,7 @@ def get_canada(data_path: str, filter_: Union[dict, bool] = True,
         df.sort_values(by=['dates2'], inplace=True) # sort by datetime obj before converting to string
         df['dates2'] = pd.to_datetime(df['dates2']).dt.strftime('%m/%d/%y') # convert dates to string
         df = df.set_index('dates2').fillna(0).astype(int) # Fill NaN with 0 and convert to int
-        df.to_csv(data_path / ('covidtimeseries_CA_%s.csv' % province))
+        df.to_csv(data_path / ('covidtimeseries_CA_%s.csv' % province), index=False)
 
 def fix_canada_dates(x):
     return datetime.strptime(x, '%d-%m-%Y')
@@ -325,6 +325,28 @@ def fix_neg(df: pd.DataFrame, roi: str,
         df[new] = df[cum].diff().fillna(0).astype(int).values
     return df
 
+def add_population(data_path: str):
+    """Add population counts for rois found in data-path.
+    """
+    from pathlib import Path
+    data_path = Path(data_path)
+    csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
+    df_pop = pd.read_csv(data_path / 'population_estimates.csv')
+    df_pop.set_index('roi', inplace=True)
+
+    for csv in csvs:
+        roi = str(csv).split('.')[0].split('_')
+        if len(roi) > 2: # handle US_ and CA_ prefixes
+            roi = roi[1] + '_' + roi[2]
+        else: # if not US state or Canadian province
+            roi = roi[1]
+        if roi in df_pop.index:
+            roi_pop = df_pop.loc[roi]['population']
+            df = pd.read_csv(csv)
+            df['population'] = roi_pop
+            df.to_csv(csv, index=False) # overwrite csv with new population counts
+        else:
+            print('population count missing for {}'.format(roi))
 
 def negify_missing(data_path: str) -> None:
     """Fix negative values in daily data.
