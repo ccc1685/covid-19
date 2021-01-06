@@ -121,36 +121,38 @@ generated quantities {
     real ll_; // log-likelihood for model
     int n_data_pts;
 
+    real R0 = beta[1]/sigmac[1];
+
     ll_ = 0;
     n_data_pts = 0;
 
     {
-    real C_cum;
-    real I_cum;
-    real D_cum;
+      real C_cum;
+      real I_cum;
+      real D_cum;
 
-    C_cum = 0;
-    I_cum = 0;
-    D_cum = 0;
+      C_cum = 0;
+      I_cum = 0;
+      D_cum = 0;
 
-    for (i in 1:n_weeks) {
-      C_cum += dC[i];
-      I_cum += dI[i];
-      D_cum += dD[i];
-      car[i] = C_cum/I_cum;
-      ifr[i] = D_cum/I_cum;
-      Rt[i] = beta[i]/sigmac[i];
-      for (j in 1:7){
-        y_proj[7*(i-1) + j,1] = poisson_rng(min([dC[i]/7,1e8]));
-        y_proj[7*(i-1) + j,2] = poisson_rng(min([dR[i]/7,1e8]));
-        y_proj[7*(i-1) + j,3] = poisson_rng(min([dD[i]/7,1e8]));
-        llx[7*(i-1) + j,1] = poisson_lpmf(y[7*(i-1) + j,1] | min([dC[i]/7,1e8]));
-        llx[7*(i-1) + j,2] = poisson_lpmf(y[7*(i-1) + j,2] | min([dR[i]/7,1e8]));
-        llx[7*(i-1) + j,3] = poisson_lpmf(y[7*(i-1) + j,3] | min([dD[i]/7,1e8]));
-        ll_ += llx[7*(i-1) + j,1] + llx[7*(i-1) + j,2] + llx[7*(i-1) + j,3];
-        n_data_pts += 1;
+      for (i in 1:n_weeks) {
+        C_cum += dC[i];
+        I_cum += dI[i];
+        D_cum += dD[i];
+        car[i] = C_cum/I_cum;
+        ifr[i] = D_cum/I_cum;
+        Rt[i] = beta[i]/sigmac[i];
+        for (j in 1:7){
+          y_proj[7*(i-1) + j,1] = poisson_rng(min([dC[i]/7,1e8]));
+          y_proj[7*(i-1) + j,2] = poisson_rng(min([dR[i]/7,1e8]));
+          y_proj[7*(i-1) + j,3] = poisson_rng(min([dD[i]/7,1e8]));
+          llx[7*(i-1) + j,1] = poisson_lpmf(max([y[7*(i-1) + j,1],0]) | min([dC[i]/7,1e8]));
+          llx[7*(i-1) + j,2] = poisson_lpmf(max([y[7*(i-1) + j,2],0]) | min([dR[i]/7,1e8]));
+          llx[7*(i-1) + j,3] = poisson_lpmf(max([y[7*(i-1) + j,3],0]) | min([dD[i]/7,1e8]));
+          ll_ += llx[7*(i-1) + j,1] + llx[7*(i-1) + j,2] + llx[7*(i-1) + j,3];
+          n_data_pts += 1;
+        }
       }
-    }
     }
 
 }

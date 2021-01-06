@@ -110,8 +110,8 @@ generated quantities {
     real car[n_weeks];
     real ifr[n_weeks];
     real Rt[n_weeks];
-    int y_proj[n_weeks*7,n_ostates];
-    real llx[n_weeks*7, 3];
+    int y_proj[n_weeks,n_ostates];
+    real llx[n_weeks, 3];
     real ll_; // log-likelihood for model
     int n_data_pts;
 
@@ -134,13 +134,13 @@ generated quantities {
         ifr[i] = D_cum/I_cum;
         Rt[i] = beta[i]/sigmac[i];
         for (j in 1:7){
-          y_proj[7*(i-1) + j,1] = poisson_rng(min([dC[i]/7,1e8]));
-          y_proj[7*(i-1) + j,2] = poisson_rng(min([dR[i]/7,1e8]));
-          y_proj[7*(i-1) + j,3] = poisson_rng(min([dD[i]/7,1e8]));
-          llx[7*(i-1) + j,1] = poisson_lpmf(y[7*(i-1) + j,1] | min([dC[i]/7,1e8]));
-          llx[7*(i-1) + j,2] = poisson_lpmf(y[7*(i-1) + j,2] | min([dR[i]/7,1e8]));
-          llx[7*(i-1) + j,3] = poisson_lpmf(y[7*(i-1) + j,3] | min([dD[i]/7,1e8]));
-          ll_ += llx[7*(i-1) + j,1] + llx[7*(i-1) + j,2] + llx[7*(i-1) + j,3];
+          y_proj[i,1] = poisson_rng(min([dC[i]/7,1e8]));
+          y_proj[i,2] = poisson_rng(min([dR[i]/7,1e8]));
+          y_proj[i,3] = poisson_rng(min([dD[i]/7,1e8]));
+          llx[i,1] = poisson_lpmf(y_wk[i,1] | min([dC[i]/7,1e8]));
+          llx[i,2] = poisson_lpmf(y_wk[i,2] | min([dR[i]/7,1e8]));
+          llx[i,3] = poisson_lpmf(y_wk[i,3] | min([dD[i]/7,1e8]));
+          ll_ += llx[i,1] + llx[i,2] + llx[i,3];
           n_data_pts += 1;
         }
       }
