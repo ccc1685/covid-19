@@ -117,6 +117,12 @@ generated quantities {
     real ifr[n_weeks];
     real Rt[n_weeks];
     int y_proj[n_weeks*7,n_ostates];
+    real llx[n_obs, 3];
+    real ll_; // log-likelihood for model
+    int n_data_pts;
+
+    ll_ = 0;
+    n_data_pts = 0;
 
     {
     real C_cum;
@@ -138,7 +144,13 @@ generated quantities {
         y_proj[7*(i-1) + j,1] = poisson_rng(min([dC[i]/7,1e8]));
         y_proj[7*(i-1) + j,2] = poisson_rng(min([dR[i]/7,1e8]));
         y_proj[7*(i-1) + j,3] = poisson_rng(min([dD[i]/7,1e8]));
+        llx[7*(i-1) + j,1] = poisson_lpmf(y[7*(i-1) + j,1] | min([dC[i]/7,1e8]));
+        llx[7*(i-1) + j,2] = poisson_lpmf(y[7*(i-1) + j,2] | min([dR[i]/7,1e8]));
+        llx[7*(i-1) + j,3] = poisson_lpmf(y[7*(i-1) + j,3] | min([dD[i]/7,1e8]));
+        ll_ += llx[7*(i-1) + j,1] + llx[7*(i-1) + j,2] + llx[7*(i-1) + j,3];
+        n_data_pts += 1;
       }
     }
     }
+
 }
