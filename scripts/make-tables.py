@@ -174,5 +174,5 @@ if n_data_path.resolve().is_file():
 else:
     print("No sample size file found at %s; unable to compute global average" % n_data_path.resolve())
 
-add_ir(args.data_path, args.tables_path) # Add infectivity ratio IR to tables 
+ncs.add_ir(args.data_path, args.tables_path) # Add infectivity ratio IR to tables 
                                             # using regional populations
