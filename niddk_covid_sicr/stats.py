@@ -71,7 +71,10 @@ def add_ir(data_path:str, tables_path:str):
     """
     data_path = Path(data_path)
     tables_path = Path(tables_path)
-    cases_csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
+    try:
+        cases_csvs = [x for x in data_path.iterdir() if 'covidtimeseries' in str(x)]
+    except:
+        print("Missing timeseries files in data-path -- run scripts/get-data.py")
     cases_data = []
 
     for csv in cases_csvs:
@@ -91,7 +94,10 @@ def add_ir(data_path:str, tables_path:str):
     df_cases.set_index('roi')
 
     table_csvs = [x for x in tables_path.iterdir() if 'table.csv' in str(x)]
-    df_pop = pd.read_csv(data_path / 'population_estimates.csv') # get population counts
+    try:
+        df_pop = pd.read_csv(data_path / 'population_estimates.csv') # get population counts
+    except:
+        print("Missing population_estimates.csv in data-path")
     df_pop.drop(columns=['Sources'], inplace=True)
 
     for table in table_csvs:
