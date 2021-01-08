@@ -75,10 +75,10 @@ transformed parameters {
 model {
   //sigmac0 ~ exponential(.25);
   //sigmac1 ~ exponential(.25);
-  sigmau ~ exponential(5.);
-  sigmar0 ~ exponential(10.);
-  sigmar1 ~ exponential(1.);
-  sigmar2 ~ normal(15.,2.);
+  //sigmau ~ exponential(5.);
+  //sigmar0 ~ exponential(10.);
+  //sigmar1 ~ exponential(1.);
+  //sigmar2 ~ normal(15.,2.);
 
     for (i in 1:n_weeks){
       alpha[i] ~ exponential(10.);
@@ -93,10 +93,10 @@ model {
     for (i in 2:n_weeks-1){
       target += normal_lpdf(beta[i+1]-beta[i] | 0, .2);
       target += normal_lpdf(beta[i+1]-2*beta[i]+beta[i-1] | 0, .5);
-      target += normal_lpdf(sigc[i+1]-sigc[i] | 0, .2);
-      target += normal_lpdf(sigc[i+1]-2*sigc[i]+sigd[i-1] | 0, .5);
-      target += normal_lpdf(sigd[i+1]-sigd[i] | 0, .2);
-      target += normal_lpdf(sigd[i+1]-2*sigd[i]+sigd[i-1] | 0, .5);
+      //target += normal_lpdf(sigc[i+1]-sigc[i] | 0, .2);
+      //target += normal_lpdf(sigc[i+1]-2*sigc[i]+sigd[i-1] | 0, .5);
+      //target += normal_lpdf(sigd[i+1]-sigd[i] | 0, .2);
+      //target += normal_lpdf(sigd[i+1]-2*sigd[i]+sigd[i-1] | 0, .5);
     }
 }
 
@@ -129,9 +129,9 @@ generated quantities {
         car[i] = C_cum/I_cum;
         ifr[i] = D_cum/I_cum;
         Rt[i] = beta[i]/sigmac[i];
-        y_proj[i,1] = poisson_rng(min([dC[i]/7,1e8]));
-        y_proj[i,2] = poisson_rng(min([dR[i]/7,1e8]));
-        y_proj[i,3] = poisson_rng(min([dD[i]/7,1e8]));
+        y_proj[i,1] = poisson_rng(min([dC[i],1e8]));
+        y_proj[i,2] = poisson_rng(min([dR[i],1e8]));
+        y_proj[i,3] = poisson_rng(min([dD[i],1e8]));
         llx[i,1] = poisson_lpmf(y[i,1] | min([dC[i]/7,1e8]));
         llx[i,2] = poisson_lpmf(y[i,2] | min([dR[i]/7,1e8]));
         llx[i,3] = poisson_lpmf(y[i,3] | min([dD[i]/7,1e8]));
