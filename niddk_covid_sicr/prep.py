@@ -80,13 +80,17 @@ def get_stan_data_weekly_total(full_data_path, args):
     df['weeklytotal_new_cases'] = df.new_cases.resample('W-{}'.format(start_abr)).sum()
     df['weeklytotal_new_recover'] = df.new_recover.resample('W-{}'.format(start_abr)).sum()
     df['weeklytotal_new_deaths'] = df.new_deaths.resample('W-{}'.format(start_abr)).sum()
-
     df.dropna(inplace=True) # drop last rows if they spill over weekly chunks and present NAs
         # will also remove non-weekly dates so each element is by weekly amount
 
     df.weeklytotal_new_cases = df.weeklytotal_new_cases.astype(int) # convert float to int
     df.weeklytotal_new_recover = df.weeklytotal_new_recover.astype(int)
     df.weeklytotal_new_deaths = df.weeklytotal_new_deaths.astype(int)
+
+    # handle negatives by setting to 0
+    df['weeklytotal_new_cases'] = df['weeklytotal_new_cases'].clip(lower=0)
+    df['weeklytotal_new_recover'] = df['weeklytotal_new_recover'].clip(lower=0)
+    df['weeklytotal_new_deaths'] = df['weeklytotal_new_deaths'].clip(lower=0)
     df.reset_index(inplace=True) # reset index
 
     # t0 := where to start time series, index space
