@@ -125,7 +125,7 @@ def get_stan_data_weekly_total(full_data_path, args, weekly_data_path, roi):
     stan_data['y'] = df[['weeklytotal_new_cases', 'weeklytotal_new_recover',
                     'weeklytotal_new_deaths']].to_numpy().astype(int)[t0:, :]
     stan_data['n_obs'] = len(df['dates2']) - t0
-    stan_data['n_weeks'] = math.floor((len(df['dates2']) - t0)/7)
+    stan_data['n_weeks'] = len(df['dates2']) - t0
     stan_data['n_total'] = len(df['dates2']) - t0 + n_proj
     if args.fixed_t:
         global_start = datetime.strptime('01/22/20', '%m/%d/%y')
