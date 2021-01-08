@@ -77,8 +77,7 @@ model {
   sigmau ~ exponential(5.);
   sigmar0 ~ exponential(10.);
   sigmar1 ~ exponential(1.);
-  sigmar2 ~ lognormal(log(15.),.5);
-  print(y)
+  sigmar2 ~ normal(15.,2.);
 
     for (i in 1:n_weeks){
       alpha[i] ~ exponential(10.);
