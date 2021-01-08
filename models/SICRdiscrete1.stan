@@ -13,7 +13,6 @@ data {
   }
 
 transformed data {
-  int N = 100000;
   int y_wk[n_weeks,n_ostates];
   print(n_weeks);
   for (k in 1:n_ostates){
@@ -33,6 +32,7 @@ real<lower=0> beta[n_weeks];             // infection rate
 real<lower=0> alpha[n_weeks];
 real<lower=0> sigd[n_weeks];
 real<lower=0> sigc[n_weeks];
+real<lower=0> sigr[n_weeks];
 real<lower=0> sigmau;             // uninfected rate
 //real<lower=0> sigmac0;             // case rate
 //real<lower=0> sigmac1;             // case rate
@@ -61,7 +61,8 @@ transformed parameters {
   I = 0;
   for (i in 1:n_weeks){
     sigmac[i] = sigc[i];
-    sigmar[i] = sigmar0+sigmar1/(1 + exp(i - sigmar2));
+    //sigmar[i] = sigmar0+sigmar1/(1 + exp(i - sigmar2));
+    sigmar[i] = sigr[i];
     sigmad[i] = sigd[i];
     I += alpha[i];
     I *= exp(beta[i] - sigmac[i] - sigmau);
@@ -95,6 +96,7 @@ model {
       beta[i] ~ exponential(.5);
       sigd[i] ~ exponential(20.);
       sigc[i] ~ exponential(2.);
+      sigr[i] ~ exponential(2.);
       target += poisson_lpmf(y_wk[i,1] | dC[i]);
       target += poisson_lpmf(y_wk[i,2] | dR[i]);
       target += poisson_lpmf(y_wk[i,3] | dD[i]);
@@ -124,7 +126,6 @@ generated quantities {
     real R0 = beta[1]/sigmac[1];
 
     ll_ = 0;
-    n_data_pts = 0;
 
     {
       real C_cum;
@@ -150,7 +151,6 @@ generated quantities {
           llx[7*(i-1) + j,2] = poisson_lpmf(y_proj[7*(i-1) + j,2] | min([dR[i]/7,1e8]));
           llx[7*(i-1) + j,3] = poisson_lpmf(y_proj[7*(i-1) + j,3] | min([dD[i]/7,1e8]));
           ll_ += llx[7*(i-1) + j,1] + llx[7*(i-1) + j,2] + llx[7*(i-1) + j,3];
-          n_data_pts += 1;
         }
       }
     }

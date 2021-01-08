@@ -22,6 +22,7 @@ real<lower=0> beta[n_weeks];             // infection rate
 real<lower=0> alpha[n_weeks];
 real<lower=0> sigd[n_weeks];
 real<lower=0> sigc[n_weeks];
+real<lower=0> sigr[n_weeks];
 real<lower=0> sigmau;             // uninfected rate
 //real<lower=0> sigmac0;             // case rate
 //real<lower=0> sigmac1;             // case rate
@@ -50,7 +51,7 @@ transformed parameters {
   I = 0;
   for (i in 1:n_weeks){
     sigmac[i] = sigc[i];
-    sigmar[i] = sigmar0+sigmar1/(1 + exp(i - sigmar2));
+    sigmar[i] = sigr[i]; //sigmar0+sigmar1/(1 + exp(i - sigmar2));
     sigmad[i] = sigd[i];
     I += alpha[i];
     I *= exp(beta[i] - sigmac[i] - sigmau);
@@ -66,7 +67,7 @@ transformed parameters {
       dD[i] = sigmad[i]*Cd[i-2];
     else
       dD[i] = sigmad[i]*C;
-      */
+    */
   }
   }
 }
@@ -84,6 +85,7 @@ model {
       beta[i] ~ exponential(.5);
       sigd[i] ~ exponential(20.);
       sigc[i] ~ exponential(2.);
+      sigr[i] ~ exponential(2.);
       target += poisson_lpmf(y[i,1] | dC[i]);
       target += poisson_lpmf(y[i,2] | dR[i]);
       target += poisson_lpmf(y[i,3] | dD[i]);
