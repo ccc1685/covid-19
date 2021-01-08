@@ -6,6 +6,7 @@ from numpy.random import gamma, exponential, lognormal,normal
 import pandas as pd
 from pathlib import Path
 import sys
+from os import mkdir
 
 import niddk_covid_sicr as ncs
 
@@ -53,7 +54,7 @@ def get_stan_data(full_data_path, args):
         stan_data['ts'] += offset
     return stan_data, df['dates2'][t0]
 
-def get_stan_data_weekly_total(full_data_path, args):
+def get_stan_data_weekly_total(full_data_path, args, weekly_data_path, roi):
     """ Get weekly totals for new cases, recoveries,
         and deaths from timeseries data.
     """
@@ -66,21 +67,6 @@ def get_stan_data_weekly_total(full_data_path, args):
             raise ValueError(msg)
         else:
             df = df[df['dates2'] <= args.last_date]
-
-    # t0 := where to start time series, index space
-    try:
-        t0 = np.where(df["new_cases"].values >= 5)[0][0]
-    except IndexError:
-        return [None, None]
-    # tm := start of mitigation, index space
-
-    try:
-        dfm = pd.read_csv(args.data_path / 'mitigationprior.csv')
-        tmdate = dfm.loc[dfm.region == args.roi, 'date'].values[0]
-        tm = np.where(df["dates2"] == tmdate)[0][0]
-    except Exception:
-        print("Could not use mitigation prior data; setting mitigation prior to default.")
-        tm = t0 + 10
 
     n_proj = 120
     stan_data = {}
@@ -95,13 +81,43 @@ def get_stan_data_weekly_total(full_data_path, args):
     df['weeklytotal_new_recover'] = df.new_recover.resample('W-{}'.format(start_abr)).sum()
     df['weeklytotal_new_deaths'] = df.new_deaths.resample('W-{}'.format(start_abr)).sum()
 
-    df.reset_index(inplace=True) # reset index for df.groupby()
-    df = df.bfill(axis ='rows') # backfill nan to fill weeklytotal columns with weekly totals
+
     df.dropna(inplace=True) # drop last rows if they spill over weekly chunks and present NAs
+        # will also remove non-weekly dates so each element is by weekly amount
 
     df.weeklytotal_new_cases = df.weeklytotal_new_cases.astype(int) # convert float to int
     df.weeklytotal_new_recover = df.weeklytotal_new_recover.astype(int)
     df.weeklytotal_new_deaths = df.weeklytotal_new_deaths.astype(int)
+    df.reset_index(inplace=True) # reset index
+    df.drop(columns=['Date', 'cum_cases', 'cum_deaths', 'cum_recover',
+                    'new_cases', 'new_deaths', 'new_recover', 'new_uninfected'],
+                    inplace=True) # no longer need these columns; only using weekly
+    df_weekly = df.copy() # make copy of df for exporting to weekly data-path
+    df_weekly.rename(columns={'weeklytotal_new_cases':'new_cases',
+                      'weeklytotal_new_recover':'new_recover',
+                      'weeklytotal_new_deaths':'new_deaths'}, inplace=True)
+    try:
+        # if data_path for weekly data exists, add df csv to it for future analysis
+        csv_weekly = Path(args.data_path + "_weekly") / ("covidtimeseries_%s.csv" % args.roi)
+        df_weekly.to_csv(csv_weekly, index=False)
+    except:
+        # else create folder and add weekly data csv
+        print("Creating data folder for weekly totals per roi")
+        mkdir(Path(args.data_path + "_weekly"))
+        csv_weekly = Path(args.data_path + "_weekly") / ("covidtimeseries_%s.csv" % args.roi)
+        df_weekly.to_csv(csv_weekly, index=False)
+
+    # t0 := where to start time series, index space
+    t0 = np.where(df["weeklytotal_new_cases"].values >= 5)[0][0]
+
+    # tm := start of mitigation, index space
+    try:
+        dfm = pd.read_csv(args.data_path / 'mitigationprior.csv')
+        tmdate = dfm.loc[dfm.region == args.roi, 'date'].values[0]
+        tm = np.where(df["dates2"] == tmdate)[0][0]
+    except Exception:
+        print("Could not use mitigation prior data; setting mitigation prior to default.")
+        tm = t0 + 10
 
     stan_data['n_ostates'] = 3
     stan_data['tm'] = tm
@@ -117,8 +133,8 @@ def get_stan_data_weekly_total(full_data_path, args):
         offset = (frame_start - global_start).days
         stan_data['tm'] += offset
         stan_data['ts'] += offset
-
     return stan_data, df['dates2'][t0]
+
 
 def get_n_data(stan_data):
     if stan_data:
