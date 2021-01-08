@@ -35,8 +35,10 @@ real<lower=0> sigmac0;             // case rate
 real<lower=0> sigmac1;             // case rate
 real<lower=0> sigmar0;             // recovery rate
 real<lower=0> sigmar1;             // recovery rate
+real<lower=0> sigmar2;             // recovery rate
 real<lower=0> sigmad0;             // death rate
 real<lower=0> sigmad1;
+real<lower=0> sigmad2;
 real<lower=0> alpha[n_weeks];
 }
 
@@ -59,8 +61,8 @@ transformed parameters {
   I = 0;
   for (i in 1:n_weeks){
     sigmac[i] = sigmac0 + (sigmac1)*i;
-    sigmad[i] = sigmad0/(1 + ((.1 + sigmad1)*i)^2);
-    sigmar[i] = sigmar0/(1 + ((.1 + sigmar1)*i)^2);
+    sigmad[i] = sigmad0/(sigmad2^2 + ((.1 + sigmad1)*i)^2);
+    sigmar[i] = sigmar0/(sigmar2^2 + ((.1 + sigmar1)*i)^2);
     I += alpha[i];
     I *= exp(beta[i] - sigmac[i] - sigmau);
     dC[i] = sigmac[i]*I;
@@ -86,8 +88,10 @@ model {
   sigmau ~ exponential(5.);
   sigmar0 ~ exponential(1.);
   sigmar1 ~ exponential(1.);
+  sigmar2 ~ normal(20.,3);
   sigmad0 ~ exponential(1.);
   sigmad1 ~ exponential(1.);
+  sigmad2 ~ normal(20.,3);
 
     for (i in 1:n_weeks){
       alpha[i] ~ exponential(10.);
@@ -111,8 +115,7 @@ generated quantities {
     real Rt[n_weeks];
     int y_proj[n_weeks*7,n_ostates];
     real llx[n_weeks*7, 3];
-    real ll_; // log-likelihood for model
-    int n_data_pts;
+    real ll_ = 0; // log-likelihood for model
 
     real R0 = beta[1]/sigmac[1];
 
@@ -136,11 +139,10 @@ generated quantities {
           y_proj[7*(i-1) + j,1] = poisson_rng(min([dC[i]/7,1e8]));
           y_proj[7*(i-1) + j,2] = poisson_rng(min([dR[i]/7,1e8]));
           y_proj[7*(i-1) + j,3] = poisson_rng(min([dD[i]/7,1e8]));
-          llx[7*(i-1) + j,1] = poisson_lpmf(y[7*(i-1) + j,1] | min([dC[i]/7,1e8]));
-          llx[7*(i-1) + j,2] = poisson_lpmf(y[7*(i-1) + j,2] | min([dR[i]/7,1e8]));
-          llx[7*(i-1) + j,3] = poisson_lpmf(y[7*(i-1) + j,3] | min([dD[i]/7,1e8]));
+          llx[7*(i-1) + j,1] = poisson_lpmf(y_proj[7*(i-1) + j,1] | min([dC[i]/7,1e8]));
+          llx[7*(i-1) + j,2] = poisson_lpmf(y_proj[7*(i-1) + j,2] | min([dR[i]/7,1e8]));
+          llx[7*(i-1) + j,3] = poisson_lpmf(y_proj[7*(i-1) + j,3] | min([dD[i]/7,1e8]));
           ll_ += llx[7*(i-1) + j,1] + llx[7*(i-1) + j,2] + llx[7*(i-1) + j,3];
-          n_data_pts += 1;
         }
       }
     }
