@@ -89,7 +89,6 @@ model {
   sigmad0 ~ exponential(1.);
   sigmad1 ~ exponential(1.);
 
-
     for (i in 1:n_weeks){
       alpha[i] ~ exponential(10.);
       beta[i] ~ exponential(.5);
