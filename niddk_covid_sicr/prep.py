@@ -86,11 +86,11 @@ def get_stan_data_weekly_total(full_data_path, args):
     df.weeklytotal_new_cases = df.weeklytotal_new_cases.astype(int) # convert float to int
     df.weeklytotal_new_recover = df.weeklytotal_new_recover.astype(int)
     df.weeklytotal_new_deaths = df.weeklytotal_new_deaths.astype(int)
-    
+
     # handle negatives by setting to 0
-    df.weeklytotal_new_cases[df.weeklytotal_new_cases < 0] = 0
-    df.weeklytotal_new_recover[df.weeklytotal_new_recover < 0] = 0
-    df.weeklytotal_new_deaths[df.weeklytotal_new_deaths < 0] = 0
+    df['weeklytotal_new_cases'] = df['weeklytotal_new_cases'].clip(lower=0)
+    df['weeklytotal_new_recover'] = df['weeklytotal_new_recover'].clip(lower=0)
+    df['weeklytotal_new_deaths'] = df['weeklytotal_new_deaths'].clip(lower=0)
     df.reset_index(inplace=True) # reset index
 
     # t0 := where to start time series, index space
