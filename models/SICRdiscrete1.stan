@@ -102,10 +102,10 @@ model {
     for (i in 2:n_weeks-1){
       target += normal_lpdf(beta[i+1]-beta[i] | 0, .2);
       target += normal_lpdf(beta[i+1]-2*beta[i]+beta[i-1] | 0, .5);
-      target += normal_lpdf(sigc[i+1]-sigc[i] | 0, .2);
-      target += normal_lpdf(sigc[i+1]-2*sigc[i]+sigd[i-1] | 0, .5);
-      target += normal_lpdf(sigd[i+1]-sigd[i] | 0, .2);
-      target += normal_lpdf(sigd[i+1]-2*sigd[i]+sigd[i-1] | 0, .5);
+    //  target += normal_lpdf(sigc[i+1]-sigc[i] | 0, .2);
+    //  target += normal_lpdf(sigc[i+1]-2*sigc[i]+sigd[i-1] | 0, .5);
+    //  target += normal_lpdf(sigd[i+1]-sigd[i] | 0, .2);
+    //  target += normal_lpdf(sigd[i+1]-2*sigd[i]+sigd[i-1] | 0, .5);
     }
 }
 
@@ -117,7 +117,7 @@ generated quantities {
     real ifr[n_weeks];
     real Rt[n_weeks];
     int y_proj[n_weeks*7,n_ostates];
-    real llx[n_obs, 3];
+    real llx[n_weeks*7, 3];
     real ll_; // log-likelihood for model
     int n_data_pts;
 
@@ -146,9 +146,9 @@ generated quantities {
           y_proj[7*(i-1) + j,1] = poisson_rng(min([dC[i]/7,1e8]));
           y_proj[7*(i-1) + j,2] = poisson_rng(min([dR[i]/7,1e8]));
           y_proj[7*(i-1) + j,3] = poisson_rng(min([dD[i]/7,1e8]));
-          llx[7*(i-1) + j,1] = poisson_lpmf(max([y[7*(i-1) + j,1],0]) | min([dC[i]/7,1e8]));
-          llx[7*(i-1) + j,2] = poisson_lpmf(max([y[7*(i-1) + j,2],0]) | min([dR[i]/7,1e8]));
-          llx[7*(i-1) + j,3] = poisson_lpmf(max([y[7*(i-1) + j,3],0]) | min([dD[i]/7,1e8]));
+          llx[7*(i-1) + j,1] = poisson_lpmf(y_proj[7*(i-1) + j,1] | min([dC[i]/7,1e8]));
+          llx[7*(i-1) + j,2] = poisson_lpmf(y_proj[7*(i-1) + j,2] | min([dR[i]/7,1e8]));
+          llx[7*(i-1) + j,3] = poisson_lpmf(y_proj[7*(i-1) + j,3] | min([dD[i]/7,1e8]));
           ll_ += llx[7*(i-1) + j,1] + llx[7*(i-1) + j,2] + llx[7*(i-1) + j,3];
           n_data_pts += 1;
         }
