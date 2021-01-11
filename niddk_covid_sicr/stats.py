@@ -60,7 +60,7 @@ def add_ir(data_path:str, tables_path:str):
     """ Add infectivity ratio IR to tables using regional populations to compute
     the fraction of population infected.
 
-    IR = cases * CAR / population
+    IR = cum_cases / CAR / population
     Arguments:
         data_path(str): Data-path to timeseries files for getting cum_case counts
                         per roi.
@@ -108,7 +108,7 @@ def add_ir(data_path:str, tables_path:str):
                 df.drop(columns=[i], inplace=True)
         df = df.merge(df_pop, on='roi', how='left')
         df = df.merge(df_cases, on='roi', how='left')
-        df['ir'] = (df['cum_cases'] * df['car']) / df['population']
+        df['ir'] = df['cum_cases'] / df['car'] / df['population']
         df.to_csv(table, index=False)
 
 
