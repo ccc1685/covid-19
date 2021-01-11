@@ -92,11 +92,11 @@ model {
     }
     for (i in 2:n_weeks-1){
       target += normal_lpdf((beta[i+1]-beta[i])/(beta[i+1]+beta[i]) | 0, .02);
-      target += normal_lpdf((beta[i+1]-2*beta[i]+beta[i-1])/(beta[i+1]+beta[i]) | 0, .02);
+      target += normal_lpdf(beta[i+1]-2*beta[i]+beta[i-1] | 0, .05);
       target += normal_lpdf((sigc[i+1]-sigc[i])/(sigc[i+1]+sigc[i]) | 0, .02);
-      target += normal_lpdf((sigc[i+1]-2*sigc[i]+sigd[i-1])/(sigc[i+1]+sigc[i]) | 0, .02);
+      target += normal_lpdf(sigc[i+1]-2*sigc[i]+sigd[i-1] | 0, .05);
       target += normal_lpdf((sigd[i+1]-sigd[i])/(sigd[i+1]+sigd[i]) | 0, .02);
-      target += normal_lpdf((sigd[i+1]-2*sigd[i]+sigd[i-1])/(sigd[i+1]+sigd[i]) | 0, .02);
+      target += normal_lpdf(sigd[i+1]-2*sigd[i]+sigd[i-1] | 0, .05);
     }
 }
 
