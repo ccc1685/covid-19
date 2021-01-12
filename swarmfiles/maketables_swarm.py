@@ -16,7 +16,7 @@ parser.add_argument('-tp', '--tables-path', default='/data/schwartzao/covid-sicr
 
 args = parser.parse_args()
 
-swarmFile = open(f"./{args.file_name}.swarm", "w")
+swarmFile = open(f"../{args.file_name}.swarm", "w")
 line = ("source /data/schwartzao/conda/etc/profile.d/conda.sh "
         "&& conda activate covid "
         "&& python /home/schwartzao/covid-sicr/scripts/make-tables.py "
