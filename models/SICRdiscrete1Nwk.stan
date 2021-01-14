@@ -66,7 +66,7 @@ transformed parameters {
   I = 0;
   Z = 1;
 
-  Nt = 884000;
+  Nt = N;
 
   for (i in 1:n_weeks){
     sigmac[i] = sigc[i];
