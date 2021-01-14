@@ -113,7 +113,7 @@ def get_stan_data_weekly_total(full_data_path, args):
     stan_data['n_obs'] = len(df['dates2']) - t0
     stan_data['n_weeks'] = len(df['dates2']) - t0
     stan_data['n_total'] = len(df['dates2']) - t0 + n_proj
-    stan_data['N'] = 10000000
+    stan_data['N'] = 884000
     if args.fixed_t:
         global_start = datetime.strptime('01/22/20', '%m/%d/%y')
         frame_start = datetime.strptime(df['dates2'][0], '%m/%d/%y')
