@@ -109,8 +109,9 @@ def get_stan_data_weekly_total(full_data_path, args):
         population = get_population(args)
         stan_data['N'] = population
     except:
-        stan_data['N'] = 0
+        # stan_data['N'] = 1 # If no population found in population_estimates.csv
         print("Could not get population estimate for {}".format(args.roi))
+        exit()
 
     stan_data['n_ostates'] = 3
     stan_data['tm'] = tm
@@ -120,7 +121,6 @@ def get_stan_data_weekly_total(full_data_path, args):
     stan_data['n_obs'] = len(df['dates2']) - t0
     stan_data['n_weeks'] = len(df['dates2']) - t0
     stan_data['n_total'] = len(df['dates2']) - t0 + n_proj
-    stan_data['N'] = 884000
     if args.fixed_t:
         global_start = datetime.strptime('01/22/20', '%m/%d/%y')
         frame_start = datetime.strptime(df['dates2'][0], '%m/%d/%y')
