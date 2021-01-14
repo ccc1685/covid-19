@@ -1,67 +1,259 @@
-roi,population,Sources
-US_AL,4903185,"US Census's ""2019 National and State Population Estimates"""
-US_AK,731545,"US Census's ""2019 National and State Population Estimates"""
-US_AZ,7278717,"US Census's ""2019 National and State Population Estimates"""
-US_AR,3017804,"US Census's ""2019 National and State Population Estimates"""
-US_CA,39512223,"US Census's ""2019 National and State Population Estimates"""
-US_CO,5758736,"US Census's ""2019 National and State Population Estimates"""
-US_CT,3565287,"US Census's ""2019 National and State Population Estimates"""
-US_DE,973764,"US Census's ""2019 National and State Population Estimates"""
-US_DC,705749,"US Census's ""2019 National and State Population Estimates"""
-US_FL,21477737,"US Census's ""2019 National and State Population Estimates"""
-US_GA,10617423,"US Census's ""2019 National and State Population Estimates"""
-US_HI,1415872,"US Census's ""2019 National and State Population Estimates"""
-US_ID,1787065,"US Census's ""2019 National and State Population Estimates"""
-US_IL,12671821,"US Census's ""2019 National and State Population Estimates"""
-US_IN,6732219,"US Census's ""2019 National and State Population Estimates"""
-US_IA,3155070,"US Census's ""2019 National and State Population Estimates"""
-US_KS,2913314,"US Census's ""2019 National and State Population Estimates"""
-US_KY,4467673,"US Census's ""2019 National and State Population Estimates"""
-US_LA,4648794,"US Census's ""2019 National and State Population Estimates"""
-US_ME,1344212,"US Census's ""2019 National and State Population Estimates"""
-US_MD,6045680,"US Census's ""2019 National and State Population Estimates"""
-US_MA,6892503,"US Census's ""2019 National and State Population Estimates"""
-US_MI,9986857,"US Census's ""2019 National and State Population Estimates"""
-US_MN,5639632,"US Census's ""2019 National and State Population Estimates"""
-US_MS,2976149,"US Census's ""2019 National and State Population Estimates"""
-US_MO,6137428,"US Census's ""2019 National and State Population Estimates"""
-US_MT,1068778,"US Census's ""2019 National and State Population Estimates"""
-US_NE,1934408,"US Census's ""2019 National and State Population Estimates"""
-US_NV,3080156,"US Census's ""2019 National and State Population Estimates"""
-US_NH,1359711,"US Census's ""2019 National and State Population Estimates"""
-US_NJ,8882190,"US Census's ""2019 National and State Population Estimates"""
-US_NM,2096829,"US Census's ""2019 National and State Population Estimates"""
-US_NY,19453561,"US Census's ""2019 National and State Population Estimates"""
-US_NC,10488084,"US Census's ""2019 National and State Population Estimates"""
-US_ND,762062,"US Census's ""2019 National and State Population Estimates"""
-US_OH,11689100,"US Census's ""2019 National and State Population Estimates"""
-US_OK,3956971,"US Census's ""2019 National and State Population Estimates"""
-US_OR,4217737,"US Census's ""2019 National and State Population Estimates"""
-US_PA,12801989,"US Census's ""2019 National and State Population Estimates"""
-US_RI,1059361,"US Census's ""2019 National and State Population Estimates"""
-US_SC,5148714,"US Census's ""2019 National and State Population Estimates"""
-US_SD,884659,"US Census's ""2019 National and State Population Estimates"""
-US_TN,6829174,"US Census's ""2019 National and State Population Estimates"""
-US_TX,28995881,"US Census's ""2019 National and State Population Estimates"""
-US_UT,3205958,"US Census's ""2019 National and State Population Estimates"""
-US_VT,623989,"US Census's ""2019 National and State Population Estimates"""
-US_VA,8535519,"US Census's ""2019 National and State Population Estimates"""
-US_WA,7614893,"US Census's ""2019 National and State Population Estimates"""
-US_WV,1792147,"US Census's ""2019 National and State Population Estimates"""
-US_WI,5822434,"US Census's ""2019 National and State Population Estimates"""
-US_WY,578759,"US Census's ""2019 National and State Population Estimates"""
-US_PR,3193694,"US Census's ""2019 National and State Population Estimates"""
-Canada,37589262,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_NL,521542,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_PEI,156947,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Nova Scotia,971395,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_New Brunswick,776827,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Quebec,8484965,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Ontario,14566547,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Manitoba,1369465,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Saskatchewan,1174462,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Alberta,4371316,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_BC,5071336,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Yukon,40854,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_NWT,44826,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
-CA_Nunavut,38780,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 ."
+roi,population,Sources,Unnamed: 2
+Afghanistan,37172386,,
+Albania,2866376,,
+Algeria,42228429,,
+Andorra,77006,,
+Angola,30809762,,
+Antigua and Barbuda,96286,,
+Argentina,44494502,,
+Armenia,2951776,,
+Australia,24982688,,
+Austria,8840521,,
+Azerbaijan,9939800,,
+Bahamas,385640,,
+Bahrain,1569439,,
+Bangladesh,161356039,,
+Barbados,286641,,
+Belarus,9483499,,
+Belgium,11433256,,
+Belize,383071,,
+Benin,11485048,,
+Bhutan,754394,,
+Bolivia,11353142,,
+Bosnia and Herzegovina,3323929,,
+Botswana,2254126,,
+Brazil,209469333,,
+Brunei,428962,,
+Bulgaria,7025037,,
+Burkina Faso,19751535,,
+Burma,53708395,,
+Burundi,11175378,,
+CA_Alberta,4371316,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_BC,5071336,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_Manitoba,1369465,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_NL,521542,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_NWT,44826,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_New Brunswick,776827,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_Nova Scotia,971395,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_Nunavut,38780,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_Ontario,14566547,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_PEI,156947,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_Quebec,8484965,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_Saskatchewan,1174462,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+CA_Yukon,40854,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+Cabo Verde,543767,,
+Cambodia,16249798,,
+Cameroon,25216237,,
+Canada,37057765,,
+Canada,37589262,"Statistics Canada, Demography Division. The table 17-10-0134-01 is an update of table 17-10-0086-01 .",
+Central African Republic,4666377,,
+Chad,15477751,,
+Chile,18729160,,
+China,1392730000,,
+Colombia,49648685,,
+Comoros,832322,,
+Congo (Brazzaville),1284609,,
+Congo (Kinshasa),7785965,,
+Costa Rica,4999441,,
+Cote d'Ivoire,25716544,,
+Croatia,4087843,,
+Cuba,11338138,,
+Cyprus,1189265,,
+Czechia,10629928,,
+Denmark,5793636,,
+Djibouti,958920,,
+Dominica,71625,,
+Dominican Republic,10627165,,
+Ecuador,17084357,,
+Egypt,98423595,,
+El Salvador,6420744,,
+Equatorial Guinea,1308974,,
+Eritrea,3213972,,
+Estonia,1321977,,
+Eswatini,1136191,,
+Ethiopia,109224559,,
+Fiji,889953,,
+Finland,5515525,,
+France,66977107,,
+Gabon,2119275,,
+Gambia,2280102,,
+Georgia,3726549,,
+Germany,82905782,,
+Ghana,29767108,,
+Greece,10731726,,
+Grenada,111454,,
+Guatemala,17247807,,
+Guinea,12414318,,
+Guinea-Bissau,1874309,,
+Guyana,779004,,
+Haiti,11123176,,
+Holy See,825,,
+Honduras,9587522,,
+Hungary,9775564,,
+Iceland,352721,,
+India,1352617328,,
+Indonesia,267663435,,
+Iran,81800269,,
+Iraq,38433600,,
+Ireland,4867309,,
+Israel,8882800,,
+Italy,60421760,,
+Jamaica,2934855,,
+Japan,126529100,,
+Jordan,9956011,,
+Kazakhstan,18272430,,
+Kenya,51393010,,
+"Korea, South",51606633,,
+Kosovo,1794248,,
+Kuwait,4137309,,
+Kyrgyzstan,6322800,,
+Laos,7061507,,
+Latvia,1927174,,
+Lebanon,6848925,,
+Lesotho,2108132,,
+Liberia,4818977,,
+Libya,6777452,,
+Liechtenstein,37910,,
+Lithuania,2801543,,
+Luxembourg,607950,,
+Madagascar,26262368,,
+Malawi,18143315,,
+Malaysia,31528585,,
+Maldives,515696,,
+Mali,19077690,,
+Malta,484630,,
+Marshall Islands,58413,,
+Mauritania,4403319,,
+Mauritius,1265303,,
+Mexico,126190788,,
+Moldova,2706049,,
+Monaco,38682,,
+Mongolia,3170208,,
+Montenegro,631219,,
+Morocco,36029138,,
+Mozambique,29495962,,
+Namibia,2448255,,
+Nepal,28087871,,
+Netherlands,17231624,,
+New Zealand,4841000,,
+Nicaragua,6465513,,
+Niger,22442948,,
+Nigeria,195874740,,
+North Macedonia,2084367,,
+Norway,5311916,,
+Oman,4829483,,
+Pakistan,212215030,,
+Panama,4176873,,
+Papua New Guinea,8606316,,
+Paraguay,6956071,,
+Peru,31989256,,
+Philippines,106651922,,
+Poland,37974750,,
+Portugal,10283822,,
+Qatar,2781677,,
+Romania,19466145,,
+Russia,144478050,,
+Rwanda,12301939,,
+Saint Kitts and Nevis,52441,,
+Saint Lucia,181889,,
+Saint Vincent and the Grenadines,110210,,
+Samoa,196130,,
+San Marino,33785,,
+Sao Tome and Principe,211028,,
+Saudi Arabia,33699947,,
+Senegal,15854360,,
+Serbia,6963764,,
+Seychelles,96762,,
+Sierra Leone,7650154,,
+Singapore,5638676,,
+Slovakia,5446771,,
+Slovenia,2073894,,
+Solomon Islands,652858,,
+Somalia,15008154,,
+South Africa,57779622,,
+South Sudan,10975920,,
+Spain,46796540,,
+Sri Lanka,21803000,,
+Sudan,41801533,,
+Suriname,575991,,
+Sweden,10175214,,
+Switzerland,8513227,,
+Syria,16906283,,
+Taiwan*,23816775,,
+Tajikistan,9100837,,
+Tanzania,56318348,,
+Thailand,69428524,,
+Timor-Leste,1293119,,
+Togo,7889094,,
+Trinidad and Tobago,1389858,,
+Tunisia,11565204,,
+Turkey,82319724,,
+US,328239523,,
+US_AK,731545,"US Census's ""2019 National and State Population Estimates""",
+US_AL,4903185,"US Census's ""2019 National and State Population Estimates""",
+US_AR,3017804,"US Census's ""2019 National and State Population Estimates""",
+US_AZ,7278717,"US Census's ""2019 National and State Population Estimates""",
+US_CA,39512223,"US Census's ""2019 National and State Population Estimates""",
+US_CO,5758736,"US Census's ""2019 National and State Population Estimates""",
+US_CT,3565287,"US Census's ""2019 National and State Population Estimates""",
+US_DC,705749,"US Census's ""2019 National and State Population Estimates""",
+US_DE,973764,"US Census's ""2019 National and State Population Estimates""",
+US_FL,21477737,"US Census's ""2019 National and State Population Estimates""",
+US_GA,10617423,"US Census's ""2019 National and State Population Estimates""",
+US_GU,168485,,
+US_HI,1415872,"US Census's ""2019 National and State Population Estimates""",
+US_IA,3155070,"US Census's ""2019 National and State Population Estimates""",
+US_ID,1787065,"US Census's ""2019 National and State Population Estimates""",
+US_IL,12671821,"US Census's ""2019 National and State Population Estimates""",
+US_IN,6732219,"US Census's ""2019 National and State Population Estimates""",
+US_KS,2913314,"US Census's ""2019 National and State Population Estimates""",
+US_KY,4467673,"US Census's ""2019 National and State Population Estimates""",
+US_LA,4648794,"US Census's ""2019 National and State Population Estimates""",
+US_MA,6892503,"US Census's ""2019 National and State Population Estimates""",
+US_MD,6045680,"US Census's ""2019 National and State Population Estimates""",
+US_ME,1344212,"US Census's ""2019 National and State Population Estimates""",
+US_MI,9986857,"US Census's ""2019 National and State Population Estimates""",
+US_MN,5639632,"US Census's ""2019 National and State Population Estimates""",
+US_MO,6137428,"US Census's ""2019 National and State Population Estimates""",
+US_MP,57216,,
+US_MS,2976149,"US Census's ""2019 National and State Population Estimates""",
+US_MT,1068778,"US Census's ""2019 National and State Population Estimates""",
+US_NC,10488084,"US Census's ""2019 National and State Population Estimates""",
+US_ND,762062,"US Census's ""2019 National and State Population Estimates""",
+US_NE,1934408,"US Census's ""2019 National and State Population Estimates""",
+US_NH,1359711,"US Census's ""2019 National and State Population Estimates""",
+US_NJ,8882190,"US Census's ""2019 National and State Population Estimates""",
+US_NM,2096829,"US Census's ""2019 National and State Population Estimates""",
+US_NV,3080156,"US Census's ""2019 National and State Population Estimates""",
+US_NY,19453561,"US Census's ""2019 National and State Population Estimates""",
+US_OH,11689100,"US Census's ""2019 National and State Population Estimates""",
+US_OK,3956971,"US Census's ""2019 National and State Population Estimates""",
+US_OR,4217737,"US Census's ""2019 National and State Population Estimates""",
+US_PA,12801989,"US Census's ""2019 National and State Population Estimates""",
+US_PR,3193694,"US Census's ""2019 National and State Population Estimates""",
+US_RI,1059361,"US Census's ""2019 National and State Population Estimates""",
+US_SC,5148714,"US Census's ""2019 National and State Population Estimates""",
+US_SD,884659,"US Census's ""2019 National and State Population Estimates""",
+US_TN,6829174,"US Census's ""2019 National and State Population Estimates""",
+US_TX,28995881,"US Census's ""2019 National and State Population Estimates""",
+US_UT,3205958,"US Census's ""2019 National and State Population Estimates""",
+US_VA,8535519,"US Census's ""2019 National and State Population Estimates""",
+US_VI,106631,,
+US_VT,623989,"US Census's ""2019 National and State Population Estimates""",
+US_WA,7614893,"US Census's ""2019 National and State Population Estimates""",
+US_WI,5822434,"US Census's ""2019 National and State Population Estimates""",
+US_WV,1792147,"US Census's ""2019 National and State Population Estimates""",
+US_WY,578759,"US Census's ""2019 National and State Population Estimates""",
+Uganda,42723139,,
+Ukraine,44622516,,
+United Arab Emirates,9630959,,
+United Kingdom,66460344,,
+Uruguay,3449299,,
+Uzbekistan,32955400,,
+Vanuatu,292680,,
+Venezuela,28870195,,
+Vietnam,95540395,,
+West Bank and Gaza,4685306,,
+Yemen,28498687,,
+Zambia,17351822,,
+Zimbabwe,14439018,,
