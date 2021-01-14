@@ -71,6 +71,9 @@ def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
     # reformat and save that data in its own .csv file.
     source = dfs['global']
     for country in tqdm(good_countries, desc='Countries'):  # For each country
+        if country in ['Diamond Princess', 'MS Zaandam']:
+            print("Skipping {}".format(country))
+            pass
         # If we have data in the downloaded JHU files for that country
         if country in source['confirmed'].index:
             df = pd.DataFrame(columns=['dates2', 'cum_cases', 'cum_deaths',
