@@ -119,7 +119,7 @@ model {
 // generated quantities
 
 generated quantities {
-    real It[n_weeks];
+    //real It[n_weeks];
     real ir[n_weeks];
     real car[n_weeks];
     real ifr[n_weeks];
@@ -142,7 +142,7 @@ generated quantities {
       for (i in 1:n_weeks) {
         C_cum += dC[i];
         I_cum += dI[i];
-        It[i] = I_cum;
+        //It[i] = I_cum;
         D_cum += dD[i];
         ir[i] = I_cum/N;
         car[i] = C_cum/I_cum;

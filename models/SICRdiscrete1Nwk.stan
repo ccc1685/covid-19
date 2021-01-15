@@ -29,7 +29,7 @@ real<lower=0> sigmau;             // uninfected rate
 
 transformed parameters {
 
-  real S[n_weeks];
+  //real S[n_weeks];
   real dC[n_weeks];
   real dR[n_weeks];
   real dD[n_weeks];
@@ -98,7 +98,7 @@ transformed parameters {
       dR[i] = sigmar[i]*C;
       }
     */
-    S[i] = s*Nt;
+    //S[i] = s*Nt;
     Z += I0 - s*Nt;
     ir[i] = 1-s;
     car[i] = Ccum/Z;
