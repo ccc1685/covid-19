@@ -88,6 +88,13 @@ def get_jhu(data_path: str, filter_: Union[dict, bool] = True) -> None:
             df[['new_cases', 'new_deaths', 'new_recover']] = \
                 df[['cum_cases', 'cum_deaths', 'cum_recover']].diff()
             df['new_uninfected'] = df['new_recover'] + df['new_deaths']
+
+            try:
+                population = get_population_count(data_path, country)
+                df['population'] = population
+            except:
+                pass
+
             # Fill NaN with 0 and convert to int
             dfs[country] = df.set_index('dates2').fillna(0).astype(int)
             # Overwrite old data
@@ -125,7 +132,29 @@ def get_countries(d: pd.DataFrame, filter_: Union[dict, bool] = True):
     print("JHU data not acceptable for %s" % ','.join(bad))
     return good
 
+def get_population_count(data_path:str, roi):
+    """ Check if we have population count for roi and
+        add to timeseries df if we do.
 
+        Args:
+            data_path (str): Full path to data directory.
+            roi (str): Region.
+        Returns:
+            population (int): Population count for ROI (if exists).
+    """
+    try:  # open population file
+        df_pop = pd.read_csv(data_path / 'population_estimates.csv')
+    except:
+        print("Missing population_estimates.csv in data-path")
+
+    try:
+        population = df_pop.query('roi == "{}"'.format(roi))['population'].values
+    except:
+        print("{} population estimate not found in population_estimates.csv".format(args.roi))
+
+    return int(population)
+    # check if roi is in it
+    # get population count for roi
 def get_covid_tracking(data_path: str, filter_: Union[dict, bool] = True,
                        fixes: bool = False) -> None:
     """Gets data from The COVID Tracking Project (US states only).
@@ -175,6 +204,13 @@ def get_covid_tracking(data_path: str, filter_: Union[dict, bool] = True,
             df[['new_cases', 'new_deaths', 'new_recover']] = \
             df[['cum_cases', 'cum_deaths', 'cum_recover']].diff()
             df['new_uninfected'] = df['new_recover'] + df['new_deaths']
+
+            try:
+                population = get_population_count(data_path, 'US_' + state)
+                df['population'] = population
+            except:
+                pass
+
             df = df.fillna(0).astype(int)
             # Overwrite old data
             df.to_csv(data_path / ('covidtimeseries_US_%s.csv' % state))
@@ -227,6 +263,13 @@ def get_canada(data_path: str, filter_: Union[dict, bool] = True,
         df[['new_cases', 'new_deaths', 'new_recover']] = \
             df[['cum_cases', 'cum_deaths', 'cum_recover']].diff()
         df['new_uninfected'] = df['new_recover'] + df['new_deaths']
+
+        try:
+            population = get_population_count(data_path, 'CA_' + province)
+            df['population'] = population
+        except:
+            pass
+
         df.sort_values(by=['dates2'], inplace=True) # sort by datetime obj before converting to string
         df['dates2'] = pd.to_datetime(df['dates2']).dt.strftime('%m/%d/%y') # convert dates to string
         df = df.set_index('dates2').fillna(0).astype(int) # Fill NaN with 0 and convert to int

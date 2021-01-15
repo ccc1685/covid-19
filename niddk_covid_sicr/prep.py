@@ -106,12 +106,13 @@ def get_stan_data_weekly_total(full_data_path, args):
         tm = t0 + 10
 
     try: # Get population estimate for roi
-        population = get_population(args)
-        stan_data['N'] = population
+        population = df['population'].iloc[0]
     except:
         # stan_data['N'] = 1 # If no population found in population_estimates.csv
         print("Could not get population estimate for {}".format(args.roi))
-        exit()
+
+    if population:
+        stan_data['N'] = population
 
     stan_data['n_ostates'] = 3
     stan_data['tm'] = tm
@@ -128,27 +129,6 @@ def get_stan_data_weekly_total(full_data_path, args):
         stan_data['tm'] += offset
         stan_data['ts'] += offset
     return stan_data, df['dates2'][t0]
-
-def get_population(args):
-    """ Get population estimates for roi to feed into Pystan.
-    Arguments:
-        args : Get args from run.py so we can match on roi.
-
-    Returns:
-        population (int): Population estimate for roi found in population_estimates.csv
-    """
-
-    try:
-        df_pop = pd.read_csv(Path(args.data_path) / 'population_estimates.csv') # get population counts
-    except:
-        print("Missing population_estimates.csv in data-path")
-    try:
-        population = df_pop.query('roi == "{}"'.format(args.roi))['population'].values
-    except:
-        print("{} population estimate not found in population_estimates.csv".format(args.roi))
-
-    return int(population)
-
 
 def get_n_data(stan_data):
     if stan_data:
