@@ -102,13 +102,13 @@ def add_ir(data_path:str, tables_path:str):
 
     for table in table_csvs:
         df = pd.read_csv(table)
-        col = ['population', 'cum_cases', 'ir_AOS'] # if exits, drop these columns to avoid duplicates
+        col = ['population', 'cum_cases', 'ir'] # if exits, drop these columns to avoid duplicates
         for i in col:
             if i in df.columns:
                 df.drop(columns=[i], inplace=True)
         df = df.merge(df_pop, on='roi', how='left')
         df = df.merge(df_cases, on='roi', how='left')
-        df['ir_AOS'] = df['cum_cases'] / df['car'] / df['population']
+        df['ir'] = df['cum_cases'] / df['car'] / df['population']
         df.to_csv(table, index=False)
 
 
